@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "echarts": "^5.4.3",
-    "wukongimjssdk": "^1.1.0"
-  }
-}

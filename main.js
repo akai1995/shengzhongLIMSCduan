@@ -7,7 +7,6 @@ import share from './share.js'
 import { getDicts } from "@/api/system/dict/data";
 import '@/utils/mixins.js'
 // import '@/convert.ts'
-import '@/imUtil/imUtils.js'
 // 字典数据组件
 import DictData from '@/components/DictData'
 // import '@/imUtil/convert.ts'

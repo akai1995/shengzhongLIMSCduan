@@ -43,12 +43,6 @@
 	import {
 		registerIm
 	} from '@/api/imApi.js'
-	import {
-		WKSDK,
-		Channel,
-		MessageText,
-		ChannelTypePerson
-	} from "wukongimjssdk"
 	export default {
 		data() {
 			return {
