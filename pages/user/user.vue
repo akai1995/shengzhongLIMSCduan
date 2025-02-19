@@ -8,26 +8,21 @@
 					<view class="info">
 						<view class="name" v-if="user.nickName">{{ user.nickName }}</view>
 						<view class="name" v-if="!user.nickName" @click="$ut.jump('/pages/login/login')">登录/注册</view>
-						<view class="text" @click="jump('/pagesA/user/editMyInformation')">编辑个人资料></view>
+						<!-- <view class="text" @click="jump('/pagesA/user/editMyInformation')">编辑个人资料></view> -->
 					</view>
 				</view>
-				<view class="tag" @click="onCut()">
+				<!-- <view class="tag" @click="onCut()">
 					<image class="img" src="@/static/public/user.png" mode=""></image> 我是医生
-				</view>
+				</view> -->
 			</view>
 		</view>
-		<view class="menu-box">
+		<!-- <view class="menu-box">
 			<view class="menu-item" @click="jump('/pagesA/user/message?type=0')">
 				<view class="badge">
 					<u-badge max="99" :value="myMessageCount"></u-badge>
 				</view>
 				<image class="img" src="@/static/user/menu4.png"></image>
 				<text class="name">我的消息</text>
-			</view>
-			<!-- <view class="menu-item" @click="$ut.jump('/pages/community/community-my')"> -->
-			<view class="menu-item" @click="$ut.showText()" v-if="false">
-				<image class="img" src="@/static/user/menu1.png"></image>
-				<text class="name">我的社区</text>
 			</view>
 			<view class="menu-item" @click="$ut.jump('/pagesA/user/myFollow')">
 				<image class="img" src="@/static/user/menu2.png"></image>
@@ -37,9 +32,9 @@
 				<image class="img" src="@/static/user/menu3.png"></image>
 				<text class="name">我的收藏</text>
 			</view>
-		</view>
+		</view> -->
 
-		<view class="view m-t3">
+		<!-- <view class="view m-t3">
 			<view class="title">健康档案</view>
 			<view class="box m-t2">
 				<view class="item" @click="$ut.jump('/pagesA/user/family')">
@@ -57,7 +52,7 @@
 					<view class="num"><text>{{ testRecord }}</text>次</view>
 				</view>
 			</view>
-		</view>
+		</view> -->
 		<view class="view" v-if="envWx !== 'release'">
 			<u-cell-group>
 				<u-cell icon="setting-fill" title="我的咨询" @click="$ut.jump('/pagesC/consult/consult')">
@@ -73,45 +68,12 @@
 		<view class="view">
 			<view class="title">其他</view>
 			<u-cell-group class="m-t2">
-				<!-- <u-cell title="操作手册" @click="$ut.jump('/pagesA/user/operationManual')" name="@/static/user/icon1.png">
-					<image slot="icon" class="icon-img" src="@/static/user/icon1.png" mode=""></image>
-					<u-icon slot="right-icon" size="30rpx" name="arrow-right"></u-icon>
-				</u-cell> -->
-				<u-cell icon="setting-fill" title="反馈中心" @click="$ut.jump('/pagesA/user/myFeedback')">
-					<image slot="icon" class="icon-img" src="@/static/user/icon2.png" mode=""></image>
-					<u-icon slot="right-icon" size="30rpx" name="arrow-right"></u-icon>
-				</u-cell>
-				<!-- <u-cell icon="setting-fill" title="技术服务电话" @click="$ut.showText()">
-					<image slot="icon" class="icon-img" src="@/static/user/icon3.png" mode=""></image>
-					<u-icon slot="right-icon" size="30rpx" name="arrow-right"></u-icon>
-				</u-cell> -->
-				<u-cell icon="setting-fill" title="修改密码" @click="editPass()">
-					<image slot="icon" class="icon-img" src="@/static/user/icon4.png" mode=""></image>
-					<u-icon slot="right-icon" size="30rpx" name="arrow-right"></u-icon>
-				</u-cell>
+				
 				<u-cell icon="setting-fill" title="系统版本" @click="$ut.showText()">
 					<image slot="icon" class="icon-img" src="@/static/user/icon5.png" mode=""></image>
 					<u-icon slot="right-icon" size="30rpx" name="arrow-right"></u-icon>
 				</u-cell>
-				<!-- v-if="userType==2" -->
-				<u-cell icon="setting-fill" title="样本物流" @click="$ut.jump('/pagesB/driver/list')" v-if="driver">
-					<image slot="icon" class="icon-img" src="@/static/user/icon11.png" mode=""></image>
-					<u-icon slot="right-icon" size="30rpx" name="arrow-right"></u-icon>
-				</u-cell>
-				<u-cell icon="setting-fill" title="打印机设备" @click="$ut.jump('/pagesB/equipment/link')" v-if="false">
-					<image slot="icon" class="icon-img" src="@/static/user/icon10.png" mode=""></image>
-					<u-icon slot="right-icon" size="30rpx" name="arrow-right"></u-icon>
-				</u-cell>
-				<!-- <u-cell title="结直肠癌早筛" @click="routeDcb">
-					<image slot="icon" class="icon-img"
-						src="https://genepiapi.ypzlfx.com/file/genepi/2023/12/11/r7xylbwZWMog07b4f653334f42749d0326950fd3a522_20231211091942A835.png"
-						mode=""></image>
-				</u-cell>
-				<u-cell title="癌症核心知识知晓率调查表" @click="routePush({ url: '/pagesB/survey-form/survey-form' })">
-					<image slot="icon" class="icon-img"
-						src="https://genepiapi.ypzlfx.com/file/genepi/2023/12/11/r7xylbwZWMog07b4f653334f42749d0326950fd3a522_20231211091942A835.png"
-						mode=""></image>
-				</u-cell> -->
+				
 			</u-cell-group>
 		</view>
 
@@ -252,14 +214,6 @@ export default {
 			uni.navigateTo({
 				url: url,
 			});
-		},
-
-		editPass() {
-			if (this.user.telephone.length > 0) {
-				this.$ut.jump("/pagesC/password/password");
-			} else {
-				this.$ut.showText("请完善个人信息");
-			}
 		},
 
 		logout() {
