@@ -8,51 +8,15 @@
 					<view class="info">
 						<view class="name" v-if="user.nickName">{{ user.nickName }}</view>
 						<view class="name" v-if="!user.nickName" @click="$ut.jump('/pages/login/login')">登录/注册</view>
-						<!-- <view class="text" @click="jump('/pagesA/user/editMyInformation')">编辑个人资料></view> -->
+						<view class="text">欢迎使用</view>
 					</view>
 				</view>
-				<!-- <view class="tag" @click="onCut()">
-					<image class="img" src="@/static/public/user.png" mode=""></image> 我是医生
-				</view> -->
+
 			</view>
 		</view>
-		<!-- <view class="menu-box">
-			<view class="menu-item" @click="jump('/pagesA/user/message?type=0')">
-				<view class="badge">
-					<u-badge max="99" :value="myMessageCount"></u-badge>
-				</view>
-				<image class="img" src="@/static/user/menu4.png"></image>
-				<text class="name">我的消息</text>
-			</view>
-			<view class="menu-item" @click="$ut.jump('/pagesA/user/myFollow')">
-				<image class="img" src="@/static/user/menu2.png"></image>
-				<text class="name">我的关注</text>
-			</view>
-			<view class="menu-item" @click="$ut.jump('/pagesA/user/myCollect')">
-				<image class="img" src="@/static/user/menu3.png"></image>
-				<text class="name">我的收藏</text>
-			</view>
-		</view> -->
 
-		<!-- <view class="view m-t3">
-			<view class="title">健康档案</view>
-			<view class="box m-t2">
-				<view class="item" @click="$ut.jump('/pagesA/user/family')">
-					<view class="label">家庭成员</view>
-					<view class="num"><text>{{ relationshipNum }}</text>人</view>
-				</view>
-				<u-line direction="col" length="50%"></u-line>
-				<view class="item" @click="$ut.jump('/pages/report/read')">
-					<view class="label">报告解读</view>
-					<view class="num"><text>{{ reportExplain }}</text>份</view>
-				</view>
-				<u-line direction="col" length="50%"></u-line>
-				<view class="item" @click="$ut.jump('/pages/report/report')">
-					<view class="label">检测记录</view>
-					<view class="num"><text>{{ testRecord }}</text>次</view>
-				</view>
-			</view>
-		</view> -->
+
+
 		<view class="view" v-if="envWx !== 'release'">
 			<u-cell-group>
 				<u-cell icon="setting-fill" title="我的咨询" @click="$ut.jump('/pagesC/consult/consult')">
@@ -68,57 +32,35 @@
 		<view class="view">
 			<view class="title">其他</view>
 			<u-cell-group class="m-t2">
-				
+
 				<u-cell icon="setting-fill" title="系统版本" @click="$ut.showText()">
 					<image slot="icon" class="icon-img" src="@/static/user/icon5.png" mode=""></image>
 					<u-icon slot="right-icon" size="30rpx" name="arrow-right"></u-icon>
 				</u-cell>
-				
+
 			</u-cell-group>
 		</view>
 
 		<view class="bottom m-t4" @click="logout">退出登录</view>
 
-		<ut-bottomNav :value="2"></ut-bottomNav>
+		<ut-bottomNav :value="1"></ut-bottomNav>
 	</view>
 </template>
 
 <script>
 import { envWx } from "@/config";
-import { mapGetters, mapMutations } from 'vuex'
+import { mapGetters } from 'vuex'
 import store from "@/store";
-import {
-	getRelationCount, getDetectionNum, getAnalysisCount
-} from "@/api/personalCenter/personalCenter.js";
-import {
-	getExpert
-} from "@/api/system/user.js";
-import {
-	authWebLoginApi,
-	getWxInfo
-} from "@/api/login.js";
+import { getExpert } from "@/api/system/user.js";
+import { authWebLoginApi } from "@/api/login.js";
 
 export default {
 	data() {
 		return {
 			envWx: 'release',
-			driver: '', //司机权限
-			menuList: [{
-				img: "@/static/user/icon1.png",
-				title: "操作手册",
-			},
-			{
-				img: "@/static/user/icon2.png",
-				title: "反馈中心",
-			},
-			],
 			user: {
 				nickName: "",
 			},
-			relationshipNum: 0,
-			reportExplain: 0,
-			testRecord: 0,
-			myMessageCount: 0,
 			userType: "",
 			noavater: 'https://genepiapi.ypzlfx.com/file/genepi/2023/07/20/OxbWNs6SoNLF1129151bdb41b25719e93409dc3a1f5b_20230720170831A016.jpg'
 		};
@@ -128,34 +70,10 @@ export default {
 	},
 	onLoad() {
 		if (this.userId) {
-			Promise.all([this.getPersonalInfo(), this.getRelationCount()]);
-		}
-		// getExpert(this.$store.getters.userId).then(res => {
 
-		// })
-		uni.$once("refresh", () => {
-			this.getPersonalInfo()
-			this.getRelationCount()
-		})
+		}
 	},
 	methods: {
-		...mapMutations(['SET_DOCTOR_INFO']),
-		routeDcb() {
-			// const curTime = new Date().getTime()
-			// const newRime = new Date(2024, 1, 1, 0,0,0).getTime()
-			// console.log(curTime, newRime);
-			// if (curTime < newRime) {
-			// uni.showModal({
-			// 	title: '提示',
-			// 	content: '尊敬的用户，红河州结直肠癌早筛功能为2024年1月1日开放。',
-			// 	showCancel: false
-			// })
-			// return
-			// }
-			uni.navigateTo({
-				url: '/pagesC/cancer-screening/add-person/add-person'
-			})
-		},
 		authWebLogin() {
 			let this_ = this;
 			uni.scanCode({
@@ -181,36 +99,9 @@ export default {
 				},
 			});
 		},
-		getPersonalInfo() {
-			let id = this.userId;
-			getWxInfo(id).then((res) => {
-				this.user = res.user;
-				this.$store.commit('SET_ORG_ID', res.user.orgId)
-				//司机
-				this.userType = res.user.role;
-				if (res.roles?.includes('driver')) {
-					this.driver = 'driver';
-				}
-				// console.log("user", res.user.role);
-			});
-		},
-		getRelationCount() {
-			//家庭成员数量
-			getRelationCount().then((res) => {
-				this.relationshipNum = res.data;
-			});
-			//检测记录数量
-			getDetectionNum().then(res => {
-				this.testRecord = res.data
-			})
-			//检测记录
-			getAnalysisCount().then(res => {
-				this.reportExplain = res.data
-			})
-		},
+
 
 		jump(url) {
-			// console.log('url',url)
 			uni.navigateTo({
 				url: url,
 			});
@@ -237,53 +128,7 @@ export default {
 			});
 		},
 
-		//切换身份
-		onCut() {
-			var type = null;
-			var form = {};
-			getExpert(this.userId).then((res) => {
-				if (!res.data && this.userId) {
-					uni.showModal({
-						title: "您暂未开通医生权限",
-						confirmText: "立即申请",
-						success(res) {
-							if (res.confirm) {
-								uni.navigateTo({
-									url: "/pagesA/user/medic",
-								});
-							} else if (res.cancel) {
-								// uni.reLaunch({
-								// 	url: '/pages/index/index'
-								// })
-							}
-						},
-					});
-					return
-				}
-				if (res.data) {
-					type = res.data.expertState;
-					if (res.data) {
-						form = encodeURIComponent(JSON.stringify(res.data));
-					}
-				}
-				//医生
-				if (type == 1) {
-					this.SET_DOCTOR_INFO(res.data)
-					uni.navigateTo({
-						url: "/pagesC/doctor-index/doctor-index",
-					});
-				} else if (type == 0) {
-					//审核中
-					this.$ut.jump("/pagesA/user/success");
 
-					// this.$ut.showText("正在审核中");
-				} else {
-					uni.navigateTo({
-						url: "/pagesA/user/medic",
-					});
-				}
-			});
-		},
 	},
 };
 </script>
