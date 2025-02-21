@@ -19,7 +19,7 @@
 				"navigationBarBackgroundColor": "#ffffff00"
 			}
 		},
-		
+
 		{
 			"path": "pages/user/user",
 			"style": {
@@ -27,9 +27,22 @@
 				"enablePullDownRefresh": false
 			}
 		},
-		
 		{
 			"path": "pages/detail/index",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/reserve/index",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/reserve/detail",
 			"style": {
 				"navigationBarTitleText": "",
 				"enablePullDownRefresh": false

@@ -106,7 +106,6 @@
 export default {
     data() {
         return {
-            envWx: "release",
             choose: { currIndex: 0, list: [] },
             time: { start: null, end: null, select: [[]], selectVisible: false, type: '' },
             form: { name: '', phone: '', description: '' }
@@ -212,6 +211,9 @@ export default {
 
             const currDate = this.choose.list[this.choose.currIndex]
             uni.showToast({ title: `${currDate.year}-${currDate.date} ${this.time.start}:00`, icon: "none", });
+            setTimeout(() => {
+                this.$ut.jump(`/pages/reserve/detail?id=11111`);
+            }, 2000);
         },
         handleGoHome() {
             this.$ut.jump(`/pages/index/index`);

@@ -17,8 +17,9 @@
 						suffixIconStyle="font-size: 22px;color: #909399"></u--input>
 				</view>
 			</view>
-			<view class="home-list" :style="{ height: headInfo.listHeight }">
-				<view class="home-item" v-for="item in 20">
+			<scroll-view class="home-list" @scrolltolower="lowerBottom" :scroll-y="true"
+				:style="{ height: headInfo.listHeight }">
+				<view class="home-item" v-for="item in 10">
 					<view class="home-item-content">
 						<view class="home-item-content-pic">
 							<img class="home-item-content-img"
@@ -66,7 +67,7 @@
 						</view>
 					</view>
 				</view>
-			</view>
+			</scroll-view>
 		</view>
 
 		<ut-bottomNav :value="0"></ut-bottomNav>
@@ -78,7 +79,6 @@
 export default {
 	data() {
 		return {
-			envWx: "release",
 			headInfo: { headHeight: '0px', titleTop: '0px', listHeight: '0px' }
 		};
 	},
@@ -100,7 +100,10 @@ export default {
 				return;
 			}
 		},
-		handleGoDetail(id){
+		lowerBottom() {
+			uni.showToast({ title: "到底啦！！！", icon: "none", });
+		},
+		handleGoDetail(id) {
 			this.$ut.jump("/pages/detail/index");
 		}
 	},
