@@ -15,7 +15,7 @@
 				<img class="detail-info-img" src="https://genepiapi.ypzlfx.com/file/device-appointment/image 28.png" />
 			</view>
 			<view class="detail-info-message">
-				<view class="detail-info-message-name">名字名字</view>
+				<view class="detail-info-message-name">{{ userName }}</view>
 				<view class="detail-info-message-sub">登陆优惠多</view>
 			</view>
 		</view>
@@ -55,7 +55,8 @@
 export default {
 	data() {
 		return {
-			headInfo: { headHeight: '0px', titleTop: '0px', listHeight: '0px' }
+			headInfo: { headHeight: '0px', titleTop: '0px', listHeight: '0px' },
+			userName: '尊敬的用户'
 		};
 	},
 	onLoad() {
@@ -71,6 +72,7 @@ export default {
 		},
 		checkUserInfo() {
 			const id = this.$store.getters.userId
+			console.log(this.$store.getters);
 			if (!id) {
 				this.$ut.jump("/pages/login/login");
 				return;

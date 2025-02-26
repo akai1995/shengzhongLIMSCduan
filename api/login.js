@@ -7,7 +7,7 @@ export function wxLogin(code,phoneCode) {
 		phoneCode:phoneCode
 	}
 	return request({
-		'url': '/auth/wxLogin',
+		'url': '/sys/wxLogin',
 		headers: {
 			isToken: false
 		},

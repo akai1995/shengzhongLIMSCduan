@@ -19,17 +19,18 @@
 			</view>
 			<scroll-view class="home-list" @scrolltolower="lowerBottom" :scroll-y="true"
 				:style="{ height: headInfo.listHeight }">
-				<view class="home-item" v-for="item in 10">
+				<view class="home-item" v-for="(item, index) in listData.list" :key="item.id">
 					<view class="home-item-content">
 						<view class="home-item-content-pic">
 							<img class="home-item-content-img"
 								src="https://genepiapi.ypzlfx.com/file/device-appointment/image.png" />
 						</view>
 						<view class="home-item-content-info">
-							<view class="home-item-content-info-title">设备名称设备名称设备名称设备名称设备名称设备名称设备名称设备名称</view>
+							<view class="home-item-content-info-title">{{ item.deviceName }}</view>
 							<view class="home-item-content-info-text">
-								<view class="home-item-content-info-text-item">设备编号82734982375234</view>
-								<view class="home-item-content-info-text-item">设备地址设备地址设备地址设备地址设备地址设备地址设备地址设备地址设备地址
+								<view class="home-item-content-info-text-item">设备编号{{ item.deviceCode }}</view>
+								<view class="home-item-content-info-text-item">
+									{{ item.deviceAddress || "暂无设备地址" }}
 								</view>
 							</view>
 						</view>
@@ -46,22 +47,25 @@
 									<view class="reserve-text">可约</view>
 								</view>
 							</view>
-							<view class="home-item-condition-head-des">{{ item % 3 == 1 ? '使用中 丨 16:00结束' : '空闲' }}
+							<view class="home-item-condition-head-des">
+								{{ item.nowUse ? `使用中 丨 ${item.nowUseEndTime}结束` : '空闲' }}
 							</view>
 						</view>
 
 						<view class="home-item-condition-time">
-							<view class="home-item-condition-time-item" v-for="(items, indexs) in 24" :key="items">
+							<view class="home-item-condition-time-item" v-for="(items, indexs) in item.reserveTimeList"
+								:key="items">
 								<view
-									:class="indexs % 3 == 1 ? 'home-item-condition-time-item-block-curr' : 'home-item-condition-time-item-block'">
+									:class="item.status ? 'home-item-condition-time-item-block-curr' : 'home-item-condition-time-item-block'">
 								</view>
 								<view class="home-item-condition-time-item-num">{{ indexs }}</view>
 							</view>
 						</view>
 
 						<view class="home-item-condition-button">
-							<view class="home-item-condition-button-block" @click="handleGoDetail(item)">
-								<u-button type="primary" size="small" :disabled="item % 3 == 1">去预约</u-button>
+							<view class="home-item-condition-button-block"
+								@click="handleGoDetail(item.id, item.deviceId)">
+								<u-button type="primary" size="small">去预约</u-button>
 							</view>
 
 						</view>
@@ -75,11 +79,14 @@
 </template>
 
 <script>
+import { getDeviceList } from '@/api/device/index.js'
 
 export default {
 	data() {
 		return {
-			headInfo: { headHeight: '0px', titleTop: '0px', listHeight: '0px' }
+			headInfo: { headHeight: '0px', titleTop: '0px', listHeight: '0px' },
+			queryParameter: { pageNo: 1, pageSize: 10 },
+			listData: { list: [], total: 0 },
 		};
 	},
 	onLoad() {
@@ -99,12 +106,29 @@ export default {
 				this.$ut.jump("/pages/login/login");
 				return;
 			}
+			this.getDeviceList()
+		},
+		getDeviceList() {
+			getDeviceList(this.queryParameter).then((resp) => {
+				this.listData.list.push(...resp.result.records);
+				this.listData.total = resp.result.total
+				uni.stopPullDownRefresh();
+			});
 		},
 		lowerBottom() {
-			uni.showToast({ title: "到底啦！！！", icon: "none", });
+			if (this.queryParameter.pageNo * this.queryParameter.pageSize < this.listData.total) {
+				this.queryParameter.pageNo += 1;
+				this.getDeviceList()
+			} else {
+				uni.showToast({ title: "已经到底啦！！！", icon: "none", });
+			}
+
 		},
-		handleGoDetail(id) {
-			this.$ut.jump("/pages/detail/index");
+		onPullDownRefresh() {
+			this.checkUserInfo()
+		},
+		handleGoDetail(id, deviceId) {
+			this.$ut.jump(`/pages/detail/index?instrumentId=${id}&deviceId=${deviceId}`);
 		}
 	},
 };

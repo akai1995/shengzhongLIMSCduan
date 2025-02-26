@@ -13,16 +13,17 @@
 
             <view class="detail-content">
                 <view class="detail-info">
-                    <view class="detail-info-title">设备名称设备名称设备名称</view>
-                    <view class="detail-info-text">设备编号8525774455</view>
-                    <view class="detail-info-text">设备地址设备地址设备地址设备地址设备地址</view>
+                    <view class="detail-info-title">{{ deviceInfo.name }}</view>
+                    <view class="detail-info-text">设备编号{{ deviceInfo.code }}</view>
+                    <view class="detail-info-text">{{ deviceInfo.address }}</view>
                 </view>
 
                 <view class="detail-date">
                     <view class="detail-date-title">选择日期</view>
                     <view class="detail-date-day">
                         <view :class="index == choose.currIndex ? 'detail-date-day-item-curr' : 'detail-date-day-item'"
-                            @click="handleDateClick(index)" v-for="(item, index) in choose.list" :key="index">
+                            @click="handleDateClick(index, item.date)" v-for="(item, index) in choose.list"
+                            :key="index">
                             <view class="detail-date-day-item-num">{{ item.date }}</view>
                             <view class="detail-date-day-item-text">{{ item.day }}</view>
                         </view>
@@ -57,9 +58,10 @@
                         </view>
 
                         <view class="detail-date-condition-time">
-                            <view class="detail-date-condition-time-item" v-for="(items, indexs) in 24" :key="items">
+                            <view class="detail-date-condition-time-item"
+                                v-for="(items, indexs) in deviceInfo.reserveTime" :key="indexs">
                                 <view
-                                    :class="indexs % 3 == 1 ? 'detail-date-condition-time-item-block-curr' : 'detail-date-condition-time-item-block'">
+                                    :class="items.status ? 'detail-date-condition-time-item-block-curr' : 'detail-date-condition-time-item-block'">
                                 </view>
                                 <view class="detail-date-condition-time-item-num">{{ indexs }}</view>
                             </view>
@@ -68,7 +70,7 @@
                 </view>
 
                 <view class="detail-form">
-                    <view class="detail-form-item">
+                    <!-- <view class="detail-form-item">
                         <view class="detail-form-item-title">预约人姓名</view>
                         <view class="detail-form-item-input">
                             <u--input placeholder="预约人姓名" border="surround" v-model="form.name"></u--input>
@@ -79,7 +81,7 @@
                         <view class="detail-form-item-input">
                             <u--input placeholder="预约人电话" border="surround" v-model="form.phone"></u--input>
                         </view>
-                    </view>
+                    </view> -->
                     <view class="detail-form-item">
                         <view class="detail-form-item-title">用途说明</view>
                         <view class="detail-form-item-input">
@@ -97,23 +99,29 @@
 
         </view>
 
-        <u-picker :show="time.selectVisible" ref="uPicker" :columns="time.select" @confirm="currTimeSubmit"></u-picker>
+        <u-picker :show="time.selectVisible" ref="uPicker" :columns="time.select" @confirm="currTimeSubmit"
+            @cancel="currTimeCancel"></u-picker>
     </view>
 </template>
 
 <script>
+import { deviceSubmit, deviceDetail, getAllDayReserve } from '@/api/device/index.js'
 
 export default {
     data() {
         return {
+            instrumentId: null,
+            deviceId: null,
             choose: { currIndex: 0, list: [] },
             time: { start: null, end: null, select: [[]], selectVisible: false, type: '' },
-            form: { name: '', phone: '', description: '' }
+            form: { name: ''/* , phone: '', description: '' */ },
+            deviceInfo: { name: "", code: "", address: "", reserveTime: [], canReserveWeek: [], canReserveTime: '' }
         };
     },
-    onLoad() {
-        this.generateDateArray()
-        this.getSelectPicker()
+    onLoad(options) {
+        this.instrumentId = options.instrumentId;
+        this.deviceId = options.deviceId;
+        this.getDeviceDetail()
     },
     methods: {
         generateDateArray() {
@@ -151,11 +159,30 @@ export default {
         },
         getSelectPicker() {
             const timeArray = [];
+            const range = this.deviceInfo.canReserveTime; // 假设这个是输入的范围
+            const [startTime, endTime] = range.split(" - "); // 拆分字符串为开始时间和结束时间
+
+            // 将时间范围的小时部分转为数字，方便比较
+            const startHour = parseInt(startTime.split(":")[0], 10);
+            const endHour = parseInt(endTime.split(":")[0], 10);
+
             for (let i = 0; i < 24; i++) {
                 const hour = i < 10 ? `0${i}` : i;
-                timeArray.push(`${hour}:00`);
+                const time = `${hour}:00`;
+
+                // 判断当前时间是否在范围内
+                if (i >= startHour && i <= endHour) {
+                    timeArray.push(time);
+                }
             }
-            this.time.select[0] = timeArray
+
+            this.time.select[0] = timeArray;
+        },
+        getWeekNumber(date) {
+            const currDate = new Date(date);
+            const dayOfWeek = currDate.getDay();
+            const daysOfWeek = ["7", "1", "2", "3", "4", "5", "6"];
+            return daysOfWeek[dayOfWeek];
         },
         timeIsNotGreaterThan(a, b) {
             const timeToMinutes = (time) => {
@@ -166,10 +193,50 @@ export default {
             const timeA = timeToMinutes(a);
             const timeB = timeToMinutes(b);
 
-            return timeA <= timeB;
+            return timeA < timeB;
         },
-        handleDateClick(index) {
-            this.choose.currIndex = index
+        getDeviceDetail() {
+            deviceDetail(this.instrumentId).then((resp) => {
+                if (resp.code == 200) {
+                    this.deviceInfo.name = resp.result.deviceName
+                    this.deviceInfo.code = resp.result.deviceCode
+                    this.deviceInfo.address = resp.result.deviceAddress || "暂无设备地址"
+                    this.deviceInfo.reserveTime = resp.result.reserveTimeList
+                    this.deviceInfo.canReserveWeek = resp.result.openList
+                    this.deviceInfo.canReserveTime = resp.result.openTime
+
+
+                    this.generateDateArray()
+                    this.getSelectPicker()
+                    this.getAllDayReserve()
+                }
+            });
+
+        },
+        getAllDayReserve() {
+            const currentDate = `${this.choose.list[this.choose.currIndex].year}-${this.choose.list[this.choose.currIndex].date}`
+            const pushData = {
+                currentDate,
+                deviceId: this.deviceId
+            }
+
+            getAllDayReserve(pushData).then((resp) => {
+                if (resp.code == 200) {
+                    this.deviceInfo.reserveTime = resp.result
+                }
+            });
+        },
+        handleDateClick(index, currDate) {
+            console.log(this.deviceInfo.canReserveWeek);
+            const currentYear = new Date().getFullYear();
+            const currenWeek = this.getWeekNumber(`${currentYear}-${currDate}`)
+            const openDate = this.deviceInfo.canReserveWeek
+            if (openDate.includes(currenWeek)) {
+                this.choose.currIndex = index;
+                this.getAllDayReserve()
+            } else {
+                uni.showToast({ title: "该日设备不开放预约", icon: "none", });
+            }
         },
         handleTimeClick(type) {
             this.time.type = type
@@ -177,6 +244,9 @@ export default {
         },
         currTimeSubmit(e) {
             this.time[this.time.type] = e.value[0]
+            this.time.selectVisible = false
+        },
+        currTimeCancel() {
             this.time.selectVisible = false
         },
         handleSubmit() {
@@ -189,10 +259,10 @@ export default {
                 return
             }
             if (!this.timeIsNotGreaterThan(this.time.start, this.time.end)) {
-                uni.showToast({ title: "预约开始时间不能大于预约结束时间", icon: "none", });
+                uni.showToast({ title: "预约开始时间不能大于等于预约结束时间", icon: "none", });
                 return
             }
-            if (!this.form.name) {
+            /* if (!this.form.name) {
                 uni.showToast({ title: "请输入预约人姓名", icon: "none", });
                 return
             }
@@ -203,17 +273,29 @@ export default {
             if (!/^1[3-9]\d{9}$/.test(this.form.phone)) {
                 uni.showToast({ title: "请输入正确的电话号码", icon: "none", });
                 return
-            }
+            } */
             if (!this.form.description) {
                 uni.showToast({ title: "请输入用途说明", icon: "none", });
                 return
             }
 
             const currDate = this.choose.list[this.choose.currIndex]
-            uni.showToast({ title: `${currDate.year}-${currDate.date} ${this.time.start}:00`, icon: "none", });
-            setTimeout(() => {
-                this.$ut.jump(`/pages/reserve/detail?id=11111`);
-            }, 2000);
+
+            const pushData = {
+                deviceId: this.instrumentId,
+                reserveDate: `${currDate.year}-${currDate.date}`,
+                reserveEndTime: `${this.time.end}:00`,
+                reservePurpose: this.form.description,
+                reserveStartTime: `${this.time.start}:00`
+            }
+            deviceSubmit(pushData).then((resp) => {
+                if (resp.code == 200) {
+                    uni.showToast({ title: "预约成功，正在跳转", icon: "none", });
+                    setTimeout(() => {
+                        this.$ut.jump(`/pages/reserve/detail?id=${resp.result.instrumentId}`);
+                    }, 2000);
+                }
+            });
         },
         handleGoHome() {
             this.$ut.jump(`/pages/index/index`);

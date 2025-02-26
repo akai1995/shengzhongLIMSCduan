@@ -15,7 +15,7 @@ const request = config => {
   const isToken = (config.headers || {}).isToken === false
   config.header = config.header || {}
   if (getToken() && !isToken) {
-    config.header['Authorization'] = 'Bearer ' + getToken()
+    config.header['X-Access-Token'] = getToken()
   }
   // get请求映射params参数
   if (config.params) {
@@ -39,7 +39,7 @@ const request = config => {
           return
         }
         const code = res.data.code || 200
-        const msg = errorCode[code] || res.data.msg || errorCode['default']
+        const msg = errorCode[code] || res.data.message || errorCode['default']
         if (code === 401) {
 			if(toLogin){
 				return

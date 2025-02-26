@@ -2,14 +2,14 @@ const accountInfo = wx.getAccountInfoSync();
 export let envWx = accountInfo.miniProgram.envVersion;
 // console.log(envWx)
 // 应用全局配置
-envWx = "release";
+envWx = "develop";
 let baseUrl = "https://genepiapi.ypzlfx.com/prod-api";
 let wsUrl = "";
 if (envWx === "develop") {
 	//开发
 	// baseUrl = 'https://genepiapi.ypzlfx.com/test-api'
 	/* baseUrl = 'https://genepiapi.ypzlfx.com/test-api' */
-	baseUrl = 'http://192.168.0.226:9999'
+	baseUrl = 'http://192.168.0.14:9082/klg-lims'
 	 wsUrl = 'ws://192.168.0.154:5200' 
 	// baseUrl = "https://genepiapi.ypzlfx.com/prod-api";
 	// wsUrl = "wss://api.ypzlfx.com/prod-api";

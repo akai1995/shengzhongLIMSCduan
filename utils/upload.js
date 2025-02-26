@@ -13,7 +13,7 @@ const upload = config => {
   const isToken = (config.headers || {}).isToken === false
   config.header = config.header || {}
   if (getToken() && !isToken) {
-    config.header['Authorization'] = 'Bearer ' + getToken()
+    config.header['X-Access-Token'] = getToken()
   }
   // get请求映射params参数
   if (config.params) {
@@ -32,7 +32,7 @@ const upload = config => {
         success: (res) => {
           let result = JSON.parse(res.data)
           const code = result.code || 200
-          const msg = errorCode[code] || result.msg || errorCode['default']
+          const msg = errorCode[code] || result.message || errorCode['default']
           if (code === 200) {
             resolve(result)
           } else if (code == 401) {

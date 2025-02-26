@@ -130,7 +130,7 @@ export function pcrInformationAdd(data) {
 //获取用户信息
 export function getInfoByToken() {
 	return request({
-		url: "/personalcenter/userInformation/getInfoByToken",
+		url: "/third/user/getInfoByToken",
 		method: "get",
 	});
 }
