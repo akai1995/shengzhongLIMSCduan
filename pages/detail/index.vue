@@ -8,7 +8,7 @@
 
         <view class="detail">
             <view class="detail-pic">
-                <img class="detail-img" src="https://genepiapi.ypzlfx.com/file/device-appointment/image.png" />
+                <img class="detail-img" :src="deviceInfo.deviceImg ? deviceInfo.deviceImg : 'https://genepiapi.ypzlfx.com/file/device-appointment/image.png'" />
             </view>
 
             <view class="detail-content">
@@ -70,7 +70,7 @@
                 </view>
 
                 <view class="detail-form">
-                    <!-- <view class="detail-form-item">
+                    <view class="detail-form-item">
                         <view class="detail-form-item-title">预约人姓名</view>
                         <view class="detail-form-item-input">
                             <u--input placeholder="预约人姓名" border="surround" v-model="form.name"></u--input>
@@ -81,7 +81,7 @@
                         <view class="detail-form-item-input">
                             <u--input placeholder="预约人电话" border="surround" v-model="form.phone"></u--input>
                         </view>
-                    </view> -->
+                    </view>
                     <view class="detail-form-item">
                         <view class="detail-form-item-title">用途说明</view>
                         <view class="detail-form-item-input">
@@ -114,7 +114,7 @@ export default {
             deviceId: null,
             choose: { currIndex: 0, list: [] },
             time: { start: null, end: null, select: [[]], selectVisible: false, type: '' },
-            form: { name: ''/* , phone: '', description: '' */ },
+            form: { name: '', phone: '', description: '' },
             deviceInfo: { name: "", code: "", address: "", reserveTime: [], canReserveWeek: [], canReserveTime: '' }
         };
     },
@@ -159,10 +159,9 @@ export default {
         },
         getSelectPicker() {
             const timeArray = [];
-            const range = this.deviceInfo.canReserveTime; // 假设这个是输入的范围
-            const [startTime, endTime] = range.split(" - "); // 拆分字符串为开始时间和结束时间
+            const range = this.deviceInfo.canReserveTime;
+            const [startTime, endTime] = range.split(" - ");
 
-            // 将时间范围的小时部分转为数字，方便比较
             const startHour = parseInt(startTime.split(":")[0], 10);
             const endHour = parseInt(endTime.split(":")[0], 10);
 
@@ -204,6 +203,7 @@ export default {
                     this.deviceInfo.reserveTime = resp.result.reserveTimeList
                     this.deviceInfo.canReserveWeek = resp.result.openList
                     this.deviceInfo.canReserveTime = resp.result.openTime
+                    this.deviceInfo.deviceImg = resp.result.deviceImg || null
 
 
                     this.generateDateArray()
@@ -262,7 +262,7 @@ export default {
                 uni.showToast({ title: "预约开始时间不能大于等于预约结束时间", icon: "none", });
                 return
             }
-            /* if (!this.form.name) {
+            if (!this.form.name) {
                 uni.showToast({ title: "请输入预约人姓名", icon: "none", });
                 return
             }
@@ -273,7 +273,7 @@ export default {
             if (!/^1[3-9]\d{9}$/.test(this.form.phone)) {
                 uni.showToast({ title: "请输入正确的电话号码", icon: "none", });
                 return
-            } */
+            }
             if (!this.form.description) {
                 uni.showToast({ title: "请输入用途说明", icon: "none", });
                 return
@@ -286,7 +286,9 @@ export default {
                 reserveDate: `${currDate.year}-${currDate.date}`,
                 reserveEndTime: `${this.time.end}:00`,
                 reservePurpose: this.form.description,
-                reserveStartTime: `${this.time.start}:00`
+                reserveStartTime: `${this.time.start}:00`,
+                reserveName: this.form.name,
+                reservePhone: this.form.phone,
             }
             deviceSubmit(pushData).then((resp) => {
                 if (resp.code == 200) {

@@ -16,7 +16,7 @@
 			</view>
 			<view class="detail-info-message">
 				<view class="detail-info-message-name">{{ userName }}</view>
-				<view class="detail-info-message-sub">登陆优惠多</view>
+				<view class="detail-info-message-sub">欢迎使用设备智约助手</view>
 			</view>
 		</view>
 

@@ -2,8 +2,8 @@ const accountInfo = wx.getAccountInfoSync();
 export let envWx = accountInfo.miniProgram.envVersion;
 // console.log(envWx)
 // 应用全局配置
-envWx = "develop";
-let baseUrl = "https://genepiapi.ypzlfx.com/prod-api";
+envWx = "release";
+let baseUrl = "https://device.ypzlfx.com/klg-lims";
 let wsUrl = "";
 if (envWx === "develop") {
 	//开发
@@ -11,11 +11,11 @@ if (envWx === "develop") {
 	/* baseUrl = 'https://genepiapi.ypzlfx.com/test-api' */
 	baseUrl = 'http://192.168.0.14:9082/klg-lims'
 	 wsUrl = 'ws://192.168.0.154:5200' 
-	// baseUrl = "https://genepiapi.ypzlfx.com/prod-api";
+	// baseUrl = "https://device.ypzlfx.com/klg-lims";
 	// wsUrl = "wss://api.ypzlfx.com/prod-api";
 } else if (envWx === "release") {
 	//生产
-	baseUrl = "https://genepiapi.ypzlfx.com/prod-api";
+	baseUrl = "https://device.ypzlfx.com/klg-lims";
 	wsUrl = "wss://api.ypzlfx.com/prod-api";
 } else {
 	baseUrl = "https://genepiapi.ypzlfx.com/test-api";

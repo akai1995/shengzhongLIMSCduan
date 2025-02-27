@@ -13,7 +13,7 @@
 		<view class="home-content">
 			<view class="home-search">
 				<view class="home-search-input">
-					<u--input placeholder="请输入关键词" suffixIcon="search"
+					<u--input placeholder="请输入关键词" suffixIcon="search" @change="handleSearch"
 						suffixIconStyle="font-size: 22px;color: #909399"></u--input>
 				</view>
 			</view>
@@ -23,7 +23,7 @@
 					<view class="home-item-content">
 						<view class="home-item-content-pic">
 							<img class="home-item-content-img"
-								src="https://genepiapi.ypzlfx.com/file/device-appointment/image.png" />
+								:src="item.deviceImg ? item.deviceImg : 'https://genepiapi.ypzlfx.com/file/device-appointment/image.png'" />
 						</view>
 						<view class="home-item-content-info">
 							<view class="home-item-content-info-title">{{ item.deviceName }}</view>
@@ -56,7 +56,7 @@
 							<view class="home-item-condition-time-item" v-for="(items, indexs) in item.reserveTimeList"
 								:key="items">
 								<view
-									:class="item.status ? 'home-item-condition-time-item-block-curr' : 'home-item-condition-time-item-block'">
+									:class="items.status ? 'home-item-condition-time-item-block-curr' : 'home-item-condition-time-item-block'">
 								</view>
 								<view class="home-item-condition-time-item-num">{{ indexs }}</view>
 							</view>
@@ -85,13 +85,13 @@ export default {
 	data() {
 		return {
 			headInfo: { headHeight: '0px', titleTop: '0px', listHeight: '0px' },
-			queryParameter: { pageNo: 1, pageSize: 10 },
+			queryParameter: { pageNo: 1, pageSize: 10, deviceName: "" },
 			listData: { list: [], total: 0 },
 		};
 	},
-	onLoad() {
+	onShow() {
 		this.getHeadInfo()
-		this.checkUserInfo()
+		this.getDeviceList()
 	},
 	methods: {
 		getHeadInfo() {
@@ -106,28 +106,42 @@ export default {
 				this.$ut.jump("/pages/login/login");
 				return;
 			}
-			this.getDeviceList()
+
 		},
-		getDeviceList() {
+		getDeviceList(type) {
 			getDeviceList(this.queryParameter).then((resp) => {
-				this.listData.list.push(...resp.result.records);
-				this.listData.total = resp.result.total
-				uni.stopPullDownRefresh();
+				if (type && type == "search") {
+					this.listData.list.push(...resp.result.records);
+					this.listData.total = resp.result.total
+					uni.stopPullDownRefresh();
+				} else {
+					this.listData.list = resp.result.records
+					this.listData.total = resp.result.total
+				}
+
 			});
 		},
 		lowerBottom() {
 			if (this.queryParameter.pageNo * this.queryParameter.pageSize < this.listData.total) {
 				this.queryParameter.pageNo += 1;
-				this.getDeviceList()
+				this.getDeviceList("search")
 			} else {
 				uni.showToast({ title: "已经到底啦！！！", icon: "none", });
 			}
 
 		},
 		onPullDownRefresh() {
-			this.checkUserInfo()
+			this.getDeviceList()
+		},
+		handleSearch(e) {
+			const searchData = e
+			this.queryParameter.deviceName = searchData
+			this.queryParameter.pageNo = 1
+			this.listData.list = []
+			this.getDeviceList()
 		},
 		handleGoDetail(id, deviceId) {
+			this.checkUserInfo()
 			this.$ut.jump(`/pages/detail/index?instrumentId=${id}&deviceId=${deviceId}`);
 		}
 	},

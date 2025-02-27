@@ -83,7 +83,7 @@ export default {
         getRejectDes() {
             getRejectDes(this.reserveId).then((resp) => {
                 if (resp.code == 200) {
-                    this.rejectDes = resp.result
+                    this.rejectDes = resp.result.comment
                 }
             });
         },
