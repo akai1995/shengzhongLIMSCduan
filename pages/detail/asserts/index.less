@@ -56,6 +56,9 @@
 			.detail-date-title {
 				position: relative;
 				width: 100%;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
 				font-family: PingFang SC, PingFang SC;
 				font-weight: bold;
 				font-size: 16px;
@@ -71,7 +74,7 @@
 				position: relative;
 				width: 100%;
 				display: flex;
-				align-items: center;
+				align-items: stretch;
 				justify-content: space-between;
 				.detail-date-day-item {
 					position: relative;
@@ -139,6 +142,98 @@
 						margin-top: 20rpx;
 					}
 				}
+				.detail-date-day-item-more {
+					position: relative;
+					width: 19%;
+					padding: 14px 8px;
+					box-sizing: border-box;
+					background: #0d70f3;
+					border-radius: 4px 4px 4px 4px;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					.detail-date-day-item-more-text {
+						position: relative;
+						font-family: PingFang SC, PingFang SC;
+						font-weight: 500;
+						font-size: 15px;
+						color: #ffffff;
+						line-height: 18px;
+						text-align: center;
+						font-style: normal;
+						text-transform: none;
+					}
+				}
+				.detail-date-day-item-more-curr {
+					position: relative;
+					width: 19%;
+					padding: 14px 8px;
+					box-sizing: border-box;
+					background: #f0f2f7;
+					border-radius: 4px 4px 4px 4px;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					.detail-date-day-item-more-text {
+						position: relative;
+						font-family: PingFang SC, PingFang SC;
+						font-weight: 500;
+						font-size: 15px;
+						color: #4b4b4e;
+						line-height: 18px;
+						text-align: center;
+						font-style: normal;
+						text-transform: none;
+					}
+				}
+			}
+			.detail-date-has-list {
+				position: relative;
+				width: 100%;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				flex-wrap: wrap;
+				box-sizing: border-box;
+				.detail-date-has-item {
+					position: relative;
+					box-sizing: border-box;
+					width: calc(50% - 10rpx);
+					margin-bottom: 20rpx;
+					background: #f0f2f7;
+					border-radius: 4px 4px 4px 4px;
+					font-family: PingFang SC, PingFang SC;
+					font-weight: 400;
+					font-size: 15px;
+					color: #4b4b4e;
+					line-height: 18px;
+					text-align: center;
+					font-style: normal;
+					text-transform: none;
+					padding: 20rpx;
+				}
+			}
+			.detail-date-more-list {
+				position: relative;
+				width: 100%;
+				font-family: PingFang SC, PingFang SC;
+				font-weight: 400;
+				font-size: 13px;
+				color: #9699a1;
+				line-height: 15px;
+				text-align: center;
+				font-style: normal;
+				text-transform: none;
+				margin-bottom: 40rpx;
+			}
+			.detail-date-has-box {
+				position: relative;
+				width: 100%;
+				padding: 40rpx;
+				border: 1px solid #cecece;
+				border-radius: 4px;
+				margin-bottom: 40rpx;
+				box-sizing: border-box;
 			}
 			.detail-date-choose {
 				position: relative;
@@ -180,115 +275,6 @@
 					}
 				}
 			}
-			.detail-date-condition {
-				position: relative;
-				width: 100%;
-				margin: 30rpx 0;
-				.detail-date-condition-head {
-					position: relative;
-					width: 100%;
-					display: flex;
-					align-items: center;
-					justify-content: space-between;
-					.detail-date-condition-head-state {
-						position: relative;
-						display: flex;
-						align-items: center;
-						.detail-date-condition-head-state-item {
-							position: relative;
-							display: flex;
-							align-items: center;
-							margin-right: 20rpx;
-							.no-reserve-icon {
-								position: relative;
-								width: 12px;
-								height: 3px;
-								background-color: #e72929;
-								margin-right: 10rpx;
-							}
-							.reserve-icon {
-								position: relative;
-								width: 12px;
-								height: 3px;
-								background-color: #eef0f4;
-								margin-right: 10rpx;
-							}
-							.no-reserve-text,
-							.reserve-text {
-								position: relative;
-								font-family: PingFang SC, PingFang SC;
-								font-weight: 400;
-								font-size: 22rpx;
-								color: #9699a1;
-								text-align: left;
-								font-style: normal;
-								text-transform: none;
-							}
-						}
-					}
-					.detail-date-condition-head-des {
-						position: relative;
-						font-family: PingFang SC, PingFang SC;
-						font-weight: 400;
-						font-size: 13px;
-						color: #0d70f3;
-						line-height: 15px;
-						text-align: right;
-						font-style: normal;
-						text-transform: none;
-					}
-				}
-				.detail-date-condition-time {
-					position: relative;
-					width: 100%;
-					display: flex;
-					align-items: center;
-					justify-content: space-between;
-					margin-top: 20rpx;
-					.detail-date-condition-time-item {
-						position: relative;
-						width: 12px;
-						.detail-date-condition-time-item-block {
-							position: relative;
-							width: 100%;
-							height: 12px;
-							background-color: #eef0f4;
-						}
-						.detail-date-condition-time-item-block-curr {
-							position: relative;
-							width: 100%;
-							height: 12px;
-							background-color: #e72929;
-						}
-						.detail-date-condition-time-item-num {
-							position: relative;
-							width: 100%;
-							font-family: PingFang SC, PingFang SC;
-							font-weight: 400;
-							font-size: 20rpx;
-							color: #d5d8e1;
-							line-height: 12px;
-							text-align: center;
-							font-style: normal;
-							text-transform: none;
-							margin-top: 5rpx;
-						}
-					}
-				}
-				.detail-date-condition-button {
-					position: relative;
-					width: 100%;
-					margin: 30rpx 0;
-					padding-bottom: 30rpx;
-					display: flex;
-					justify-content: flex-end;
-					border-bottom: 1px solid #e6e9f1;
-					.detail-date-condition-button-block {
-						position: relative;
-						width: 80px;
-					}
-				}
-			}
 		}
 		.detail-form {
 			position: relative;
@@ -311,6 +297,16 @@
 					font-style: normal;
 					text-transform: none;
 					padding-left: 10rpx;
+				}
+				.detail-form-item-input {
+					position: relative;
+					width: 100%;
+					.detail-form-item-arr {
+						position: absolute;
+						margin: auto;
+						top: 11px;
+						right: 10px;
+					}
 				}
 			}
 			.submit-button {

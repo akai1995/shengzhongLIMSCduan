@@ -40,7 +40,7 @@ export function getReserveList(queryParameter) {
 
 export function getAllDayReserve(queryParameter) {
 	return request({
-		url: "/appDevice/storageInstrumentReserve/getDeviceReserveTimeList",
+		url: "/appDevice/storageInstrumentReserve/getDeviceReserveTimeV2List",
 		method: "get",
 		params: queryParameter,
 	});
@@ -64,5 +64,27 @@ export function closeDevice(id) {
 	return request({
 		url: "/appDevice/storageInstrumentReserve/powerOff?id=" + id,
 		method: "get",
+	});
+}
+
+export function getGroup() {
+	return request({
+		url: "/appDevice/storageInstrumentReserve/getParentProjectList",
+		method: "get",
+	});
+}
+
+export function getTeacher(id) {
+	return request({
+		url: "/appDevice/storageInstrumentReserve/getProjectDetList?pid=" + id,
+		method: "get",
+	});
+}
+
+export function cancelReserve(data) {
+	return request({
+		url: "/appDevice/storageInstrumentReserve/reserveCancel",
+		method: "post",
+		data: data,
 	});
 }

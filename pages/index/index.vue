@@ -29,6 +29,7 @@
 							<view class="home-item-content-info-title">{{ item.deviceName }}</view>
 							<view class="home-item-content-info-text">
 								<view class="home-item-content-info-text-item">设备编号{{ item.deviceCode }}</view>
+								<view class="home-item-content-info-text-item">设备价格{{ item.priceDesc }}</view>
 								<view class="home-item-content-info-text-item">
 									{{ item.deviceAddress || "暂无设备地址" }}
 								</view>
@@ -36,32 +37,6 @@
 						</view>
 					</view>
 					<view class="home-item-condition">
-						<view class="home-item-condition-head">
-							<view class="home-item-condition-head-state">
-								<view class="home-item-condition-head-state-item">
-									<view class="no-reserve-icon"></view>
-									<view class="no-reserve-text">不可约</view>
-								</view>
-								<view class="home-item-condition-head-state-item">
-									<view class="reserve-icon"></view>
-									<view class="reserve-text">可约</view>
-								</view>
-							</view>
-							<view class="home-item-condition-head-des">
-								{{ item.nowUse ? `使用中 丨 ${item.nowUseEndTime}结束` : '空闲' }}
-							</view>
-						</view>
-
-						<view class="home-item-condition-time">
-							<view class="home-item-condition-time-item" v-for="(items, indexs) in item.reserveTimeList"
-								:key="items">
-								<view
-									:class="items.status ? 'home-item-condition-time-item-block-curr' : 'home-item-condition-time-item-block'">
-								</view>
-								<view class="home-item-condition-time-item-num">{{ indexs }}</view>
-							</view>
-						</view>
-
 						<view class="home-item-condition-button">
 							<view class="home-item-condition-button-block"
 								@click="handleGoDetail(item.id, item.deviceId)">

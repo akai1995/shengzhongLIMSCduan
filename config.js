@@ -9,7 +9,7 @@ if (envWx === "develop") {
 	//开发
 	// baseUrl = 'https://genepiapi.ypzlfx.com/test-api'
 	/* baseUrl = 'https://genepiapi.ypzlfx.com/test-api' */
-	baseUrl = 'http://192.168.0.14:9082/klg-lims'
+	baseUrl = 'http://192.168.0.35:9082/klg-lims'
 	 wsUrl = 'ws://192.168.0.154:5200' 
 	// baseUrl = "https://device.ypzlfx.com/klg-lims";
 	// wsUrl = "wss://api.ypzlfx.com/prod-api";

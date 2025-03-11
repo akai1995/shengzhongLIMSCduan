@@ -11,7 +11,8 @@
                 :key="index">
                 <div class="reserve-item-content">
                     <view class="reserve-pic">
-                        <img class="reserve-img" src="https://genepiapi.ypzlfx.com/file/device-appointment/image.png" />
+                        <img class="reserve-img"
+                            :src="item.deviceImg ? item.deviceImg : 'https://genepiapi.ypzlfx.com/file/device-appointment/image.png'" />
                     </view>
                     <view class="reserve-info">
                         <view class="reserve-info-head">

@@ -18,14 +18,15 @@
             <view class="reserve-detail-status-red"
                 v-if="detailData.deviceReserveStatus == 3 || detailData.deviceReserveStatus == 7">
                 <view class="reserve-detail-status-red-title">{{ detailData.deviceReserveStatus_dictText }}</view>
-                <view class="reserve-detail-status-red-text">{{ rejectDes }}</view>
+                <view class="reserve-detail-status-red-text" v-if="detailData.deviceReserveStatus == 7">{{ rejectDes }}
+                </view>
             </view>
         </view>
 
         <view class="reserve-detail-info">
             <view class="reserve-detail-info-pic">
                 <img class="reserve-detail-info-img"
-                    src="https://genepiapi.ypzlfx.com/file/device-appointment/image.png" />
+                    :src="detailData.deviceImg ? detailData.deviceImg : 'https://genepiapi.ypzlfx.com/file/device-appointment/image.png'" />
             </view>
             <view class="reserve-detail-info-message">
                 <view class="reserve-detail-info-message-title">{{ detailData.deviceName }}</view>
@@ -47,18 +48,27 @@
         <view class="submit-button" v-if="detailData.deviceReserveStatus == 5 && detailData.deviceStatus == 1">
             <u-button @click="handleClose" type="primary" text="关机"></u-button>
         </view>
+        <view class="submit-button" v-if="cancelReserve.button">
+            <u-button @click="handleCancelReserveClick" type="primary" text="取消预约"></u-button>
+        </view>
+
+        <u-modal :show="cancelReserve.visible" title="取消预约" showCancelButton @confirm="handleSubmitReserve"
+            @cancel="handleCancelReserve">
+            <u--textarea v-model="cancelReserve.description" placeholder="请输入取消原因" :autoHeight="false"></u--textarea>
+        </u-modal>
     </view>
 </template>
 
 <script>
-import { reserveDetail, getRejectDes, openDevice, closeDevice } from '@/api/device/index.js'
+import { reserveDetail, getRejectDes, openDevice, closeDevice, cancelReserve } from '@/api/device/index.js'
 
 export default {
     data() {
         return {
             reserveId: null,
             detailData: null,
-            rejectDes: null
+            rejectDes: null,
+            cancelReserve: { visible: false, description: '', button: false }
         };
     },
     onLoad(options) {
@@ -69,12 +79,32 @@ export default {
         hidePhoneNumber(phoneNumber) {
             return phoneNumber.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
         },
+        checkTime() {
+            const startTimeStr = this.detailData.reserveTime.split(' - ')[0];
+            const startTime = new Date(startTimeStr.replace(' ', 'T') + ':00');
+            const currentTime = new Date();
+            const timeDifference = startTime - currentTime;
+            if (timeDifference > 2 * 60 * 60 * 1000) {
+                return true;
+            }
+            return false;
+        },
+        checkCancelReserveStatus() {
+            if (this.detailData.deviceReserveStatus != 3 && this.detailData.deviceReserveStatus != 5 && this.detailData.deviceReserveStatus != 6 && this.detailData.deviceReserveStatus != 7) {
+                return true
+            } else {
+                return false
+            }
+        },
         getReserveDetail() {
             reserveDetail(this.reserveId).then((resp) => {
                 if (resp.code == 200) {
                     this.detailData = resp.result
-                    if (resp.result.deviceReserveStatus == 3 || resp.result.deviceReserveStatus == 7) {
+                    if (resp.result.deviceReserveStatus == 7) {
                         this.getRejectDes()
+                    }
+                    if (this.checkCancelReserveStatus() && this.checkTime()) {
+                        this.cancelReserve.button = true
                     }
                 }
             });
@@ -106,6 +136,31 @@ export default {
                 }
             });
         },
+        handleCancelReserveClick() {
+            this.cancelReserve.visible = true
+            this.cancelReserve.description = ''
+        },
+        handleSubmitReserve() {
+            if (!this.cancelReserve.description) {
+                uni.showToast({ title: "请填写取消原因", icon: "none", });
+                return
+            }
+            const pushData = {
+                cancelReason: this.cancelReserve.description,
+                instrmentReserveId: this.reserveId
+            }
+            cancelReserve(pushData).then((resp) => {
+                if (resp.code == 200) {
+                    uni.showToast({ title: "取消预约成功", icon: "none", });
+                    this.getReserveDetail()
+                    this.cancelReserve.button = false
+                    this.cancelReserve.visible = false
+                }
+            });
+        },
+        handleCancelReserve() {
+            this.cancelReserve.visible = false
+        }
     },
 };
 </script>
