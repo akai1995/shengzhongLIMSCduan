@@ -15,9 +15,18 @@
             <view class="detail-content">
                 <view class="detail-info">
                     <view class="detail-info-title">{{ deviceInfo.name }}</view>
-                    <view class="detail-info-text">设备编号{{ deviceInfo.code }}</view>
-                    <view class="detail-info-text">设备价格{{ deviceInfo.price }}</view>
+                    <view class="detail-info-text" style="margin-bottom: 10rpx;">设备编号{{ deviceInfo.code }}</view>
+
                     <view class="detail-info-text">{{ deviceInfo.address }}</view>
+                </view>
+
+                <view class="detail-date">
+                    <view class="detail-date-title">
+                        <view>设备价格</view>
+                    </view>
+                    <view class="detail-info">
+                        <view class="detail-info-text middle" v-html="deviceInfo.price"></view>
+                    </view>
                 </view>
 
                 <view class="detail-date">
@@ -276,12 +285,19 @@ export default {
 
             return timeDiff >= 30 && timeDiff <= 720;
         },
+        addLineBreakBeforeText(text, targets) {
+            targets.forEach(target => {
+                const regex = new RegExp(target, 'g');
+                text = text.replace(regex, '<br />' + target);
+            });
+            return text;
+        },
         getDeviceDetail() {
             deviceDetail(this.instrumentId).then((resp) => {
                 if (resp.code == 200) {
                     this.deviceInfo.name = resp.result.deviceName
                     this.deviceInfo.code = resp.result.deviceCode
-                    this.deviceInfo.price = resp.result.priceDesc || "暂无价格"
+                    this.deviceInfo.price = this.addLineBreakBeforeText(resp.result.priceDesc, ["校内","校外", "不足"]) || "暂无价格"
                     this.deviceInfo.address = resp.result.deviceAddress || "暂无设备地址"
                     this.deviceInfo.reserveTime = resp.result.reserveTimeList
                     this.deviceInfo.canReserveWeek = resp.result.openList
