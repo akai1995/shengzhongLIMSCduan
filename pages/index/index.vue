@@ -7,7 +7,7 @@
 		<img class="home-bg" src="https://genepiapi.ypzlfx.com/file/device-appointment/image 39.png" />
 
 		<view class="home-head" :style="{ height: headInfo.headHeight }">
-			<view class="home-title" :style="{ marginTop: headInfo.titleTop }">实验易约</view>
+			<view class="home-title" :style="{ marginTop: headInfo.titleTop }">实验预约</view>
 		</view>
 
 		<view class="home-content">
