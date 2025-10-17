@@ -29,7 +29,7 @@
 							<view class="home-item-content-info-title">{{ item.deviceName }}</view>
 							<view class="home-item-content-info-text">
 								<view class="home-item-content-info-text-item">设备编号{{ item.deviceCode }}</view>
-								<view class="home-item-content-info-text-item">设备价格{{ item.priceDesc }}</view>
+								<view class="home-item-content-info-text-item">收费标准{{ item.priceDesc }}</view>
 								<view class="home-item-content-info-text-item">
 									{{ item.deviceAddress || "暂无设备地址" }}
 								</view>

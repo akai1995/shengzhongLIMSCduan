@@ -22,7 +22,7 @@
 
                 <view class="detail-date">
                     <view class="detail-date-title">
-                        <view>设备价格</view>
+                        <view>收费标准</view>
                     </view>
                     <view class="detail-info">
                         <view class="detail-info-text middle" v-html="deviceInfo.price"></view>
