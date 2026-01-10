@@ -3,19 +3,19 @@ export let envWx = accountInfo.miniProgram.envVersion;
 // console.log(envWx)
 // 应用全局配置
 envWx = "release";
-let baseUrl = "https://device.ypzlfx.com/klg-lims";
+let baseUrl = "https://eai.ypzlfx.com/eai-lims";
 let wsUrl = "";
 if (envWx === "develop") {
 	//开发
 	// baseUrl = 'https://genepiapi.ypzlfx.com/test-api'
 	/* baseUrl = 'https://genepiapi.ypzlfx.com/test-api' */
-	baseUrl = 'http://192.168.0.35:9082/klg-lims'
+	baseUrl = 'http://192.168.0.35:9083/eai-lims'
 	 wsUrl = 'ws://192.168.0.154:5200' 
 	// baseUrl = "https://device.ypzlfx.com/klg-lims";
 	// wsUrl = "wss://api.ypzlfx.com/prod-api";
 } else if (envWx === "release") {
 	//生产
-	baseUrl = "https://device.ypzlfx.com/klg-lims";
+	baseUrl = "https://eai.ypzlfx.com/eai-lims";
 	wsUrl = "wss://api.ypzlfx.com/prod-api";
 } else {
 	baseUrl = "https://genepiapi.ypzlfx.com/test-api";

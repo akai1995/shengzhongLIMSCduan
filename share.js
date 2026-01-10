@@ -3,7 +3,7 @@ export default{
     onShareAppMessage() {
         // 设置转发的参数
         return {
-            title: "设备智约助手",
+            title: "eAI",
             // path: '',
             imageUrl: "",
             success: function(res) {
@@ -22,7 +22,7 @@ export default{
     // 分享到朋友圈
      onShareTimeline:function(res){
         return {
-          title: '设备智约助手',
+          title: 'eAI',
           imageUrl:'https://genepiapi.ypzlfx.com/file/genepi/2023/11/13/AKtZ1IVhxRiWc97110247ad6760c4f750448fbc3371b_20231113171945A939.png',
           query:''      
         }
@@ -30,7 +30,7 @@ export default{
       // 收藏
       onAddToFavorites:function(res) {
         return {
-          title: '设备智约助手',
+          title: 'eAI',
           imageUrl:'https://genepiapi.ypzlfx.com/file/genepi/2023/11/13/AKtZ1IVhxRiWc97110247ad6760c4f750448fbc3371b_20231113171945A939.png',
           query: '',
         }

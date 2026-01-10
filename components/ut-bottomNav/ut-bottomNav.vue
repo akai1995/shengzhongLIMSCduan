@@ -1,6 +1,6 @@
 <template>
 	<u-tabbar :value="value" :border="true" activeColor="#3B7EFFFF">
-		<u-tabbar-item text="设备" @click="jump('/pages/index/index', 0)">
+		<u-tabbar-item text="首页" @click="jump('/pages/index/index', 0)">
 			<image class="nav-img" slot="inactive-icon" src="@/static/index/home.png"></image>
 			<image class="nav-img" slot="active-icon" src="@/static/index/home-fell.png"></image>
 		</u-tabbar-item>

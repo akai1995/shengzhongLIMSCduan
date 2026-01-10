@@ -42,9 +42,30 @@
 			}
 		},
 		{
-			"path": "pages/reserve/detail",
+		"path": "pages/reserve/detail",
+		"style": {
+			"navigationBarTitleText": "",
+			"enablePullDownRefresh": false
+		}
+	},
+	{
+			"path": "pages/device-appointment/index",
 			"style": {
-				"navigationBarTitleText": "",
+				"navigationBarTitleText": "设备预约",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/signPaper/index",
+			"style": {
+				"navigationBarTitleText": "待签署文件",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/signPaper/am-sign-input/am-sign-input",
+			"style": {
+				"navigationBarTitleText": "文件签署",
 				"enablePullDownRefresh": false
 			}
 		}
