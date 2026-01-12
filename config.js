@@ -1,9 +1,14 @@
+
+// #ifdef MP-WEIXIN
 const accountInfo = wx.getAccountInfoSync();
 export let envWx = accountInfo.miniProgram.envVersion;
-// console.log(envWx)
+// #endif
+// #ifdef H5
+let envWx = "release";
+// #endif
+console.log(envWx)
 // 应用全局配置
-envWx = "release";
-let baseUrl = "https://eai.ypzlfx.com/eai-lims";
+let baseUrl = "http://192.168.0.151:9083/eai-lims";
 let wsUrl = "";
 if (envWx === "develop") {
 	//开发

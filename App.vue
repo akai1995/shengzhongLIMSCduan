@@ -10,6 +10,8 @@
 		   if (this.token) {
 			   this.GetWxInfo() 
 		   }
+		  // 注册网络请求拦截器
+		  requestInterceptor()
 	   },
 	   computed: {
 		   ...mapGetters(['token'])
@@ -18,6 +20,36 @@
 		   ...mapActions(['GetWxInfo'])
 	   }
 	}
+/**
+ * 网络请求拦截
+ */
+const requestInterceptor = () => {
+  uni.addInterceptor('request', {
+    invoke(args) {
+      args.url = args?.url || ''
+    },
+    success(args) {
+      // 请求成功后，统一处理返回值
+      if (args.statusCode === 400) {
+        // 显示z-paging网络请求错误图标
+        uni.$emit('z-paging-error-emit', args.data)
+        // 关闭loading
+        uni.hideLoading()
+        // 关闭navBarLoading
+        uni.hideNavigationBarLoading()
+      }
+    },
+    fail(err) {
+      console.log('interceptor-fail', err)
+      // 显示z-paging网络请求错误图标
+      uni.$emit('z-paging-error-emit', err)
+      // 关闭loading
+      uni.hideLoading()
+      // 关闭navBarLoading
+      uni.hideNavigationBarLoading()
+    },
+  })
+}
 </script>
 
 <style>

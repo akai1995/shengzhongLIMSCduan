@@ -102,12 +102,19 @@
     "vueVersion" : "2",
     "h5" : {
         "sdkConfigs" : {
-            "maps" : {
-                "amap" : {
-                    "key" : "48e30049122fc8432b1c5bf43e86d398",
-                    "securityJsCode" : "",
-                    "serviceHost" : ""
-                }
+            "maps" : {}
+        },
+        "template" : "",
+        "title" : "",
+        "router" : {
+            "base" : ""
+        },
+        "devServer" : {
+            "port" : ""
+        },
+        "optimization" : {
+            "treeShaking" : {
+                "enable" : true
             }
         }
     }

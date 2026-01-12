@@ -1,10 +1,14 @@
 import Vue from 'vue'
+// #ifdef MP-WEIXIN
 const accountInfo = uni.getAccountInfoSync();
 let envWx = accountInfo.miniProgram.envVersion;
+// #endif
 Vue.mixin({
 	data() {
 		return {
+			// #ifdef MP-WEIXIN
 			envWx,
+			// #endif
 			default_img: 'https://genepiapi.ypzlfx.com/file/genepi/2023/11/24/Mask group@2x_20231124181155A412.png',
 		}
 	},

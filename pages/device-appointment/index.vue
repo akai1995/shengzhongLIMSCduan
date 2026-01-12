@@ -3,23 +3,42 @@
 </style>
 
 <template>
-	<view class="page">
-		<img class="home-bg" src="https://genepiapi.ypzlfx.com/file/device-appointment/image 39.png" />
-
-		<view class="home-head" :style="{ height: headInfo.headHeight }">
-			<view class="home-title" :style="{ marginTop: headInfo.titleTop }">实验预约</view>
-		</view>
-
-		<view class="home-content">
+	<z-paging ref="zPagingRef" class="page" v-model="dataList" @query="queryList" :fixed="true" :auto="true" :auto-show-back-to-top="true" :enable-back-to-top="true" :show-refresher-when-reload="true" :auto-scroll-to-top-when-reload="false" :auto-clean-list-when-reload="true" :safe-area-inset-bottom="true" empty-view-text="暂无数据">
+		<view slot="top" class="">
+			<img class="home-bg" src="https://genepiapi.ypzlfx.com/file/device-appointment/image 39.png" />
+			<view class="home-head" :style="{ height: headInfo.headHeight }">
+				<view class="home-title" :style="{ marginTop: headInfo.titleTop }">实验预约</view>
+			</view>
 			<view class="home-search">
 				<view class="home-search-input">
-					<u--input placeholder="请输入关键词" suffixIcon="search" @change="handleSearch"
+					<u--input border="surround" placeholder="请输入关键词" suffixIcon="search" @change="handleSearch"
 						suffixIconStyle="font-size: 22px;color: #909399"></u--input>
 				</view>
 			</view>
-			<scroll-view class="home-list" @scrolltolower="lowerBottom" :scroll-y="true"
-				:style="{ height: headInfo.listHeight }">
-				<view class="home-item" v-for="(item, index) in listData.list" :key="item.id">
+		</view>
+		<view class="home-content">
+			<view class="f1">
+				<view class="f1Card">
+					<view class="f1CardInfo">
+						<view class="f1CardTitle"></view>
+						<view class="f1CardSubTitle"></view>
+					</view>
+					<view class="f1CardIcon">
+						<u-icon name="" />
+					</view>
+				</view>
+				<view class="f1Card">
+					<view class="f1CardInfo">
+						<view class="f1CardTitle"></view>
+						<view class="f1CardSubTitle"></view>
+					</view>
+					<view class="f1CardIcon">
+						<u-icon name="" />
+					</view>
+				</view>
+			</view>
+			<scroll-view class="home-list" @scrolltolower="lowerBottom" :scroll-y="true" :style="{ height: headInfo.listHeight }">
+				<view class="home-item" v-for="(item, index) in dataList" :key="item.id">
 					<view class="home-item-content">
 						<view class="home-item-content-pic">
 							<img class="home-item-content-img"
@@ -49,7 +68,8 @@
 			</scroll-view>
 		</view>
 
-		<ut-bottomNav :value="0"></ut-bottomNav>
+		<!-- <ut-bottomNav :value="0"></ut-bottomNav> -->
+	</z-paging>
 	</view>
 </template>
 
@@ -61,19 +81,32 @@ export default {
 		return {
 			headInfo: { headHeight: '0px', titleTop: '0px', listHeight: '0px' },
 			queryParameter: { pageNo: 1, pageSize: 10, deviceName: "" },
-			listData: { list: [], total: 0 },
+			dataList: [], 
+			totalCount: 0
 		};
 	},
 	onShow() {
 		this.getHeadInfo()
-		this.getDeviceList()
+		// this.getDeviceList()
 	},
 	methods: {
+		queryList(pageNo, pageSize) {
+			this.$refs.zPagingRef.endRefresh()
+			this.queryParameter.pageNo = pageNo
+			this.queryParameter.pageSize = pageSize
+			const type = pageNo>1 ? 'search': ''
+			getDeviceList(this.queryParameter).then((resp) => {
+				this.totalCount = resp.result.total
+				this.$refs.zPagingRef.complete(resp.result.records)
+			});
+		},
 		getHeadInfo() {
+			// #ifdef MP-WEIXIN
 			const popInfo = uni.getMenuButtonBoundingClientRect()
 			this.headInfo.headHeight = `${popInfo.height}px`
 			this.headInfo.titleTop = `${popInfo.top}px`
 			this.headInfo.listHeight = `calc(100vh - ${popInfo.top + popInfo.height + 155}px)`
+			// #endif
 		},
 		checkUserInfo() {
 			const id = this.$store.getters.userId
@@ -86,18 +119,18 @@ export default {
 		getDeviceList(type) {
 			getDeviceList(this.queryParameter).then((resp) => {
 				if (type && type == "search") {
-					this.listData.list.push(...resp.result.records);
-					this.listData.total = resp.result.total
+					this.dataList.list.push(...resp.result.records);
+					this.dataList.total = resp.result.total
 					uni.stopPullDownRefresh();
 				} else {
-					this.listData.list = resp.result.records
-					this.listData.total = resp.result.total
+					this.dataList.list = resp.result.records
+					this.dataList.total = resp.result.total
 				}
 
 			});
 		},
 		lowerBottom() {
-			if (this.queryParameter.pageNo * this.queryParameter.pageSize < this.listData.total) {
+			if (this.queryParameter.pageNo * this.queryParameter.pageSize < this.dataList.total) {
 				this.queryParameter.pageNo += 1;
 				this.getDeviceList("search")
 			} else {
@@ -112,7 +145,7 @@ export default {
 			const searchData = e
 			this.queryParameter.deviceName = searchData
 			this.queryParameter.pageNo = 1
-			this.listData.list = []
+			this.dataList.list = []
 			this.getDeviceList()
 		},
 		handleGoDetail(id, deviceId) {

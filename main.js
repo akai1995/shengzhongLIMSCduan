@@ -10,6 +10,21 @@ import '@/utils/mixins.js'
 // 字典数据组件
 import DictData from '@/components/DictData'
 // import '@/imUtil/convert.ts'
+
+uni.$zp = {
+  config: {
+    // 'empty-view-title-style': 'color:#18605a',
+    'default-page-no': 1,
+    // 配置分页默认pageSize为15
+    'default-page-size': 16,
+    // 配置空数据图默认描述文字为：空空如也~~
+    'empty-view-text': '空空如也~~',
+    // 空数据view的z-index
+    'empty-view-z-index': 0,
+    // ...
+  },
+}
+
 // 全局挂载后使用
 Vue.prototype.$store = store
 Vue.prototype.$ut = $ut
