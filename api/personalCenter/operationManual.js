@@ -1,4 +1,4 @@
-import request from "@/utils/request";
+import request from "@/providers/request";
 
 /** 分页查询*/
 export function getOperationManualList(pageNum,pageSize) {

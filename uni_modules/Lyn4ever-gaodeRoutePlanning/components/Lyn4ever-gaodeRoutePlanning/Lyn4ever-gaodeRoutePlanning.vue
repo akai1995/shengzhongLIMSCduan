@@ -19,7 +19,7 @@
 					lineColor: "#0606ff", //路径颜色
 					lineWidth: 4, //路径宽度
 					startImage: "",
-					wayImage: "https://genepiapi.ypzlfx.com/file/genepi/2023/10/23/l5V4Utu4XHAX8499a2fe9358b54b245701e198411d6d_20231023200037A490.png",
+					wayImage: this.$staticPath+"genepi/2023/10/23/l5V4Utu4XHAX8499a2fe9358b54b245701e198411d6d_20231023200037A490.png",
 					endImage: ""
 				}
 			}

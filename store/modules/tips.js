@@ -1,5 +1,5 @@
-import storage from '@/utils/storage'
-import constant from '@/utils/constant'
+import storage from '@/providers/utilities/storage'
+import constant from '@/providers/constant'
 const tips = {
 	state:{
 		isTips: storage.get(constant.tips),

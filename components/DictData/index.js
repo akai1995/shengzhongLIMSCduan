@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import store from '@/store'
-import DataDict from '@/utils/dict'
+import DataDict from '@/providers/dict'
 import { getDicts as getDicts } from '@/api/system/dict/data'
 
 function searchDictByKey(dict, key) {

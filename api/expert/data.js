@@ -1,4 +1,4 @@
-import request from '@/utils/request'
+import request from '@/providers/request'
 
 // 根据字典类型查询字典数据信息
 export function getDicts(dictType) {

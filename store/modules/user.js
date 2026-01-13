@@ -1,8 +1,8 @@
 import config from "@/config";
-import storage from "@/utils/storage";
-import constant from "@/utils/constant";
+import storage from "@/providers/utilities/storage";
+import constant from "@/providers/constant";
 import { login, wxLogin, logout, getInfo, getWxInfo } from "@/api/login";
-import { getToken, setToken, removeToken, setStorageOrgId } from "@/utils/auth";
+import { getToken, setToken, removeToken, setStorageOrgId } from "@/providers/auth";
 import { getInfoByToken } from "@/api/personalCenter/personalCenter";
 const baseUrl = config.baseUrl;
 
@@ -113,7 +113,7 @@ const user = {
 						const user = res.user;
 						const avatar =
 							user == null || user.avatar == "" || user.avatar == null
-								? "https://genepiapi.ypzlfx.com/file/genepi/2023/07/20/OxbWNs6SoNLF1129151bdb41b25719e93409dc3a1f5b_20230720170831A016.jpg"
+								? this.$staticPath+"genepi/2023/07/20/OxbWNs6SoNLF1129151bdb41b25719e93409dc3a1f5b_20230720170831A016.jpg"
 								: user.avatar;
 						const username = user == null || user.userName == "" || user.userName == null ? "" : user.userName;
 						if (res.roles && res.roles.length > 0) {
@@ -142,7 +142,7 @@ const user = {
 						const user = res.user;
 						const avatar =
 							user == null || user.avatar == "" || user.avatar == null
-								? "https://genepiapi.ypzlfx.com/file/genepi/2023/07/20/OxbWNs6SoNLF1129151bdb41b25719e93409dc3a1f5b_20230720170831A016.jpg"
+								? this.$staticPath+"genepi/2023/07/20/OxbWNs6SoNLF1129151bdb41b25719e93409dc3a1f5b_20230720170831A016.jpg"
 								: user.avatar;
 						const username = user == null || user.username == "" || user.username == null ? "" : user.userName;
 						const idcard = user == null || user.idcard == "" || user.idcard == null ? "" : user.idcard;

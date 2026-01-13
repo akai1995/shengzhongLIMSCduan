@@ -1,5 +1,5 @@
-import upload from "@/utils/upload";
-import request from "@/utils/request";
+import upload from "@/providers/utilities/upload";
+import request from "@/providers/request";
 
 // 查询家庭成员数量
 export function getRelationCount() {

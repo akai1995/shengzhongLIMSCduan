@@ -14,7 +14,7 @@ if (envWx === "develop") {
 	//开发
 	// baseUrl = 'https://genepiapi.ypzlfx.com/test-api'
 	/* baseUrl = 'https://genepiapi.ypzlfx.com/test-api' */
-	baseUrl = 'http://192.168.0.35:9083/eai-lims'
+	baseUrl = 'http://192.168.0.151:9083/eai-lims'
 	 wsUrl = 'ws://192.168.0.154:5200' 
 	// baseUrl = "https://device.ypzlfx.com/klg-lims";
 	// wsUrl = "wss://api.ypzlfx.com/prod-api";
@@ -30,14 +30,13 @@ module.exports = {
 	envWx,
 	// baseUrl: 'https://vue.ruoyi.vip/prod-api',
 	baseUrl,
-	// baseUrl: 'http://192.168.110.33:9999',
 	wsUrl,
 	// 应用信息
 	appInfo: {
 		// 应用名称
-		name: "ruoyi-app",
+		name: "e-AI",
 		// 应用版本
-		version: "1.1.0",
+		version: "2.26.0113",
 		// 应用logo
 		logo: "/static/logo.png",
 		// 官方网站

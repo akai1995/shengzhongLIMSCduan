@@ -1,4 +1,4 @@
-import request from '@/utils/request'
+import request from '@/providers/request'
 
 // 发布社区新闻
 export function publish(data) {

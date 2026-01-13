@@ -1,4 +1,4 @@
-import request from '@/utils/request'
+import request from '@/providers/request'
 
 // 轮播
 export function swiperList(params) {

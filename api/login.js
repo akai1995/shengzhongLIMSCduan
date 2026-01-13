@@ -1,4 +1,4 @@
-import request from '@/utils/request'
+import request from '@/providers/request'
 
 // 微信登录授权
 export function wxLogin(code,phoneCode) {
