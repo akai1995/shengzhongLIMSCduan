@@ -34,15 +34,9 @@
 </template>
 
 <script>
-	import {
-		getExpert
-	} from '@/api/system/user.js'
-	import {
-		getToken
-	} from '@/providers/auth'
-	import {
-		registerIm
-	} from '@/api/imApi.js'
+	import { getExpert } from '@/app/api/system/user.js'
+	import { getToken } from '@/providers/auth'
+	import { registerIm } from '@/app/api/imApi.js'
 	export default {
 		data() {
 			return {

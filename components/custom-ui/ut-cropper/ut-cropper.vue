@@ -591,8 +591,7 @@
 				query.select('#imgCanvas')
 					.fields({ node: true, size: true })
 					.exec((res) => {
-						const canvas = res[0].node;
-										
+						const canvas = res[0].node;										
 						const dpr = uni.getSystemInfoSync().pixelRatio;
 						canvas.width = res[0].width * dpr;
 						canvas.height = res[0].height * dpr;

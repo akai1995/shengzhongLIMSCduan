@@ -1,21 +1,19 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import user from '@/store/modules/user'
-import equipment from '@/store/modules/equipment'
 import getters from './getters'
-import tips from '@/store/modules/tips.js'
-import doctor from './modules/doctor'
 import cancers from './modules/cancers'
 import dict from './modules/dict'
-Vue.use(Vuex)
+import doctor from './modules/doctor'
+import equipment from '@/store/modules/equipment'
+import tips from '@/store/modules/tips'
+import user from '@/store/modules/user'
 
+Vue.use(Vuex)
 const store = new Vuex.Store({
   modules: {
-    user,
-	equipment,
-	tips,
-	cancers,
-	dict
+    cancers, dict,
+    equipment,
+    tips, user,
   },
   getters
 })

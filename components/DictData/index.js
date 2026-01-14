@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import store from '@/store'
 import DataDict from '@/providers/dict'
-import { getDicts as getDicts } from '@/api/system/dict/data'
+import { getDictByType } from '@/app/api/system/dict/data'
 
 function searchDictByKey(dict, key) {
   if (key == null && key == "") {
@@ -30,7 +30,7 @@ function install() {
             return new Promise(resolve => { resolve(storeDict) })
           } else {
             return new Promise((resolve, reject) => {
-              getDicts(dictMeta.type).then(res => {
+              getDictByType(dictMeta.type).then(res => {
                 store.dispatch('dict/setDict', { key: dictMeta.type, value: res.data })
                 resolve(res.data)
               }).catch(error => {

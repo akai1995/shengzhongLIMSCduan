@@ -125,7 +125,7 @@
 </template>
 
 <script>
-import { deviceSubmit, deviceDetail, getAllDayReserve, getGroup, getTeacher } from '@/api/device/index.js'
+import { deviceSubmit, deviceDetail, getAllDayReserve, getGroup, getTeacher } from '@/app/api/device/index.js'
 
 export default {
     data() {

@@ -1,9 +1,10 @@
-import config from "@/config";
-import storage from "@/providers/utilities/storage";
-import constant from "@/providers/constant";
-import { login, wxLogin, logout, getInfo, getWxInfo } from "@/api/login";
-import { getToken, setToken, removeToken, setStorageOrgId } from "@/providers/auth";
-import { getInfoByToken } from "@/api/personalCenter/personalCenter";
+
+import { getToken, setToken, removeToken, setStorageOrgId } from '@/providers/auth';
+import { login, wxLogin, logout, getInfo, getWxInfo } from '@/app/api/login';
+import { getInfoByToken } from '@/app/api/personalCenter/personalCenter';
+import storage from '@/providers/utilities/storage';
+import constant from '@/app/constant'; import config from '@/app/config';
+
 const baseUrl = config.baseUrl;
 
 const user = {

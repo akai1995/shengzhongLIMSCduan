@@ -1,4 +1,4 @@
-// utils/router.js
+// providers/utilities/router.js
 
 export default {
   navTo(options = {}) {

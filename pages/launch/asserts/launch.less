@@ -1,81 +1,62 @@
-.page {
+.launch {
 	width: 100%;
 	min-height: 100vh;
 	position: relative;
 	box-sizing: border-box;
-	overflow: hidden;
-
-	.home-bg {
+	.launch-bg {
 		position: absolute;
-		width: 100%;
-		height: auto;
+		width: 100%; height: auto;
 		aspect-ratio: 2.435/1;
-		top: 0;
-		left: 0;
+		top: 0; left: 0;
 	}
 
-	.home-head {
+	.launch-head {
 		position: relative;
 		width: 100%;
 
-		.home-title {
+		.launch-title {
 			position: relative;
 			width: 100%;
-			text-align: center;
-			line-height: 32px;
-			font-family: PingFang SC, PingFang SC;
+			line-height: 32rpx;
 			font-weight: 500;
-			font-size: 17px;
+			font-size: 32rpx;
 			color: #000000;
 			text-align: center;
-			font-style: normal;
-			text-transform: none;
 		}
 	}
 
-	.home-content {
-		position: relative;
-		width: 100%;
-		padding: 40rpx 22rpx;
-		box-sizing: border-box;
-		overflow-y: auto;
-		margin-top: 20rpx;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		min-height: calc(100vh - 200rpx);
-		gap: 40rpx;
+	.launch-content {
+		background-color: #fff;
+		padding: 32rpx;
+		text-align: center;
 		
-		.home-welcome {
-			font-size: 24px;
+		.launch-welcome {
+			font-size: 48rpx;
 			font-weight: 700;
+			line-height: 96rpx;
 			color: #303133;
-			margin-bottom: 10rpx;
 		}
 		
-		.home-description {
-			font-size: 16px;
+		.launch-description {
+			font-size: 32rpx;
+			line-height: 64rpx;
 			color: #606266;
-			margin-bottom: 20rpx;
+			margin-bottom: 56rpx;
 		}
 		
-		.home-buttons {
+		.launch-buttons {
+			align-items: center;
 			display: flex;
 			flex-direction: column;
-			gap: 30rpx;
-			width: 100%;
-			align-items: center;
+			gap: 36rpx; width: 100%;
 			margin: 20rpx 0;
 			
-			.home-button {
+			.launch-button {
 				position: relative;
-				width: 80%;
-				height: 120rpx;
-				color: #fff;
-				border: none;
+				width: 80%; height: 120rpx;
+				color: #fff; border: none;
 				border-radius: 60rpx;
-				font-size: 18px;
+				font-size: 36rpx;
 				font-weight: 600;
 				line-height: 120rpx;
 				text-align: center;
@@ -83,146 +64,24 @@
 				transition: all 0.3s ease;
 				
 				&:first-child {
-					background-color: #409eff;
-					
-					&:active {
-						background-color: #66b1ff;
-					}
+					background-color: #409eff;					
+					&:active { background-color: #66b1ff; }
 				}
 				
 				&:last-child {
-					background-color: #67c23a;
-					
-					&:active {
-						background-color: #85ce61;
-					}
+					background-color: #67c23a;					
+					&:active { background-color: #85ce61; }
 				}
 			}
 		}
+	}
+	
 		
-		.home-footer {
-			margin-top: auto;
-			margin-bottom: 40rpx;
-			font-size: 12px;
-			color: #909399;
-			text-align: center;
-		}
-		.home-search {
-			position: relative;
-			width: 100%;
-			padding: 22rpx;
-			margin: 0px auto;
-			box-sizing: border-box;
-			.home-search-input {
-				position: relative;
-				width: 100%;
-				background-color: #fff;
-			}
-		}
-		.luBox {
-			position: relative;
-			width: 100%;
-			overflow-y: auto;
-			background-color: #fff;
-			padding: 22rpx;
-			padding-bottom: 0;
-			box-sizing: border-box;
-			.home-item {
-				position: relative;
-				width: 100%;
-				margin-bottom: 20rpx;
-
-				.home-item-content {
-					position: relative;
-					width: 100%;
-					display: flex;
-					align-items: stretch;
-					.home-item-content-pic {
-						position: relative;
-						width: 28.3%;
-						aspect-ratio: 1.375/1;
-						overflow: hidden;
-						border-radius: 4px;
-						.home-item-content-img {
-							position: relative;
-							width: 100%;
-							height: 100%;
-							display: block;
-						}
-					}
-					.home-item-content-info {
-						position: relative;
-						width: 71.7%;
-						padding-left: 15rpx;
-						box-sizing: border-box;
-						display: flex;
-						flex-direction: column;
-						.home-item-content-info-title {
-							position: relative;
-							width: 100%;
-							overflow: hidden;
-							white-space: nowrap;
-							text-overflow: ellipsis;
-							font-family: PingFang SC, PingFang SC;
-							font-weight: 500;
-							font-size: 16px;
-							color: #000000;
-							text-align: left;
-							font-style: normal;
-							text-transform: none;
-						}
-						.home-item-content-info-text {
-							position: relative;
-							width: 100%;
-							margin-top: auto;
-							.home-item-content-info-text-item {
-								position: relative;
-								width: 100;
-								font-family: PingFang SC, PingFang SC;
-								font-weight: 400;
-								font-size: 13px;
-								color: #9699a1;
-								line-height: 17px;
-								text-align: left;
-								font-style: normal;
-								text-transform: none;
-								overflow: hidden;
-								white-space: nowrap;
-								text-overflow: ellipsis;
-							}
-						}
-					}
-				}
-
-				.home-item-condition {
-					position: relative;
-					width: 100%;
-					margin-top: 20rpx;
-					.home-item-condition-button {
-						position: relative;
-						width: 100%;
-						margin: 30rpx 0;
-						margin-bottom: 60rpx;
-						padding-bottom: 60rpx;
-						display: flex;
-						justify-content: flex-end;
-						border-bottom: 1px solid #e6e9f1;
-						.home-item-condition-button-block {
-							position: relative;
-							width: 80px;
-						}
-					}
-				}
-				&:last-child {
-					margin-bottom: 0;
-					.home-item-condition {
-						.home-item-condition-button {
-							padding-bottom: 20rpx;
-							border-bottom: none;
-						}
-					}
-				}
-			}
-		}
+	.launch-footer {
+		margin-top: auto;
+		margin-bottom: 40rpx;
+		font-size: 24rpx;
+		color: #909399;
+		text-align: center;
 	}
 }

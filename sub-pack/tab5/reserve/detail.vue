@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import { reserveDetail, getRejectDes, openDevice, closeDevice, cancelReserve } from '@/api/device/index.js'
+import { reserveDetail, getRejectDes, openDevice, closeDevice, cancelReserve } from '@/app/api/device/index.js'
 
 export default {
     data() {

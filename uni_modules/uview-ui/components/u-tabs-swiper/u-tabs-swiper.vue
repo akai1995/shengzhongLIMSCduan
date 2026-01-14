@@ -95,7 +95,7 @@
 	 * @example <z-tabs :list="list"></z-tabs>
 	 */
 	export default {
-		name: 'z-tabs',
+		name: 'u-tabs-swiper',
 		data() {
 			return {
 				currentIndex: 0,

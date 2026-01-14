@@ -1,4 +1,4 @@
-import store from '@/store'; import config from '@/config'
+import store from '@/store'; import config from '@/app/config'
 import { getToken } from '@/providers/auth'
 import errorCode from '@/providers/utilities/errorCode'
 import { toast, showConfirm, tansParams } from '@/providers/common'

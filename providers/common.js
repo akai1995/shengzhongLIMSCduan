@@ -2,9 +2,7 @@
  * 显示消息提示框
  * @param 根据code获取name
  */
-import {
-	areaList
-} from '@/providers/area.js'
+import { areaList } from '@/providers/area.js'
 const {
 	street_list,
 	county_list,

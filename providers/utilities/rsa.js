@@ -1,5 +1,5 @@
 import JSEncrypt from '@/providers/jsencrypt.js'
-import constant from '@/providers/constant.js'
+import constant from '@/app/constant.js'
 
 //加密	
 export function encryptedData(data) { // 新建JSEncrypt对象  

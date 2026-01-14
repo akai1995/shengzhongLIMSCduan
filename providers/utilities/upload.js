@@ -1,8 +1,7 @@
-import store from '@/store'
-import config from '@/config'
-import { getToken } from '@/providers/auth'
-import errorCode from '@/providers/utilities/errorCode'
+import store from '@/store'; import config from '@/app/config'
 import { toast, showConfirm, tansParams } from '@/providers/common'
+import errorCode from '@/providers/utilities/errorCode'
+import { getToken } from '@/providers/auth'
 
 let timeout = 10000
 const baseUrl = config.baseUrl

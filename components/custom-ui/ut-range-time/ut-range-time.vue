@@ -29,9 +29,7 @@
 </template>
 
 <script>
-	import {
-		dateFormat
-	} from '@/providers/public';
+	import { dateFormat } from '@/providers/index.js';
 	export default {
 		name: "ut-range-time",
 		props: {

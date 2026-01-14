@@ -4,6 +4,13 @@
         :fixed="true" :auto="false" :refresher-enabled="false" :auto-show-back-to-top="true" :auto-scroll-to-top-when-reload="false"
         :loading-more-enabled="false" :show-refresher-when-reload="false" hide-empty-view
     >
+        <view slot="top">
+            <u-navbar 
+                title="图文识别" back-text="" left-icon="" :fixed="false" 
+                :border="false" background="transparent" color="#000" left-icon-color="#000"
+                @leftClick="onBack"
+            />
+        </view>
 		<view class="content">
 			<view class="tipBox">
                 <view class="tipTitle">上传图片</view>
@@ -34,19 +41,6 @@
 </template>
 
 <script>
-// 注意：这里需要替换为实际的API调用
-function pickExclude(obj, keys) {
-	// 某些情况下，type可能会为
-    if (!['[object Object]', '[object File]'].includes(Object.prototype.toString.call(obj))) {
-        return {}
-    }
-    return Object.keys(obj).reduce((prev, key) => {
-        if (!keys.includes(key)) {
-            prev[key] = obj[key]
-        }
-        return prev
-    }, {})
-}
 export default {
 	data() {
 		return {
@@ -110,6 +104,7 @@ export default {
         padding: 32rpx;
         .tipBox {
 			padding: 24rpx;
+
             background-image: url(/static/temp/ocr-bg.png);
             background-repeat: no-repeat;
             background-position: center center;

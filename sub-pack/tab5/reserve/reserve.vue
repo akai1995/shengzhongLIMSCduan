@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { getReserveList } from '@/api/device/index.js'
+import { getReserveList } from '@/app/api/device/index.js'
 
 export default {
     data() {

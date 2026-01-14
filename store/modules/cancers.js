@@ -1,5 +1,5 @@
 import storage from '@/providers/utilities/storage'
-import constant from '@/providers/constant'
+import constant from '@/app/constant'
 const cancers = {
 	state: {
 		pickerLabel: storage.get(constant.pickerLabel),

@@ -5,7 +5,7 @@
  * @Date: 2023-10-24 12:36:14
  */
 
-import { envWx } from '@/config.js'
+import { envWx } from '@/app/config'
 const mapTokenKey = {
 	develop: 'develop-token',
 	trial: 'develop-token',

@@ -1,13 +1,12 @@
-import Vue from 'vue'
-import App from './App';
-import router from '@/providers/router'
-import store from './store'
-import share from './share.js'
+import Vue from 'vue'; import App from './App';
+import store from './store';
+import { getDictByType } from "@/app/api/system/dict/data"
+import router from '@/providers/utilities/router'
 import uView from '@/uni_modules/uview-ui'
-import $ut from '@/providers/public.js'
-import { getDicts } from "@/api/system/dict/data";
-import '@/providers/mixins.js'
+import mixins from '@/providers/mixins'
+import $ut from '@/providers/index'
 // import '@/convert.ts'
+
 // 字典数据组件
 import DictData from '@/components/DictData'
 // import '@/imUtil/convert.ts'
@@ -27,21 +26,32 @@ uni.$zp = {
   },
 }
 
-Vue.mixin(share)
-Vue.use(uView)
+Vue.mixin(mixins); Vue.use(uView);
 
 Vue.config.productionTip = false
 // 全局挂载后使用
 Vue.prototype.$staticPath = 'https://genepiapi.ypzlfx.com/file/'
 Vue.prototype.$eUni = router
+Vue.prototype.onBack = () => {
+  const canNavBack = getCurrentPages();
+  if (canNavBack && canNavBack.length > 1) {
+    router.navBack({
+      delta: 1
+    });
+  } else {
+    history.back();
+  }
+}
+Vue.prototype.getDictByType = getDictByType
 Vue.prototype.$store = store
 Vue.prototype.$ut = $ut
-Vue.prototype.getDicts = getDicts
+
 // 全局方法挂载
 DictData.install()
 
 App.mpType = 'app';
 const app = new Vue({ 
-	...App, store 
+	...App, 
+	store 
 });
 app.$mount();

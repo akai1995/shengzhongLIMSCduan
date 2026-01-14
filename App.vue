@@ -1,5 +1,5 @@
 <script>
-    import { mapActions, mapGetters } from 'vuex';
+  import { mapActions, mapGetters } from 'vuex';
 	export default {
 	   onLaunch() {
 		   if (this.token) {
@@ -11,6 +11,15 @@
 	   computed: {
 		   ...mapGetters(['token'])
 	   },
+    beforeMount() {
+      // const deviceType = uni.getSystemInfoSync().deviceType
+      // const platform = uni.getSystemInfoSync().platform
+      // // 如果是安卓，并且是微信浏览器，则不进行实人认证
+      // if (deviceType == 'phone' && ['android', 'ios'].includes(platform)) {
+      // } else {
+      //   uni.$u.toast('为了良好体验，请在移动端进行操作！')
+      // }
+    },
 	   methods: {
 		   ...mapActions(['GetWxInfo'])
 	   }

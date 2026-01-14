@@ -46,9 +46,7 @@
 
 <script>
 	// 注意：这里需要替换为实际的API调用
-	import {
-		appSignDataSubmit
-	} from '@/api/signPaper/index.js'
+	import { appSignDataSubmit } from '@/app/api/signPaper/index.js'
 	
 	export default {
 		data() {

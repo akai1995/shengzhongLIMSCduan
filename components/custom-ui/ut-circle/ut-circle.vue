@@ -67,7 +67,7 @@
 		selectConcernIds,
 		deleteCircle,
 		shareCommunityNews
-	} from "@/api/community.js";
+	} from "@/app/api/community.js";
 	export default {
 		name:"ut-circle",
 		props:['data', 'isSearch'],

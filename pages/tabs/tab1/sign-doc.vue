@@ -4,7 +4,7 @@
 
 <template>
 	<z-paging ref="zPagingRef" class="page" :paging-style="{backgroundColor: 'white'}" v-model="dataList" @query="queryList" :fixed="true" :auto="false" :auto-show-back-to-top="true" :enable-back-to-top="true" :show-refresher-when-reload="true" :auto-scroll-to-top-when-reload="false" :auto-clean-list-when-reload="true" :safe-area-inset-bottom="true" empty-view-text="暂无数据">
-		<view slot="top" class="">
+		<view slot="top" style="position: relative; box-sizing: border-box;">
 			<image class="home-bg" :src="$staticPath+'device-appointment/image 39.png'" />
 			<!-- <view class="home-head" :style="{ height: headInfo.headHeight }">
 				<view class="home-title" :style="{ marginTop: headInfo.titleTop }">待签署文件</view>
@@ -26,7 +26,7 @@
 
 <script>
 // 注意：这里需要替换为实际的API调用
-import { getSignFileList } from '@/api/signPaper/index.js'
+import { getSignFileList } from '@/app/api/signPaper/index.js'
 
 export default {
 	data() {

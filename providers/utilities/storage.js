@@ -1,4 +1,4 @@
-import constant from '../constant'
+import constant from '@/app/constant'
 
 // 存储变量名
 let storageKey = 'storage_data'

@@ -1,3 +1,3 @@
 module.exports = {
-	transpileDependencies: ['z-paging']
+	transpileDependencies: ['Lyn4ever-gaodeRoutePlanning', 'ss-preview', 'uview-ui', 'z-paging']
 }

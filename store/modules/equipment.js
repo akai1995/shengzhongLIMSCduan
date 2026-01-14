@@ -1,13 +1,13 @@
 const equipment = {
 	state:{
-		platform: "",
-		deviceId:"",
-		writeCharaterId: "",    
-		writeServiceId: "",
-		notifyCharaterId: "",
-		notifyServiceId: "",
-		readCharaterId: "",
-		readServiceId: "",
+		platform: '',
+		deviceId:'',
+		writeCharaterId: '',    
+		writeServiceId: '',
+		notifyCharaterId: '',
+		notifyServiceId: '',
+		readCharaterId: '',
+		readServiceId: '',
 	},
 	getters:{
 		getPlatform:(state) => state.platform,
