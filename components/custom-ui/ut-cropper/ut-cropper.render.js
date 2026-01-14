@@ -147,39 +147,30 @@ function checkRange(e) {
  */
 function changeImageRect(e) {
 	// console.log('changeImageRect', e)
-	offset.x += e.x || 0;
-	offset.y += e.y || 0;
+	offset.x += e.x || 0; offset.y += e.y || 0;
 	if(e.check && area.checkRange) { // 检查边界
 		var point = checkRange(offset);
-		if(offset.x !== point.x || offset.y !== point.y) {
-			offset = point;
-		}
+		if(offset.x !== point.x || offset.y !== point.y) { offset = point; }
 	}
 	
 	// 因频繁修改 width/height 会造成大量的内存消耗，改为scale
 	// e.instance.imageStyles = {
-	// 	width: img.width + 'px',
-	// 	height: img.height + 'px',
+	// 	width: img.width + 'px', height: img.height + 'px',
 	// 	transform: 'translate(' + (offset.x + ox) + 'px, ' + (offset.y + ox) + 'px) rotate(' + rotate +'deg)'
 	// };
 	var ox = (img.width - img.oldWidth) / 2;
 	var oy = (img.height - img.oldHeight) / 2;
 	// e.instance.imageStyles = {
-	// 	width: img.oldWidth + 'px',
-	// 	height: img.oldHeight + 'px',
+	// 	width: img.oldWidth + 'px', height: img.oldHeight + 'px',
 	// 	transform: 'translate(' + (offset.x + ox) + 'px, ' + (offset.y + oy) + 'px) rotate(' + rotate +'deg) scale(' + scale + ')'
 	// };
 	setStyle(e.instance, 'imageStyles', {
-		width: img.oldWidth + 'px',
-		height: img.oldHeight + 'px',
+		width: img.oldWidth + 'px', height: img.oldHeight + 'px',
 		transform: (img.gpu ? 'translateZ(0) ' : '') + 'translate(' + (offset.x + ox) + 'px, ' + (offset.y + oy) + 'px' + ') rotate(' + rotate +'deg) scale(' + scale + ')'
 	});
 	callMethod(e.instance, 'dataChange', {
-		width: img.width,
-		height: img.height,
-		x: offset.x,
-		y: offset.y,
-		rotate: rotate
+		width: img.width, height: img.height,
+		x: offset.x, y: offset.y, rotate: rotate
 	});
 };
 /**
@@ -191,23 +182,18 @@ function changeAreaRect(e) {
 	// 变更蒙版样式
 	setStyle(e.instance, 'maskStylesList', [
 		{
-			left: 0,
+			left: 0, top: 0, bottom: 0,
+			'z-index': area.zIndex + 2,
 			width: (area.left + areaOffset.left) + 'px',
-			top: 0,
-			bottom: 0,
-			'z-index': area.zIndex + 2
 		},
 		{
+			right: 0, top: 0, bottom: 0,
+			'z-index': area.zIndex + 2,
 			left: (area.right + areaOffset.right) + 'px',
-			right: 0,
-			top: 0,
-			bottom: 0,
-			'z-index': area.zIndex + 2
 		},
 		{
-			left: (area.left + areaOffset.left) + 'px',
+			top: 0, left: (area.left + areaOffset.left) + 'px',
 			width: (area.width + areaOffset.right - areaOffset.left) + 'px',
-			top: 0,
 			height: (area.top + areaOffset.top) + 'px',
 			'z-index': area.zIndex + 2
 		},
@@ -216,8 +202,7 @@ function changeAreaRect(e) {
 			width: (area.width + areaOffset.right - areaOffset.left) + 'px',
 			top: (area.bottom + areaOffset.bottom) + 'px',
 			// height: (area.top - areaOffset.bottom + sys.offsetBottom) + 'px',
-			bottom: 0,
-			'z-index': area.zIndex + 2
+			bottom: 0, 'z-index': area.zIndex + 2
 		}
 	]);
 	// 变更边框样式
@@ -236,32 +221,28 @@ function changeAreaRect(e) {
 		setStyle(e.instance, 'gridStylesList', [
 			{
 				'border-width': '1px 0 0 0',
-				left: (area.left + areaOffset.left) + 'px',
-				right: (area.right + areaOffset.right) + 'px',
+				left: (area.left + areaOffset.left) + 'px', right: (area.right + areaOffset.right) + 'px',
 				top: (area.top + areaOffset.top + (area.height + areaOffset.bottom - areaOffset.top) / 3 - 0.5) + 'px',
 				width: (area.width + areaOffset.right - areaOffset.left) + 'px',
 				'z-index': area.zIndex + 3
 			},
 			{
 				'border-width': '1px 0 0 0',
-				left: (area.left + areaOffset.left) + 'px',
-				right: (area.right + areaOffset.right) + 'px',
+				left: (area.left + areaOffset.left) + 'px', right: (area.right + areaOffset.right) + 'px',
 				top: (area.top + areaOffset.top + (area.height + areaOffset.bottom - areaOffset.top) * 2 / 3 - 0.5) + 'px',
 				width: (area.width + areaOffset.right - areaOffset.left) + 'px',
 				'z-index': area.zIndex + 3
 			},
 			{
 				'border-width': '0 1px 0 0',
-				top: (area.top + areaOffset.top) + 'px',
-				bottom: (area.bottom + areaOffset.bottom) + 'px',
+				top: (area.top + areaOffset.top) + 'px', bottom: (area.bottom + areaOffset.bottom) + 'px',
 				left: (area.left + areaOffset.left + (area.width + areaOffset.right - areaOffset.left) / 3 - 0.5) + 'px',
 				height: (area.height + areaOffset.bottom - areaOffset.top) + 'px',
 				'z-index': area.zIndex + 3
 			},
 			{
 				'border-width': '0 1px 0 0',
-				top: (area.top + areaOffset.top) + 'px',
-				bottom: (area.bottom + areaOffset.bottom) + 'px',
+				top: (area.top + areaOffset.top) + 'px', bottom: (area.bottom + areaOffset.bottom) + 'px',
 				left: (area.left + areaOffset.left + (area.width + areaOffset.right - areaOffset.left) * 2 / 3 - 0.5) + 'px',
 				height: (area.height + areaOffset.bottom - areaOffset.top) + 'px',
 				'z-index': area.zIndex + 3
@@ -310,8 +291,7 @@ function changeAreaRect(e) {
 			}
 		}
 		setStyle(e.instance, 'circleBoxStyles', {
-			left: (area.left + areaOffset.left) + 'px',
-			top: (area.top + areaOffset.top) + 'px',
+			left: (area.left + areaOffset.left) + 'px', top: (area.top + areaOffset.top) + 'px',
 			width: (area.width + areaOffset.right - areaOffset.left) + 'px',
 			height: (area.height + areaOffset.bottom - areaOffset.top) + 'px',
 			'z-index': area.zIndex + 2

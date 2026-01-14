@@ -9,13 +9,15 @@
 			<!-- <view class="home-head" :style="{ height: headInfo.headHeight }">
 				<view class="home-title" :style="{ marginTop: headInfo.titleTop }">待签署文件</view>
 			</view> -->
-			<u-navbar title="待签署文件" bgColor="transparent" :fixed="false"><view class="u-nav-slot" slot="left"></view></u-navbar>
+			<u-navbar title="待签署文件" :fixed="false" bgColor="transparent"><view class="u-nav-slot" slot="left"></view></u-navbar>
 			<view class="home-search">
-				<u--input border="surround" placeholder="请输入关键词" suffixIcon="search" suffixIconStyle="color: #909399" @change="handleSearch" />
+				<u--input border="surround" placeholder="请输入关键词" suffixIcon="search" suffixIconStyle="color: #909399" customStyle="border-color:white;" @change="onSearch" />
 			</view>
 		</view>
 		<view class="home-content">
+			<project-home-card />
 			<view class="luBox">
+				<view class="luTitle">待签署文件列表</view>
             	<u-skeleton v-if="!firstLoaded&&dataList.length === 0" rows="10" title loading />
       			<project-sign-doc-item v-for="item,idx in dataList" :key="item.id" :item="item" :hideLine="dataList.length-1==idx" />
 			</view>
@@ -47,10 +49,10 @@ export default {
 	methods: {
 		getHeadInfo() {
 			// #ifdef MP-WEIXIN
-			const popInfo = uni.getMenuButtonBoundingClientRect()
-			this.headInfo.headHeight = `${popInfo.height}px`
-			this.headInfo.titleTop = `${popInfo.top}px`
-			this.headInfo.listHeight = `calc(100vh - ${popInfo.top + popInfo.height + 155}px)`
+			// const popInfo = uni.getMenuButtonBoundingClientRect()
+			// this.headInfo.headHeight = `${popInfo.height}px`
+			// this.headInfo.titleTop = `${popInfo.top}px`
+			// this.headInfo.listHeight = `calc(100vh - ${popInfo.top + popInfo.height + 155}px)`
 			// #endif
 		},
 		checkUserInfo() {
@@ -66,8 +68,8 @@ export default {
 			this.queryParameter.pageSize = pageSize
 			const type = pageNo>1 ? 'search': ''
 			getSignFileList(this.queryParameter).then((resp) => {
-				this.totalCount = resp.result.total
-				this.$refs.zPagingRef.complete(resp.result.records)
+				this.totalCount = resp&&resp.result?resp.result.total : 0 
+				this.$refs.zPagingRef.complete(resp&&resp.result?resp.result.records:false)
 			}).catch(()=>{
 				this.$refs.zPagingRef.complete(false)
 			}).finally(()=>{
@@ -75,7 +77,7 @@ export default {
 				uni.hideLoading();
 			});
 		},
-		handleSearch(e) {
+		onSearch(e) {
 			const searchData = e
 			this.queryParameter.keyword = searchData
 			this.$refs.zPagingRef && this.$refs.zPagingRef.refresh();

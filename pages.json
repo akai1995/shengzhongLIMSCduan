@@ -63,6 +63,13 @@
 			"root": "sub-pack/tab1",
 			"pages": [
 				{
+					"path": "chat-history-stream/chat-history-stream",
+					"style": {
+						"navigationBarTitleText": "报告分析",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
 					"path": "device/detail",
 					"style": {
 						"navigationBarTitleText": "设备详情",

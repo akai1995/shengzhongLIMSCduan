@@ -3,7 +3,7 @@
 </style>
 
 <template>
-	<z-paging ref="zPagingRef" class="reserve" :paging-style="{backgroundColor: 'white'}" v-model="dataList" @query="queryList" :fixed="true" :auto="false" :auto-show-back-to-top="true" :enable-back-to-top="true" :show-refresher-when-reload="true" :auto-scroll-to-top-when-reload="false" :auto-clean-list-when-reload="true" :safe-area-inset-bottom="true" empty-view-text="暂无数据">
+	<z-paging ref="zPagingRef" class="reserve" :paging-style="{ backgroundColor: '#F7F8FA' }" v-model="dataList" @query="queryList" :fixed="true" :auto="false" :auto-show-back-to-top="true" :enable-back-to-top="true" :show-refresher-when-reload="true" :auto-scroll-to-top-when-reload="false" :auto-clean-list-when-reload="true" :safe-area-inset-bottom="true" empty-view-text="暂无数据">
 		<ut-nav slot="top" title="我的预约" @onBack="handleGoUser" border></ut-nav>
         <view class="reserve-list">
             <u-skeleton v-if="!firstLoaded&&dataList.length === 0" rows="15" title loading />
@@ -35,8 +35,8 @@ export default {
 			this.queryParameter.pageNo = pageNo
 			this.queryParameter.pageSize = pageSize
 			getReserveList(this.queryParameter).then((resp) => {
-				this.totalCount = resp.result.total
-				this.$refs.zPagingRef.complete(resp.result.records)
+				this.totalCount = resp&&resp.result?resp.result.total : 0 
+				this.$refs.zPagingRef.complete(resp&&resp.result?resp.result.records:false)
 			}).catch(()=>{
 				this.$refs.zPagingRef.complete(false)
 			}).finally(()=>{

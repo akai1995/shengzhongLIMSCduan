@@ -1,46 +1,57 @@
 <template>
-	<view class="imageCropper" :style="{ zIndex }" @wheel="cropper.mousewheel">
-		<canvas v-if="use2d" type="2d" id="imgCanvas" class="imgCanvas" :style="{
-			width: `${canvansWidth}px`,
-			height: `${canvansHeight}px`
-		}"></canvas>
-		<canvas v-else id="imgCanvas" canvas-id="imgCanvas" class="imgCanvas" :style="{
-			width: `${canvansWidth}px`,
-			height: `${canvansHeight}px`
-		}"></canvas>
-		<view id="picPreview" class="picPreview" :change:init="cropper.initObserver" :init="initData" @touchstart="cropper.touchstart" @touchmove="cropper.touchmove" @touchend="cropper.touchend">
-			<image v-if="imgSrc" id="cropImage" class="cropImage" :style="cropper.imageStyles" :src="imgSrc" webp></image>
-			<view v-for="(item, index) in maskList" :key="item.id" :id="item.id" class="cropMaskBlock" :style="cropper.maskStylesList[index]"></view>
-			<view v-if="showBorder" id="cropBorder" class="cropBorder" :style="cropper.borderStyles"></view>
-			<view v-if="radius > 0" id="cropCircleBox" class="cropCircleBox" :style="cropper.circleBoxStyles">
-				<view class="cropCircle" id="cropCircle" :style="cropper.circleStyles"></view>
-			</view>
-			<block v-if="showGrid">
-				<view v-for="(item, index) in gridList" :key="item.id" :id="item.id" class="cropGrid" :style="cropper.gridStylesList[index]"></view>
-			</block>
-			<block v-if="showAngle">
-				<view v-for="(item, index) in angleList" :key="item.id" :id="item.id" class="cropAngle" :style="cropper.angleStylesList[index]">
-					<view :style="[{
-						width: `${angleSize}px`,
-						height: `${angleSize}px`
-					}]"></view>
+	<z-paging 
+        ref="zPagingRef" class="page" :paging-style="{ backgroundColor: '#F7F8FA' }" v-model="dataList" @query="queryList"
+        :fixed="true" :auto="false" :refresher-enabled="false" :auto-show-back-to-top="true" :auto-scroll-to-top-when-reload="false"
+        :loading-more-enabled="false" :show-refresher-when-reload="false" hide-empty-view
+    >
+        <view slot="top" style="z-index: 999;"> <u-navbar title="图文识别" :fixed="false" background="transparent" color="#000" left-icon="close" left-icon-color="#000" @leftClick="onCloseCrop" /> </view>
+		<view class="image-cropper" :style="{ zIndex }" @wheel="cropper.mousewheel">
+			<canvas v-if="use2d" type="2d" id="imgCanvas" class="img-canvas" :style="{
+				width: `${canvansWidth}px`,
+				height: `${canvansHeight}px`
+			}" />
+			<canvas v-else id="imgCanvas" canvas-id="imgCanvas" class="img-canvas" :style="{
+				width: `${canvansWidth}px`,
+				height: `${canvansHeight}px`
+			}" />
+			<view id="pic-preview" class="pic-preview" :change:init="cropper.initObserver" :init="initData" @touchstart="cropper.touchstart" @touchmove="cropper.touchmove" @touchend="cropper.touchend">
+				<image v-if="imgSrc" id="crop-image" class="crop-image" :style="cropper.imageStyles" :src="imgSrc" webp></image>
+				<view v-for="(item, index) in maskList" :key="item.id" :id="item.id" class="crop-mask-block" :style="cropper.maskStylesList[index]"></view>
+				<view v-if="showBorder" id="crop-border" class="crop-border" :style="cropper.borderStyles"></view>
+				<view v-if="radius > 0" id="crop-circle-box" class="crop-circle-box" :style="cropper.circleBoxStyles">
+					<view class="crop-circle" id="crop-circle" :style="cropper.circleStyles"></view>
 				</view>
-			</block>
-		</view>
-		<slot />
-		<view class="fixed-bottom safe-area-inset-bottom" :style="{ zIndex: initData.area.zIndex + 99 }">
-			<view v-if="(rotatable || reverseRotatable) && !!imgSrc" class="actionBar">
-				<view v-if="reverseRotatable" class="rotateIcon" @click="cropper.rotateImage270"></view>
-				<view v-if="rotatable" class="rotateIcon isReverse" @click="cropper.rotateImage90"></view>
+				<block v-if="showGrid">
+					<view v-for="(item, index) in gridList" :key="item.id" :id="item.id" class="crop-grid" :style="cropper.gridStylesList[index]"></view>
+				</block>
+				<block v-if="showAngle">
+					<view v-for="(item, index) in angleList" :key="item.id" :id="item.id" class="crop-angle" :style="cropper.angleStylesList[index]">
+						<view :style="[{
+							width: `${angleSize}px`,
+							height: `${angleSize}px`
+						}]"></view>
+					</view>
+				</block>
 			</view>
-			<view v-if="!choosable" class="chooseBtn" @click="cropClick">确定</view>
+			<slot />
+		</view>
+		<view slot="bottom" class="fixed-bottom safe-area-inset-bottom pubTopLine" :style="{ zIndex: initData.area.zIndex + 99 }">
+			<view v-if="(rotatable || reverseRotatable) && !!imgSrc" class="action-bar">
+				<view v-if="reverseRotatable" class="rotate-icon" @click="cropper.rotateImage270"></view>
+				<view v-if="rotatable" class="rotate-icon is-reverse" @click="cropper.rotateImage90"></view>
+			</view>
+			<!-- <view v-if="!choosable" class="choose-btn" @click="cropClick">确定</view> -->
+			<view v-if="!choosable" class="cus-action">
+				<u-icon name="close" size="45rpx" @click="onCloseCrop" />
+				<u-icon name="checkmark" size="45rpx" @click="cropClick" />
+			</view>
 			<block v-else-if="!!imgSrc">
 				<view class="rechoose" @click="chooseImage">重选</view>
 				<button class="button" size="mini" @click="cropClick">确定</button>
 			</block>
-			<view v-else class="chooseBtn" @click="chooseImage">选择图片</view>
+			<view v-else class="choose-btn" @click="chooseImage">选择图片</view>
 		</view>
-	</view>
+	</z-paging>
 </template>
 
 <!-- #ifdef APP-VUE -->
@@ -66,7 +77,7 @@
 <!-- #endif -->
 <script>
 	/** 裁剪区域最大宽高所占屏幕宽度百分比 */
-	const AREA_SIZE = 75;
+	const AREA_SIZE = 110;
 	/** 图片默认宽高 */
 	const IMG_SIZE = 300;
  
@@ -205,24 +216,25 @@
 		emits: ["crop"],
 		data() {
 			return {
+				dataList: [],
 				// 用不同 id 使 v-for key 不重复
 				maskList: [
-					{ id: 'cropMaskBlock-1' },
-					{ id: 'cropMaskBlock-2' },
-					{ id: 'cropMaskBlock-3' },
-					{ id: 'cropMaskBlock-4' },
+					{ id: 'crop-mask-block-1' },
+					{ id: 'crop-mask-block-2' },
+					{ id: 'crop-mask-block-3' },
+					{ id: 'crop-mask-block-4' },
 				],
 				gridList: [
-					{ id: 'cropGrid-1' },
-					{ id: 'cropGrid-2' },
-					{ id: 'cropGrid-3' },
-					{ id: 'cropGrid-4' },
+					{ id: 'crop-grid-1' },
+					{ id: 'crop-grid-2' },
+					{ id: 'crop-grid-3' },
+					{ id: 'crop-grid-4' },
 				],
 				angleList: [
-					{ id: 'cropAngle-1' },
-					{ id: 'cropAngle-2' },
-					{ id: 'cropAngle-3' },
-					{ id: 'cropAngle-4' },
+					{ id: 'crop-angle-1' },
+					{ id: 'crop-angle-2' },
+					{ id: 'crop-angle-3' },
+					{ id: 'crop-angle-4' },
 				],
 				/** 本地缓存的图片路径 */
 				imgSrc: '',
@@ -310,9 +322,9 @@
 					// #ifndef MP-WEIXIN
 					use2d = false;
 					// #endif
-					// if(use2d && (this.imgWidth > 1365 || this.imgHeight > 1365)) {
-					// 	use2d = false;
-					// }
+					if(use2d && (this.imgWidth > 1365 || this.imgHeight > 1365)) {
+						use2d = false;
+					}
 					let canvansWidth = this.imgWidth;
 					let canvansHeight = this.imgHeight;
 					let size = Math.max(canvansWidth, canvansHeight)
@@ -331,6 +343,10 @@
 			},
 		},
 		methods: {
+			queryList(pageNo, pageSize) {
+				this.$refs.zPagingRef.endRefresh()
+				uni.hideLoading();
+			},
 			/** 提供给wxs调用，用来接收图片变更数据 */
 			dataChange(e) {
 				// console.log('dataChange', e)
@@ -575,6 +591,10 @@
 					}
 				}, this);
 			},
+			onCloseCrop() {
+				this.resetData();
+				this.$emit('close');
+			},
 			/** 确认裁剪 */
 			cropClick() {
 				uni.showLoading({ title: '裁剪中...', mask: true });
@@ -591,7 +611,8 @@
 				query.select('#imgCanvas')
 					.fields({ node: true, size: true })
 					.exec((res) => {
-						const canvas = res[0].node;										
+						const canvas = res[0].node;
+										
 						const dpr = uni.getSystemInfoSync().pixelRatio;
 						canvas.width = res[0].width * dpr;
 						canvas.height = res[0].height * dpr;
@@ -616,58 +637,59 @@
 </script>
  
 <style lang="scss" scoped>
-	.imageCropper {
+	.image-cropper {
 		position: fixed;
-		left: 0;
-		right: 0;
 		top: 0;
+		right: 0;
 		bottom: 0;
-		overflow: hidden;
+		left: 0;
+		width: 100%;
+		height: 100%;
 		display: flex;
 		flex-direction: column;
 		background-color: #cfe2fd;
-		.imgCanvas {
+		.img-canvas {
 			position: absolute !important;
 			transform: translateX(-100%);
 		}
-		.picPreview {
+		.pic-preview {
 			width: 100%;
 			flex: 1;
 			position: relative;
 
-			.cropMaskBlock {
+			.crop-mask-block {
 				background-color: rgba(0, 0, 0, 0.9);
 				z-index: 2;
 				position: fixed;
 				box-sizing: border-box;
 				pointer-events: none;
 			}
-			.cropCircleBox {
+			.crop-circle-box {
 				position: fixed;
 				box-sizing: border-box;
 				z-index: 2;
 				pointer-events: none;
 				overflow: hidden;
-				.cropCircle {
+				.crop-circle {
 					width: 100%;
 					height: 100%;
 				}
 			}
-			.cropImage {
+			.crop-image {
 				padding: 0 !important;
 				margin: 0 !important;
 				border-radius: 0 !important;
 				display: block !important;
 				backface-visibility: hidden;
 			}
-			.cropBorder {
+			.crop-border {
 				position: fixed;
 				border: 1px solid #0d70f3;
 				box-sizing: border-box;
 				z-index: 3;
 				pointer-events: none;
 			}
-			.cropGrid {
+			.crop-grid {
 				position: fixed;
 				z-index: 3;
 				border-style: dashed;
@@ -675,7 +697,7 @@
 				pointer-events: none;
 				opacity: 0.5;
 			}
-			.cropAngle {
+			.crop-angle {
 				position: fixed;
 				z-index: 3;
 				border-style: solid;
@@ -683,60 +705,69 @@
 				pointer-events: none;
 			}
 		}
+	}
 
-		.fixed-bottom {
-			position: fixed;
-			left: 0;
-			right: 0;
-			bottom: 0;
-			z-index: 99;
+	.fixed-bottom {
+		// position: fixed;
+		// left: 0;
+		// right: 0;
+		// bottom: 0;
+		// z-index: 99;
+		display: flex;
+		flex-direction: row;
+		background-color: $uni-bg-color-mask;
+
+		.action-bar {
+			position: absolute;
+			top: -90rpx;
+			left: 10rpx;
 			display: flex;
-			flex-direction: row;
-			background-color: $uni-bg-color-grey;
-
-			.actionBar {
-				position: absolute;
-				top: -90rpx;
-				left: 10rpx;
-				display: flex;
-				.rotateIcon {
-					background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAABCFJREFUaEPtml3IpVMUx3//ko/ChTIyiGFSMyhllI8bc4F85yuNC2FCqLmQC1+FZORiEkUMNW7UjKjJULgxV+NzSkxDhEkZgwsyigv119J63p7zvOc8z37OmXdOb51dz82711r7/99r7bXXXucVi3xokeNnRqCvB20fDmwAlgK/5bcD+FTSr33tHXQP2H4MeHQE0A+B5yRtLiUyDQJrgVc6AAaBpyV93kXkoBMIQLbfBS5NcK8BRwDXNcD+AdwnaVMbiWkRCPBBohpxHuK7M7865sclRdgNHVMhkF6IMIpwirFEUhzo8M7lwIvASTXEqyVtH8ZgagQSbOzsDknv18HZXpHn5IL8+94IOUm7miSmSqAttjPdbgGuTrnNktYsGgLpoYuAD2qg1zRTbG8P2D4SOC6/Q7vSHPALsE/S7wWy80RsPw/ckxMfSTq/LtRJwPbxwF3ASiCUTxwHCPAnEBfVF8AWSTtL7Ng+LfWOTfmlkn6udFsJ5K15R6a4kvX6yGyUFBvTOWzHXXFzCt4g6c1OArYj9iIGh43YgR+BvztXh1PSa4cMkd0jaVmXDduPAE+k3HpJD7cSGFKvfAc8FQUX8IOk/V2L1udtB/hTgdOBW4Aba/M7Ja1qs2f7euCNlHlZUlx4/495IWQ7Jl+qGbxX0gt9AHfJ2o6zFBVoNVrDKe+F3Sm8VdK1bQQ+A85JgXckXdkFaJx527cC9TpnVdvBtl3h2iapuhsGPdBw1b9xnUvaNw7AEh3bnwDnpuwGSfeP0rN9NvAMELXRXFkxEEK2nwQeSiOtRVQJwC4Z29cAW1Nuu6TVXTrN+SaBt4ErUug2Sa/2NdhH3vZy4NvU2S/p6D768w5xI3WOrAD7LtISFpGdIhVXKfaYvjd20wP13L9M0p4DBbaFRKToSLExVkr6qs+aIwlI6iwz+izUQqC+ab29PiMwqRcmPXczD8w8MFj1zg7xXEqbpdHCw7FgWSjafZL+KcQxtpjteCeflwYulFR/J3TabSslVkj6utPChAK2f6q9uZdLitKieLQRuExSvX9ZbLRUMFs09efpUZL+KtUfVo1GW/umNHC3pOhRLtiwfSbwZS6wV9IJfRdreuBBYH0a2STp9r4G+8jbXgc8mzoDT8VSO00ClwDv1ZR7XyylC4ec7ejaLUmdsV6Aw7oSbwFXpdFdks7qA6pU1na0aR6owgeIR/1cx63UzjAC0YXYVjMQHlkn6ZtSo21ytuPZGKFagQ/xsXZ/3iGuFrYdjafXG0DiQMeBi47c9/GV3BO247UV38n5o0UAP6xmu7jFOGxjRr66On5NPBDOCBsDTapxjHY1dyOcolNXnYlx1himE53p2PmNkxosevfavhg4Izt2k7TXPwZ2S6p6QZPin/2rwcQ7OKmBohCadJGF1P8PG6aaQBKVX/8AAAAASUVORK5CYII=');
-					background-size: 60% 60%;
-					background-repeat: no-repeat;
-					background-position: center;
-					width: 80rpx;
-					height: 80rpx;
-					&.isReverse {
-						transform: rotateY(180deg);
-					}
+			.rotate-icon {
+				background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAABCFJREFUaEPtml3IpVMUx3//ko/ChTIyiGFSMyhllI8bc4F85yuNC2FCqLmQC1+FZORiEkUMNW7UjKjJULgxV+NzSkxDhEkZgwsyigv119J63p7zvOc8z37OmXdOb51dz82711r7/99r7bXXXucVi3xokeNnRqCvB20fDmwAlgK/5bcD+FTSr33tHXQP2H4MeHQE0A+B5yRtLiUyDQJrgVc6AAaBpyV93kXkoBMIQLbfBS5NcK8BRwDXNcD+AdwnaVMbiWkRCPBBohpxHuK7M7865sclRdgNHVMhkF6IMIpwirFEUhzo8M7lwIvASTXEqyVtH8ZgagQSbOzsDknv18HZXpHn5IL8+94IOUm7miSmSqAttjPdbgGuTrnNktYsGgLpoYuAD2qg1zRTbG8P2D4SOC6/Q7vSHPALsE/S7wWy80RsPw/ckxMfSTq/LtRJwPbxwF3ASiCUTxwHCPAnEBfVF8AWSTtL7Ng+LfWOTfmlkn6udFsJ5K15R6a4kvX6yGyUFBvTOWzHXXFzCt4g6c1OArYj9iIGh43YgR+BvztXh1PSa4cMkd0jaVmXDduPAE+k3HpJD7cSGFKvfAc8FQUX8IOk/V2L1udtB/hTgdOBW4Aba/M7Ja1qs2f7euCNlHlZUlx4/495IWQ7Jl+qGbxX0gt9AHfJ2o6zFBVoNVrDKe+F3Sm8VdK1bQQ+A85JgXckXdkFaJx527cC9TpnVdvBtl3h2iapuhsGPdBw1b9xnUvaNw7AEh3bnwDnpuwGSfeP0rN9NvAMELXRXFkxEEK2nwQeSiOtRVQJwC4Z29cAW1Nuu6TVXTrN+SaBt4ErUug2Sa/2NdhH3vZy4NvU2S/p6D768w5xI3WOrAD7LtISFpGdIhVXKfaYvjd20wP13L9M0p4DBbaFRKToSLExVkr6qs+aIwlI6iwz+izUQqC+ab29PiMwqRcmPXczD8w8MFj1zg7xXEqbpdHCw7FgWSjafZL+KcQxtpjteCeflwYulFR/J3TabSslVkj6utPChAK2f6q9uZdLitKieLQRuExSvX9ZbLRUMFs09efpUZL+KtUfVo1GW/umNHC3pOhRLtiwfSbwZS6wV9IJfRdreuBBYH0a2STp9r4G+8jbXgc8mzoDT8VSO00ClwDv1ZR7XyylC4ec7ejaLUmdsV6Aw7oSbwFXpdFdks7qA6pU1na0aR6owgeIR/1cx63UzjAC0YXYVjMQHlkn6ZtSo21ytuPZGKFagQ/xsXZ/3iGuFrYdjafXG0DiQMeBi47c9/GV3BO247UV38n5o0UAP6xmu7jFOGxjRr66On5NPBDOCBsDTapxjHY1dyOcolNXnYlx1himE53p2PmNkxosevfavhg4Izt2k7TXPwZ2S6p6QZPin/2rwcQ7OKmBohCadJGF1P8PG6aaQBKVX/8AAAAASUVORK5CYII=');
+				background-size: 60% 60%;
+				background-repeat: no-repeat;
+				background-position: center;
+				width: 80rpx; height: 80rpx;
+				&.is-reverse {
+					transform: rotateY(180deg);
 				}
 			}
-			 
-			.rechoose {
-				color: $uni-color-primary;
-				padding: 0 $uni-spacing-row-lg;
-				line-height: 100rpx;
-			}
-
-			.chooseBtn {
-				color: $uni-color-primary;
-				text-align: center;
-				line-height: 100rpx;
-				flex: 1;
-			}
-
-			.button {
-				margin: auto $uni-spacing-row-lg auto auto;
-				background-color: $uni-color-primary;
-				color: #fff;
-			}
 		}
 
-		.safe-area-inset-bottom {
-			padding-bottom: 0;  
-			padding-bottom: constant(safe-area-inset-bottom); // 兼容 IOS<11.2
-			padding-bottom: env(safe-area-inset-bottom); // 兼容 IOS>=11.2
+		.cus-action{
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			width: 100%; height: 100rpx;
+			padding: 15rpx 24rpx;
+			u-icon{
+				padding: 15rpx;
+			}
 		}
- 
+			
+		.rechoose {
+			color: $uni-color-primary;
+			padding: 0 $uni-spacing-row-lg;
+			line-height: 100rpx;
+		}
+
+		.choose-btn {
+			color: $uni-color-primary;
+			text-align: center;
+			line-height: 100rpx;
+			flex: 1;
+		}
+
+		.button {
+			margin: auto $uni-spacing-row-lg auto auto;
+			background-color: $uni-color-primary;
+			color: #fff;
+		}
+	}
+
+	.safe-area-inset-bottom {
+		padding-bottom: 0;  
+		padding-bottom: constant(safe-area-inset-bottom); // 兼容 IOS<11.2
+		padding-bottom: env(safe-area-inset-bottom); // 兼容 IOS>=11.2
 	}
 </style>

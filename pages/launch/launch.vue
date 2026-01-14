@@ -8,10 +8,10 @@
         :fixed="true" :auto="false" :refresher-enabled="false" :auto-show-back-to-top="true" :auto-scroll-to-top-when-reload="false"
         :loading-more-enabled="false" :show-refresher-when-reload="false" hide-empty-view
     >
-		<view slot="top" style="height: 182rpx;position: relative; box-sizing: border-box;">
+		<view slot="top" style="height: 280rpx;position: relative; box-sizing: border-box;">
 			<img class="launch-bg" :src="$staticPath+'device-appointment/image 39.png'" />
 			<!-- <view class="launch-head" :style="{ height: headInfo.headHeight }"><view class="launch-title" :style="{ marginTop: headInfo.titleTop }">eAI</view></view> -->
-			<u-navbar title="eAI" bgColor="transparent" :fixed="false"><view class="u-nav-slot" slot="left"></view></u-navbar>
+			<u-navbar title="e-AI" :fixed="false" bgColor="transparent"><view class="u-nav-slot" slot="left"></view></u-navbar>
 		</view>
 		<view class="launch-content">
 			<view class="launch-welcome">欢迎使用eAI系统</view>
