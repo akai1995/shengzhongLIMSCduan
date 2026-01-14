@@ -77,9 +77,9 @@ export default {
             return true;
 		},
 		onJump(item) {
-            if (item.url) {
+            if (item.path) {
                 this.checkUserInfo()
-			    this.$ut.jump(item.url);
+			    this.$ut.jump(item.path);
             } else {
 			    uni.showToast({ title: "敬请期待", icon: "none", });
             }
