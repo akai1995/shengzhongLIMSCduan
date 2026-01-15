@@ -6,14 +6,34 @@
 		<view class="chat-input-bar">
 			<view class="chat-input-container">
 				<!-- :adjust-position="false"必须设置，防止键盘弹窗自动上顶，交由z-paging内部处理 -->
-				<u--textarea :focus="focus" class="chat-input" v-model="msg" :adjust-position="false" confirm-type="send" placeholder="请输入内容" @confirm="sendClick" />
+				 <!-- <view class="fileBox">
+					<view class="fileItem" v-for="item in fileList" :class="{
+							waiting: item.status=='waiting',
+							loading: item.status=='loading',
+							success: item.status=='success',
+							fail: item.status=='fail',
+						}">
+					    /* jpg jpeg png webp 图； dox docx xls xlsx pdf ppt pptx 类型图标 */
+						<view class="fileIcon"><image :src="item.status=='success'?item.path:''" /></view>
+						<view class="fileName">{{item.name}}</view>
+						<view class="fileStatus">{{statusMap[item.status]||item.name}}</view>
+					</view>
+				 </view> -->
+				<u--textarea border="none" :focus="focus" class="chat-input" v-model="msg" :adjust-position="false" confirm-type="send" placeholder="请输入内容" @confirm="sendClick" />
 			</view>
 			<!-- 表情图标（如果不需要切换表情面板则不用写） -->
-			<view class="emoji-container">
+			<!-- <view class="emoji-container">
 				<image class="emoji-img" :src="`/static/${emojiType || 'emoji'}.png`" @click="emojiChange"></image>
+			</view> -->
+			<view class="chat-input-history" @click="onLogShow()">
+				<u-icon name="/static/temp/imgs/icon-history.png" size="45rpx" />
+			</view>
+			<view class="chat-input-plus" @click="onPlus()">
+				<u-icon name="/static/temp/imgs/icon-plus.png" size="45rpx" />
 			</view>
 			<view :class="{'chat-input-send': true, 'chat-input-send-disabled': !sendEnabled}" @click="sendClick">
-				<text class="chat-input-send-text">发送</text>
+				<!-- <text class="chat-input-send-text">发送</text> -->
+				<u-icon class="chat-input-send-text" name="/static/temp/imgs/icon-send.png" size="45rpx" />
 			</view>
 		</view>
 		<!--  表情面板，这里使用height控制隐藏显示是为了有高度变化的动画效果（如果不需要切换表情面板则不用写） -->
@@ -40,6 +60,15 @@
 		},
 		data() {
 			return {
+				statusMap: {
+					waiting: '等待中...',
+					loading: '上传中...',
+					success: '',
+					fail: '上传失败',
+				},
+				// jpg jpeg png webp dox docx xls xlsx pdf ppt pptx
+				// name size type path
+				flieList: [],
 				msg: '',
 				
 				// 表情数组（如果不需要切换表情面板则不用写）
@@ -89,6 +118,19 @@
 			},
 			
 			// 点击了发送按钮
+			onLogShow() {
+				if (!this.sendEnabled) return;
+				this.$emit('history');
+				this.msg = '';
+			},
+			
+			// 点击了发送按钮
+			sendClick() {
+				if (!this.sendEnabled) return;
+				
+			},
+			
+			// 点击了发送按钮
 			sendClick() {
 				if (!this.sendEnabled) return;
 				this.$emit('send', this.msg);
@@ -99,6 +141,22 @@
 </script>
 
 <style scoped>
+	.fileBox{
+
+	}
+	.fileItem{
+		
+	}
+	.fileIcon{
+		
+	}
+	.fileName{
+		
+	}
+	.fileName{
+		
+	}
+
 	.chat-input-bar {
 		display: flex;
 		flex-direction: row;
@@ -106,7 +164,8 @@
 		border-top: solid 1px #f5f5f5;
 		background-color: #f8f8f8;
 		
-		padding: 10rpx 20rpx;
+		padding: 10rpx 20rpx 10rpx 40rpx;
+		position: relative;
 	}
 	.chat-input-container {
 		flex: 1;
@@ -130,7 +189,23 @@
 		width: 54rpx;
 		height: 54rpx;
 	}
+
+	.chat-input-history{
+		position: absolute;
+		left: 20rpx;
+		bottom: 20rpx;
+	}
+
+	.chat-input-plus{
+		position: absolute;
+		right: 80rpx;
+		bottom: 20rpx;
+	}
+
 	.chat-input-send {
+		position: absolute;
+		right: 20rpx;
+		bottom: 20rpx;
 		background-color: #007AFF;
 		margin: 10rpx 10rpx 10rpx 20rpx;
 		border-radius: 10rpx;

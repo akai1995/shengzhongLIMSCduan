@@ -1,5 +1,5 @@
 import upload from '@/providers/utilities/upload'
-import request from '@/providers/request'
+import request from '@/providers/http'
 
 // 用户密码重置
 export function updateUserPwd(oldPassword, newPassword) {

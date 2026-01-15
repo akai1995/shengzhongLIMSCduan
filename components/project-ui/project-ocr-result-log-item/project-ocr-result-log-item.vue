@@ -59,7 +59,7 @@ export default {
                 width: 36rpx;
                 height: 36rpx;
                 // @include background-image('/temp/icon-radio1.png');
-                background-image: url(/static/temp/icon-radio1.png);
+                background-image: url(/static/temp/imgs/icon-radio1.png);
                 background-repeat: no-repeat;
                 background-position: center center;
                 background-size: cover;
@@ -69,7 +69,7 @@ export default {
             .lCheck {
                 .widget_check {
                     // @include background-image('/temp/icon-radio2.png');
-                    background-image: url(/static/temp/icon-radio2.png);
+                    background-image: url(/static/temp/imgs/icon-radio2.png);
                 }
             }
         }

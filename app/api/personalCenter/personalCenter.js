@@ -1,5 +1,5 @@
 import upload from "@/providers/utilities/upload";
-import request from "@/providers/request";
+import request from "@/providers/http";
 
 // 查询家庭成员数量
 export function getRelationCount() {

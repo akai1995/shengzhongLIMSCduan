@@ -6,9 +6,9 @@
 			{{item.time}}
 		</text>
 		<view :class="{'chat-container':true,'chat-location-me':item.isMe}">
-			<view class="chat-icon-container">
+			<!-- <view class="chat-icon-container">
 				<image class="chat-icon" :src="item.icon" mode="aspectFill" />
-			</view>
+			</view> -->
 			<view class="chat-content-container">
 				<text :class="{'chat-user-name':true,'chat-location-me':item.isMe}">
 					{{item.name}}

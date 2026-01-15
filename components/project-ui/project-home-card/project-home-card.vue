@@ -6,7 +6,7 @@
                 <view class="cardSubTitle">扫图识字，一扫既得</view>
             </view>
             <view class="cardIcon">
-                <image src="@/static/temp/img-ocr.png" />
+                <image src="@/static/temp/imgs/img-ocr.png" />
             </view>
         </view>
         <view class="cardWarp f2" @click="onJump('chat-history-stream/chat-history-stream')">
@@ -15,7 +15,7 @@
                 <view class="cardSubTitle">医疗报告智能分析助手</view>
             </view>
             <view class="cardIcon">
-                <image src="@/static/temp/img-report.png" />
+                <image src="@/static/temp/imgs/img-report.png" />
             </view>
         </view>
     </view>
@@ -52,7 +52,7 @@ export default {
         justify-content: flex-start;
         gap: 22rpx;
         .f1 {
-            background-image: url(/static/temp/img-ocr-bg.png);
+            background-image: url(/static/temp/imgs/img-ocr-bg.png);
             background-repeat: no-repeat;
             background-position: center center;
             background-size: cover;
@@ -63,7 +63,7 @@ export default {
             }
         }
         .f2 {
-            background-image: url(/static/temp/img-report-bg.png);
+            background-image: url(/static/temp/imgs/img-report-bg.png);
             background-repeat: no-repeat;
             background-position: center center;
             background-size: cover;

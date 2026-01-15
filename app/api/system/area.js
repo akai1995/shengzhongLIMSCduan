@@ -1,5 +1,5 @@
 import upload from '@/providers/utilities/upload'
-import request from '@/providers/request'
+import request from '@/providers/http'
 
 
 

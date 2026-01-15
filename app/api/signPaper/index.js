@@ -1,4 +1,4 @@
-import request from "@/providers/request";
+import request from "@/providers/http";
 
 export function getSignFileList(queryParameter) {
 	return request({

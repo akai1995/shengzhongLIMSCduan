@@ -6,11 +6,8 @@
 
 <script>
 export default {
-	data(){
-
-    },
-	methods: {
-    }
+	data(){ return {} },
+	methods: { }
 }
 </script>
 

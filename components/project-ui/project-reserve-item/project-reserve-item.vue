@@ -31,29 +31,29 @@
 
 <script>
 export default {
-  props: {
-    hideLine  : {
-      type: Boolean,
-      default: false
-    },
-    item: {
-      type: Object,
-      default: () => {
-        return {
+    props: {
+        hideLine  : {
+        type: Boolean,
+        default: false
+        },
+        item: {
+        type: Object,
+        default: () => {
+            return {
+            }
         }
-      }
-    }
-  },
-  data() {
-    return {
-    };
-  },
-  methods: {
-		onView(id) {
-			this.checkUserInfo()
+        }
+    },
+    data() {
+        return {
+        };
+    },
+    methods: {
+        onView(id) {
+            if (!this.checkUserInfo()){ return }
             this.$ut.jump(`/sub-pack/tab5/reserve/detail?id=${id}`);
-		}
-  }
+        }
+    }
 }
 </script>
 

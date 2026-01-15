@@ -30,7 +30,7 @@
                     <view class="subTip">您可以上传需要识别的图片，我们将为您智能识别提取文字信息~</view>
                     <view class="imgBox">
                         <view class="scanBox">
-                            <image src="@/static/temp/ocr-icon.png" />
+                            <image src="@/static/temp/imgs/ocr-icon.png" />
                         </view>
                         <view class="scanTip">请上传图文清晰的图片</view>
                     </view>
@@ -39,7 +39,7 @@
             <view slot="bottom" class="pubBotBtn pubTopLine">            
                 <view class="wrap">
                     <view class="btn icon-history" @click="onOcrResultLogShow()">
-                        <u-icon name="/static/temp/icon-history.png" size="45rpx" />
+                        <u-icon name="/static/temp/imgs/icon-history.png" size="45rpx" />
                     </view>
                 </view>
                 <view class="wrap">
@@ -79,13 +79,6 @@ export default {
 		}, 250);
 	},
 	methods: {
-		checkUserInfo() {
-			const id = this.$store.getters.userId
-			if (!id) {
-				this.$ut.jump("/project-pages/login/login");
-				return;
-			}
-		},
         onOcrResultLogShow() {
             this.showOcrResultLog = true
         },

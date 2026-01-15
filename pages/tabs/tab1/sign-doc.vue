@@ -55,13 +55,6 @@ export default {
 			// this.headInfo.listHeight = `calc(100vh - ${popInfo.top + popInfo.height + 155}px)`
 			// #endif
 		},
-		checkUserInfo() {
-			const id = this.$store.getters.userId
-			if (!id) {
-				this.$ut.jump("/project-pages/login/login");
-				return;
-			}
-		},
 		queryList(pageNo, pageSize) {
 			// this.$refs.zPagingRef.endRefresh()
 			this.queryParameter.pageNo = pageNo
@@ -83,7 +76,7 @@ export default {
 			this.$refs.zPagingRef && this.$refs.zPagingRef.refresh();
 		},
 		handleGoSign(id) {
-			this.checkUserInfo()
+            if (!this.checkUserInfo()){ return }
 			this.$ut.jump(`/pages/tabs/tab1/doc-sign?id=${id}&showSign=true`);
 		}
 	},

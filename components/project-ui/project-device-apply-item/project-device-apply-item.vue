@@ -40,7 +40,7 @@ export default {
   },
   methods: {
 		onView(id, deviceId) {
-			this.checkUserInfo()
+            if (!this.checkUserInfo()){ return }
 			this.$ut.jump(`/sub-pack/tab1/device/detail?instrumentId=${id}&deviceId=${deviceId}`);
 		}
   }

@@ -75,20 +75,13 @@ export default {
 				uni.hideLoading();
 			});
 		},
-		checkUserInfo() {
-			const id = this.$store.getters.userId
-			if (!id) {
-				this.$ut.jump("/project-pages/login/login");
-				return;
-			}
-		},
 		onSearch(e) {
 			const searchData = e
 			this.queryParameter.deviceName = searchData
 			this.$refs.zPagingRef && this.$refs.zPagingRef.refresh();
 		},
 		handleGoDetail(id, deviceId) {
-			this.checkUserInfo()
+            if (!this.checkUserInfo()){ return }
 			this.$ut.jump(`/sub-pack/tab1/device/detail?instrumentId=${id}&deviceId=${deviceId}`);
 		}
 	},

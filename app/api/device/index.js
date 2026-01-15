@@ -1,4 +1,4 @@
-import request from "@/providers/request";
+import request from "@/providers/http";
 
 export function getDeviceList(queryParameter) {
 	return request({

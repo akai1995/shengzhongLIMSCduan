@@ -36,7 +36,7 @@ export default {
   },
   methods: {
 		onSign(id) {
-			this.checkUserInfo()
+            if (!this.checkUserInfo()){ return }
 			this.$ut.jump(`/pages/tabs/tab1/doc-sign?id=${id}&showSign=true`);
 		}
   }

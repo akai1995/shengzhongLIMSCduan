@@ -52,7 +52,7 @@ export default {
 		},
 		onHome(name) {
 			if (name=='sign-doc'){
-				this.checkUserInfo()
+            	if (!this.checkUserInfo()){ return }
 			}
 			this.$ut.jump('/pages/tabs/tab1/'+name) 
 		}

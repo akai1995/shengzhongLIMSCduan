@@ -42,6 +42,14 @@
 				"navigationBarTitleText": "我的",
 				"enablePullDownRefresh": false
 			}
+		},
+		{
+			"path": "pages/404/404",
+			"style": {
+				"navigationStyle": "default",
+				"enablePullDownRefresh": false,
+				"navigationBarTitleText": "页面丢失了"
+			}
 		}
 	],
 	"subPackages": [
@@ -51,8 +59,8 @@
 				{
 					"path": "login/login",					
 					"style": {
-						"navigationBarTitleText": "设备预约",
-						"navigationStyle": "default",
+						"navigationBarTitleText": "登录",
+						// "navigationStyle": "default",
 						"enablePullDownRefresh": false,
 						"navigationBarBackgroundColor": "#ffffff00"
 					}
@@ -79,7 +87,7 @@
 				{
 					"path": "ocr-recognition/ocr-recognition",
 					"style": {
-						"navigationBarTitleText": "",
+						"navigationBarTitleText": "图文识别",
 						"enablePullDownRefresh": false
 					}
 				}

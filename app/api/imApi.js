@@ -1,4 +1,4 @@
-import request from '@/providers/request'
+import request from '@/providers/http'
 
 // 获取某个频道的消息列表
 export function loadHisMsg(params) {

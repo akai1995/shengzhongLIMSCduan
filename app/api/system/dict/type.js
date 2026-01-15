@@ -1,4 +1,4 @@
-import request from '@/providers/request'
+import request from '@/providers/http'
 
 // 查询字典类型列表
 export function listType(query) {

@@ -47,21 +47,23 @@ export default{
 		checkUserInfo() {
 			const id = this.$store.getters.userId
 			if (!id) {
-				this.$ut.jump("/project-pages/login/login");
-				return;
+				this.$ut.jump("/sub-pack/project-pages/login/login");
+				return false;
 			}
+			return true;
+		},
+		showToast(msg, icon = 'none', success=()=>{}, duration = 1500) {
+			uni.showToast({
+				msg: msg, icon: icon,
+				duration: duration,
+				success: success
+			});
 		},
 		routePush({ url }) {
-			this.$eUni.navTo({ url })
+			if (url) { this.$eUni.navTo({ url }) } else { this.$eUni.navTo({ url: '' }) }
+			
 		},
-		routeDetailEmit({ url, item }) {
-			this.$eUni.navTo({ 
-				url,
-				success(res) {
-					res.eventChannel.emit('item', item)
-				}
-			})
-		},
+		routeDetailEmit({ url, item }) { this.$eUni.navTo({  url, success(res) { res.eventChannel.emit('item', item) } }) },
 		async showSelct(arr, field) {
 			const itemList = arr.map(({
 				label

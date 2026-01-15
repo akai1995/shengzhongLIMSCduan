@@ -44,12 +44,12 @@ const request = config => {
 			toLogin = true
           // showType = true
           // showConfirm('登录状态已过期，请重新登录').then(res => {
-			  // uni.reLaunch({ url: '/project-pages/login/login' })
-			  uni.navigateTo({ url: '/project-pages/login/login', complete:()=>{ toLogin = false } })
+			  // uni.reLaunch({ url: '/sub-pack/project-pages/login/login' })
+			  uni.navigateTo({ url: '/sub-pack/project-pages/login/login', complete:()=>{ toLogin = false } })
     //       showConfirm('请登录查看').then(res => {
 				// if(res.confirm){
 				// 	store.dispatch('WxLogOut').then(res => {
-				// 	  uni.reLaunch({ url: '/project-pages/login/login' })
+				// 	  uni.reLaunch({ url: '/sub-pack/project-pages/login/login' })
 				// 	  showType = false
 				// 	})
 				// }else if(res.cancel){

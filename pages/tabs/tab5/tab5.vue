@@ -67,18 +67,9 @@ export default {
 			this.headInfo.listHeight = `calc(100vh - ${popInfo.top + popInfo.height + 155}px)`
 			// #endif
 		},
-		checkUserInfo() {
-			const id = this.$store.getters.userId
-			console.log(this.$store.getters);
-			if (!id) {
-				this.$ut.jump("/project-pages/login/login");
-				return false;
-			}
-            return true;
-		},
 		onJump(item) {
             if (item.path) {
-                this.checkUserInfo()
+            	if (!this.checkUserInfo()){ return }
 			    this.$ut.jump(item.path);
             } else {
 			    uni.showToast({ title: "敬请期待", icon: "none", });
