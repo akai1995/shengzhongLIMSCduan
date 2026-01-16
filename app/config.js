@@ -36,7 +36,7 @@ module.exports = {
 		// 应用名称
 		name: "e-AI",
 		// 应用版本
-		version: "2.26.0113",
+		version: "2.26.0116",
 		// 应用logo
 		logo: "/static/logo.png",
 		// 官方网站

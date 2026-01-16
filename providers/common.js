@@ -3,12 +3,7 @@
  * @param 根据code获取name
  */
 import { areaList } from '@/providers/area.js'
-const {
-	street_list,
-	county_list,
-	city_list,
-	province_list
-} = areaList
+const { street_list, county_list, city_list, province_list } = areaList
 export function getAddressByCode(code, splitStr = '-') {
 	if (!code || code.length < 6) {
 		return ''
