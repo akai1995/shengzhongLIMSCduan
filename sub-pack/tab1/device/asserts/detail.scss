@@ -247,3 +247,17 @@
 		}
 	}
 }
+
+    
+/*共用底部按钮*/
+.pubBotBtn {
+	background: #fff;
+    padding: 16rpx;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+	.wrap {
+        padding: 0;
+        width: 100%;
+	}
+}

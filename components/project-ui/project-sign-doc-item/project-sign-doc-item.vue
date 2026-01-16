@@ -2,15 +2,13 @@
     <view class="liItem">
         <view class="liItemInfo">
             <view class="pecific">
-                <view class="signFileName">{{ item.signFileName }}</view>
+                <view class="signFileName">{{ item.signFileName || '' }}</view>
                 <view class="summary">发起人: {{ item.createBy }}</view>
                 <view class="summary">发起时间: {{ item.createTime }}</view>
             </view>
         </view>
-        <view class="botHandle pubBotHandle" :class="{pubBotLine:!hideLine}">
-            <view class="btn" @click.stop="onSign(item.id)">
-                <u-button type="primary" size="small" text="去签署" />
-            </view>
+        <view class="botHandle pubBotHandle" :class="{ pubBotLine: !hideLine }">
+            <view class="btn" @click.stop="onSign(item.id)"><u-button type="primary" size="small" text="去签署" /></view>
         </view>
     </view>
 </template>
@@ -63,12 +61,11 @@ export default {
             box-sizing: border-box;
             
             .pecific {
-                position: relative;
-                
+                position: relative;                
                 .signFileName {
                     color: #222;
                     font-size: 32rpx;
-                    line-height: 44rpx;
+                    line-height: 42rpx;
                     font-weight: 500;
                     overflow: hidden;
                     white-space: nowrap;
@@ -78,7 +75,7 @@ export default {
                 .summary {
                     color: #9699A1;
                     font-size: 24rpx;
-                    line-height: 44rpx;
+                    line-height: 42rpx;
                     font-weight: 400;
                     overflow: hidden;
                     white-space: nowrap;
@@ -87,28 +84,8 @@ export default {
             }
         }
 
-        .botHandle {
-            height: 95rpx;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            margin-top: 10rpx;
-            .btn {
-                background: transparent !important;
-                margin: 0 !important;
-                padding: 0 15rpx !important;
-                color: #000 !important;
-                font-size: 28rpx !important;
-                .u-icon {
-                    margin-right: 10rpx;
-                }
-                &::after {
-                    border: 0 !important;
-                }
-                &:active {
-                    opacity: 0.8;
-                }
-            }
+        .pubBotHandle {
+            margin-top: 0;
         }
         
         &:last-child {

@@ -1,13 +1,20 @@
 <template>
 	<view>
 		<view class="login">
-			<view class="title">短信登录</view>
-			<u--form :model="form" ref="uForm">
+			<view class="title">注册新账号</view>
+			<u--form :model="form" class="m-t4" ref="uForm">
+				<u-form-item class="form-item" labelWidth="80" label="国家/地区">
+					<!-- <u-picker :show="show" :columns="columns"></u-picker> -->
+					<view class="list">
+						<view>中国+86</view>
+						<view><u-icon name="arrow-right" color="#999"></u-icon></view>
+					</view>
+				</u-form-item>
 				<u-form-item class="form-item" labelWidth="60" label="手机号">
-					<u-input class="input" v-model="form.phone" maxlength='11' type="number" placeholder="请输入账号" />
+					<u-input class="input" type="number" v-model="form.phone" placeholder="请输入账号" />
 				</u-form-item>
 				<u-form-item label="验证码" labelWidth="60">
-					<u-input class="input" v-model="form.code" type="number" placeholder="请输入登录密码" >
+					<u-input class="input" type="number" v-model="form.code" placeholder="请输入登录密码" >
 						<template slot="suffix">
 							<u-tag text="发送验证码" plain size="mini"></u-tag>
 						</template>
@@ -20,16 +27,14 @@
 				<u-checkbox name="ok" shape="circle" activeColor="#3B7EFFFF"></u-checkbox>
 			</u-checkbox-group>
 			<text class="grey">已仔细阅读并同意</text>
-			<text class="blue">《基因派平台服务协议》</text>
-			<text class="blue">《知情同意》</text>
+			<text class="blue" @click="$ut.jump('/sub-pack/project-pages/article-detail/article-detail?type=1&name=基因派平台服务协议')">《基因派平台服务协议》</text>
+			<text class="blue" @click="$ut.jump('/sub-pack/project-pages/article-detail/article-detail?type=2&name=知情同意')">《知情同意》</text>
 		</view>
 
-		<view class="btn">登录</view>
+		<view class="btn" @click="onSwitch('4')">下一步</view>
 
 		<view class="other grey">
-			<text @click="onSwitch('0')">微信登录</text>
-			<text class="silod" @click="onSwitch('3')">注册新账号</text>
-			<text @click="onSwitch('1')">账号登录</text>
+			<text @click="onSwitch('0')">已有账号</text>
 		</view>
 	</view>
 </template>
@@ -42,6 +47,9 @@
 					phone:'',
 					code:''
 				},
+				columns:['中国'],
+				show:false,
+				
 				checked: []
 			};
 		},
@@ -122,10 +130,17 @@
 		border-bottom: 1rpx solid #DADADAFF;
 	}
 	.input{
-		border: none !important;
+		border: none;
 	}
 	.tag{
 		color: #3B7EFFFF;
 		font-size: 28rpx;
+	}
+	
+	.list{
+		width: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
 	}
 </style>

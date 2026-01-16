@@ -1,13 +1,18 @@
-<style lang="less" scoped>
-@import './asserts/detail.less';
+<style lang="scss" scoped>
+@import './asserts/detail.scss';
 </style>
 
 <template>
-    <view>
-        <ut-nav title="详情" @onBack="handleGoHome" border></ut-nav>
+	<z-paging
+		ref="paging" class="detailPage" :paging-style="{backgroundColor: 'white'}" v-model="dataList" @query="queryList"
+		:fixed="true" :auto="false" :refresher-enabled="false" :auto-show-back-to-top="true" :auto-scroll-to-top-when-reload="false"
+		:loading-more-enabled="false" :show-refresher-when-reload="false" hide-empty-view
+	>
+        <view slot="top"><u-navbar title="详情" :fixed="false" background="transparent" color="#000" left-icon-color="#000" @leftClick="handleGoHome" /></view>
+        <!-- <ut-nav title="详情" @onBack="handleGoHome" border></ut-nav> -->
         <view class="detail">
             <view class="detail-pic">
-                <image class="detail-img" :src="deviceInfo.deviceImg ? deviceInfo.deviceImg : $staticPath+'device-appointment/image.png'" />
+                <image class="detail-img" :src="deviceInfo.deviceImg ? deviceInfo.deviceImg : $staticPath+'temp/imgs/devcieCover.png'" />
             </view>
             <view class="detail-content">
                 <view class="detail-info">
@@ -49,11 +54,11 @@
                     <view class="detail-date-choose">
                         <view class="detail-date-choose-item">
                             <view class="detail-date-choose-item-title">开始时间</view>
-                            <view class="detail-date-choose-item-button" @click="handleTimeClick('start')">{{ time.start ? time.start : '请选择' }}</view>
+                            <u-button type="success" plain :text="time.start ? time.start : '请选择'" shape="circle" @click="handleTimeClick('start')" />
                         </view>
                         <view class="detail-date-choose-item">
                             <view class="detail-date-choose-item-title">结束时间</view>
-                            <view class="detail-date-choose-item-button" @click="handleTimeClick('end')">{{ time.end ? time.end : '请选择' }}</view>
+                            <u-button type="success" plain :text="time.end ? time.end : '请选择'" shape="circle" @click="handleTimeClick('end')" />
                         </view>
                     </view>
                 </view>
@@ -109,10 +114,6 @@
                             <u--textarea v-model="form.description" placeholder="请输入用途说明" :autoHeight="false" />
                         </view>
                     </view>
-
-                    <view class="submit-button">
-                        <u-button @click="handleSubmit" type="primary" text="提交预约" />
-                    </view>
                 </view>
             </view>
         </view>
@@ -121,17 +122,21 @@
         <u-picker :show="group.visible" :columns="group.list" keyName="label" @confirm="handleCurrGroup" @cancel="group.visible = false" />
         <u-picker :show="teacher.visible" :columns="teacher.list" keyName="label" @confirm="handleCurrTeacher" @cancel="teacher.visible = false" />
         <u-calendar :show="choose.moreVisible" :defaultDate="choose.minDate" :minDate="choose.minDate" :maxDate="choose.maxDate" @confirm="handleConfirmDate" @close="choose.moreVisible = false"></u-calendar>
-    </view>
+
+        <view slot="bottom" class="pubBotBtn pubTopLine">
+            <view class="wrap">
+                <view class="btn" @click="handleSubmit"><u-button type="primary" text="提交预约" /></view>
+            </view>
+        </view>
+    </z-paging>
 </template>
 
 <script>
 import { deviceSubmit, deviceDetail, getAllDayReserve, getGroup, getTeacher } from '@/app/api/device/index.js'
-
 export default {
     data() {
         return {
-            instrumentId: null,
-            deviceId: null,
+			dataList: [], firstLoaded: false, instrumentId: null, deviceId: null,
             choose: { currIndex: 0, list: [], isMore: false, moreDate: '', moreVisible: false, minDate: '', maxDate: '', moreText: true },
             time: { start: null, end: null, select: [[]], selectVisible: false, type: '' },
             form: { name: '', phone: '', description: '', group: '', teacher: '', school: '', info: '' },
@@ -144,10 +149,13 @@ export default {
     onLoad(options) {
         this.instrumentId = options.instrumentId;
         this.deviceId = options.deviceId;
-        this.getDeviceDetail()
-        this.getGroup()
+        // this.getDeviceDetail(); this.getGroup()
     },
     methods: {
+		queryList(pageNo, pageSize) {
+			this.$refs.paging.endRefresh()
+            uni.hideLoading();
+		},
         generateDateArray() {
             const result = [];
             const today = new Date();
@@ -267,13 +275,13 @@ export default {
                     this.deviceInfo.canReserveTime = resp.result.openTime
                     this.deviceInfo.deviceImg = resp.result.deviceImg || null
 
-
-                    this.generateDateArray()
-                    this.getSelectPicker()
-                    this.getAllDayReserve()
+                    this.generateDateArray(); this.getSelectPicker(); this.getAllDayReserve()
                 }
-            });
-
+            }).finally(()=>{
+                setTimeout(() => {
+                    this.firstLoaded = true
+                }, 1000)
+            })
         },
         getGroup() {
             getGroup().then((resp) => {
@@ -286,7 +294,6 @@ export default {
                 }
             });
         },
-
         getTeacher(id) {
             getTeacher(id).then((resp) => {
                 if (resp.code == 200) {

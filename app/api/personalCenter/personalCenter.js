@@ -1,4 +1,3 @@
-import upload from "@/providers/utilities/upload";
 import request from "@/providers/http";
 
 // 查询家庭成员数量

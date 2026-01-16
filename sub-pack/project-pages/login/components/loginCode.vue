@@ -1,15 +1,15 @@
 <template>
 	<view>
 		<view class="login">
-			<view class="title">账号登录</view>
+			<view class="title">短信登录</view>
 			<u--form :model="form" ref="uForm">
-				<u-form-item class="form-item" label="账号" prop="account">
-					<u-input class="input" v-model="form.account" type="number" placeholder="请输入账号" />
+				<u-form-item class="form-item" labelWidth="60" label="手机号">
+					<u-input class="input" v-model="form.phone" maxlength='11' type="number" placeholder="请输入账号" />
 				</u-form-item>
-				<u-form-item label="密码" prop="pass">
-					<u-input class="input" v-model="form.pass" type="number" placeholder="请输入登录密码" >
+				<u-form-item label="验证码" labelWidth="60">
+					<u-input class="input" v-model="form.code" type="number" placeholder="请输入登录密码" >
 						<template slot="suffix">
-							<text class="tag">忘记密码</text>
+							<u-tag text="发送验证码" plain size="mini"></u-tag>
 						</template>
 					</u-input>
 				</u-form-item>
@@ -20,8 +20,8 @@
 				<u-checkbox name="ok" shape="circle" activeColor="#3B7EFFFF"></u-checkbox>
 			</u-checkbox-group>
 			<text class="grey">已仔细阅读并同意</text>
-			<text class="blue">《基因派平台服务协议》</text>
-			<text class="blue">《知情同意》</text>
+			<text class="blue" @click="$ut.jump('/sub-pack/project-pages/article-detail/article-detail?type=1&name=基因派平台服务协议')">《基因派平台服务协议》</text>
+			<text class="blue" @click="$ut.jump('/sub-pack/project-pages/article-detail/article-detail?type=2&name=知情同意')">《知情同意》</text>
 		</view>
 
 		<view class="btn">登录</view>
@@ -29,7 +29,7 @@
 		<view class="other grey">
 			<text @click="onSwitch('0')">微信登录</text>
 			<text class="silod" @click="onSwitch('3')">注册新账号</text>
-			<text @click="onSwitch('2')">短信登录</text>
+			<text @click="onSwitch('1')">账号登录</text>
 		</view>
 	</view>
 </template>
@@ -39,8 +39,8 @@
 		data() {
 			return {
 				form:{
-					account:'',
-					pass:''
+					phone:'',
+					code:''
 				},
 				checked: []
 			};
@@ -55,15 +55,13 @@
 
 <style lang="less">
 	.login {
-		width: 90%;
-		min-height: 270rpx;
-		background: #fff;
-		border-radius: 20rpx;
-		margin: auto;
-		margin-top: -140rpx;
+		margin-top: -140rpx !important;
 		position: relative;
-		z-index: 1;
-		padding: 40rpx 40rpx 20rpx 40rpx;
+		border-radius: 20rpx;
+		min-height: 160rpx;
+		width: 90%; margin: auto;
+		z-index: 1; padding: 40rpx;
+		// background: #fff;
 		box-sizing: border-box;
 
 		.title {
@@ -94,8 +92,7 @@
 		}
 
 		.silod {
-			padding: 0 39rpx;
-			margin: 0;
+			padding: 0 39rpx; margin: 0;
 			box-sizing: border-box;
 			border-left: 1rpx solid #D9D9D9FF;
 			border-right: 1rpx solid #D9D9D9FF;
@@ -104,7 +101,7 @@
 
 	.btn {
 		margin: auto;
-		margin-top: 40rpx;
+		// margin-top: 40rpx;
 		width: 600rpx;
 		height: 80rpx;
 		background: linear-gradient(135deg, #00DEFF 0%, #0C5FFF 100%);
@@ -122,7 +119,7 @@
 		border-bottom: 1rpx solid #DADADAFF;
 	}
 	.input{
-		border: none;
+		border: none !important;
 	}
 	.tag{
 		color: #3B7EFFFF;

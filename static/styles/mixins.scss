@@ -49,7 +49,7 @@
 }
 
 @mixin background-image($val) {
-	background-image: url(https://genepiapi.ypzlfx.com/file/#{$val});
+	background-image: url(https://genepiapi.ypzlfx.com/file/eai/#{$val});
 	background-repeat: no-repeat;
 	background-position: center center;
 	background-size: cover;

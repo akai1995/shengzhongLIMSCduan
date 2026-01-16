@@ -53,8 +53,9 @@ export default{
 			return true;
 		},
 		showTips(msg, icon = 'none', success=()=>{}, duration = 1500) {
+			console.log('msg', msg)
 			uni.showToast({
-				msg: msg, icon: icon,
+				title: msg, icon: icon,
 				duration: duration,
 				success: success
 			});

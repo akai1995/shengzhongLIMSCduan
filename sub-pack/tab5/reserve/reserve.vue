@@ -1,9 +1,14 @@
-<style lang="less" scoped>
-@import './asserts/reserve.less';
+<style lang="scss" scoped>
+@import './asserts/reserve.scss';
 </style>
 
 <template>
-	<z-paging ref="paging" class="reserve" :paging-style="{ backgroundColor: '#F7F8FA' }" v-model="dataList" @query="queryList" :fixed="true" :auto="false" :auto-show-back-to-top="true" :enable-back-to-top="true" :show-refresher-when-reload="true" :auto-scroll-to-top-when-reload="false" :auto-clean-list-when-reload="true" :safe-area-inset-bottom="true" empty-view-text="暂无数据">
+	<z-paging 
+        ref="paging" class="reserve" :paging-style="{ backgroundColor: '#F7F8FA' }" v-model="dataList" @query="queryList"
+        :fixed="true" :auto="false" :auto-show-back-to-top="true" :enable-back-to-top="true" :show-refresher-when-reload="true"
+        :auto-scroll-to-top-when-reload="false" :auto-clean-list-when-reload="true" :safe-area-inset-bottom="true"
+        empty-view-text="暂无数据" :loading-more-no-more-text="`已加载完，共${totalCount}条记录`"
+    >
 		<ut-nav slot="top" title="我的预约" @onBack="handleGoUser" border></ut-nav>
         <view class="reserve-list">
             <u-skeleton v-if="!firstLoaded&&dataList.length === 0" rows="15" title loading />
@@ -27,7 +32,7 @@ export default {
     },
 	mounted() {
 		setTimeout(() => {
-		this.$refs.paging && this.$refs.paging.refresh();
+			this.$refs.paging && this.$refs.paging.refresh();
 		}, 250);
 	},
     methods: {

@@ -2,25 +2,27 @@
 	<view>
 		<view class="login">
 			<!-- <view class="title">微信登录</view> -->
-
-			<button open-type="getPhoneNumber" size="mini" class="btn" v-if="checked.length>0"
-				@getphonenumber="getPhoneNumber">
+			<!-- #ifdef MP-WEIXIN -->
+			<button open-type="getPhoneNumber" size="mini" class="btn" v-if="checked.length>0" @getphonenumber="getPhoneNumber">
 				<!-- <u-icon name="weixin-fill" color="#fff" size="40rpx"></u-icon> -->
 				<text style="margin: 0 10rpx;">手机号快捷登录</text>
 			</button>
-			<view class="btn" style="background:#82848a;" v-if="checked.length == 0"
-				@click="$ut.showText(`请阅读并同意《服务条款》和《隐私协议》`)">
+			<button size="mini" class="btn" style="background:#82848a;" v-if="checked.length == 0" @click="showTips(`请阅读并同意《服务条款》和《隐私协议》`)">
 				<!-- <u-icon name="weixin-fill" color="#fff" size="40rpx"></u-icon> -->
 				<text style="margin: 0 10rpx;">手机号快捷登录</text>
-			</view>
+			</button>
+			<!-- #endif -->
+			 
+			<!-- #ifdef H5 -->
+			<button size="mini" class="btn" v-if="checked.length>0" @click="showTips(`请到小程序里面操作`)">手机号快捷登录</button>
+			<button size="mini" class="btn" style="background:#82848a;" v-if="checked.length == 0" @click="showTips(`请到小程序里面操作`)">手机号快捷登录</button>
+			<!-- #endif -->
 		</view>
 		<view class="clause">
-			<u-checkbox-group v-model="checked">
-				<u-checkbox name="ok" shape="circle" activeColor="#3B7EFFFF"></u-checkbox>
-			</u-checkbox-group>
+			<u-checkbox-group v-model="checked"><u-checkbox name="ok" shape="circle" activeColor="#3B7EFFFF" /></u-checkbox-group>
 			<text class="grey">已仔细阅读并同意</text>
-			<text class="blue" @click="$ut.jump('/pagesA/clause/clause')">《服务条款》</text>
-			<text class="blue" @click="$ut.jump('/pagesA/clause/clause?type=2')">《隐私协议》</text>
+			<text class="blue" @click="$ut.jump('/sub-pack/project-pages/article-detail/article-detail?type=1&name=服务条款')">《服务条款》</text>
+			<text class="blue" @click="$ut.jump('/sub-pack/project-pages/article-detail/article-detail?type=2&name=隐私协议')">《隐私协议》</text>
 		</view>
 
 		<view class="other grey" v-if="false">
@@ -28,46 +30,27 @@
 			<text class="silod" @click="onSwitch('3')">注册新账号</text>
 			<text @click="onSwitch('1')">账号登录</text>
 		</view>
-
-		<u-toast ref="uToast"></u-toast>
 	</view>
 </template>
 
 <script>
 	import { getExpert } from '@/app/api/system/user.js'
-	import { getToken } from '@/providers/auth'
 	import { registerIm } from '@/app/api/imApi.js'
+	import { getToken } from '@/providers/auth'
 	export default {
-		data() {
-			return {
-				checked: [],
-				wxLoginForm: {},
-				telCode: '',
-			};
-		},
+		data() { return { checked: [], wxLoginForm: {}, telCode: '' } },
 		methods: {
-			onSwitch(val) {
-				this.$emit('onSwitch', val)
-			},
-			getPhoneNumber(e) {
-				if (e.detail.errMsg == "getPhoneNumber:ok") {
-					this.telCode = e.detail.code
-					this.wxHandleLogin()
-				}
-			},
-
+			onSwitch(val) { this.$emit('onSwitch', val) },
+			getPhoneNumber(e) { if (e.detail.errMsg == "getPhoneNumber:ok") { this.telCode = e.detail.code; this.wxHandleLogin() } },
 			async wxHandleLogin() {
-				uni.getProvider({
-					service: 'oauth',
+				uni.getProvider({ service: 'oauth',
 					success: (res) => {
 						console.log(res);
 						if (~res.provider.indexOf("weixin")) {
 							//登录
-							uni.login({
-								provider: 'weixin',
+							uni.login({ provider: 'weixin',
 								success: (loginRes) => {
 									console.log("获取登录信息", loginRes);
-
 									//设置凭证
 									this.wxLoginForm.code = loginRes.code;
 									//向后端发起请求
@@ -81,16 +64,11 @@
 
 			sendWxLoginFormToLocalService() {
 				// console.log("向后端发起请求" + this.wxLoginForm);
-				let params = {
-					code: this.wxLoginForm.code,
-					phoneCode: this.telCode
-				}
+				let params = { code: this.wxLoginForm.code, phoneCode: this.telCode }
 				uni.showLoading({})
 				this.$store.dispatch('WxLogin', params).then(() => {
-					console.log("登录成功")
-					// this.$modal.closeLoading()
-					uni.hideLoading()
-					// this.distingUser()
+					uni.hideLoading(); console.log("登录成功")
+					// this.$modal.closeLoading(); this.distingUser()
 					// return
 					this.loginSuccess()
 
@@ -107,10 +85,8 @@
 				const orderReceive = uni.getStorageSync('orderReceive')
 				// 设置用户信息
 				this.$store.dispatch('GetWxInfo').then(res => {
-
 					//TODO
-					let id = this.$store.getters.userId;
-					let token = getToken()
+					let id = this.$store.getters.userId; let token = getToken();
 					// registerIm().then(res=>{
 					// 	if(res.code==200){
 					// 		// 单机模式可以直接设置地址
@@ -122,48 +98,20 @@
 					// 	}
 					// })
 
-					uni.showToast({
-						title: '授权登录成功',
-						icon: 'none'
-					})
+					uni.showToast({ title: '授权登录成功', icon: 'none' })
 					let pages = getCurrentPages()
 					const pagesNum = pages.filter(({ route }) => route === 'project-pages/login/login').length
-					this.$eUni.navBack({
-						delta: pagesNum
-					})
-					uni.removeStorageSync('orderReceive')
-					uni.removeStorageSync('signin')
-					uni.removeStorageSync('report')
+					this.$eUni.navBack({ delta: pagesNum }); uni.removeStorageSync('orderReceive')
+					uni.removeStorageSync('signin'); uni.removeStorageSync('report')
 					// console.log(this.$store.getters.userType);
 					// if (this.$store.getters.userType == 1) {
-					// 	if (orderReceive) {
-					// 		this.$eUni.reLaunch({
-					// 			url: '/pagesB/order/orderReceive'
-					// 		})
-					// 	} else {
-					// 		this.$eUni.reLaunch({
-					// 			url: '/pagesC/doctor-index/doctor-index'
-					// 		})
-					// 	}
-
-
+					// 	if (orderReceive) { this.$eUni.reLaunch({ url: '/pagesB/order/orderReceive' }) } 
+					//  else { this.$eUni.reLaunch({ url: '/pagesC/doctor-index/doctor-index' }) }
 					// } else {
-
-					// 	// if (signin) {
-					// 	// 	this.$eUni.reLaunch({
-					// 	// 	url: '/pagesA/signin/signin'
-					// 	// })
-					// 	// }else if (report) {
-					// 	// 	this.$eUni.reLaunch({
-					// 	// 	url: '/pages/report/report'
-					// 	// 	})
-					// 	// } else {
-					// 	// 	this.$eUni.reLaunch({
-					// 	// 	url: '/pages/launch/launch'
-					// 	// })
-					// 	// }
-					// 	uni.removeStorageSync('signin')
-					// 	uni.removeStorageSync('report')
+					// 	// if (signin) { this.$eUni.reLaunch({ url: '/pagesA/signin/signin' }) }
+					// 	// else if (report) { this.$eUni.reLaunch({ url: '/pages/report/report' }) } 
+					//  // else { this.$eUni.reLaunch({ url: '/pages/launch/launch' }) }
+					// 	uni.removeStorageSync('signin'); uni.removeStorageSync('report')
 					// }
 					uni.$emit('refresh')
 				})
@@ -186,17 +134,14 @@
 
 <style lang="less">
 	.login {
-		width: 90%;
-		min-height: 270rpx;
-		// background: #fff;
-		border-radius: 20rpx;
-		margin: auto;
-		margin-top: -140rpx;
+		margin-top: -140rpx !important;
 		position: relative;
-		z-index: 1;
-		padding: 40rpx;
+		border-radius: 20rpx;
+		min-height: 160rpx;
+		width: 90%; margin: auto;
+		z-index: 1; padding: 40rpx;
+		// background: #fff;
 		box-sizing: border-box;
-
 		.title {
 			font-size: 48rpx;
 			font-weight: bold;
@@ -204,16 +149,12 @@
 		}
 
 		.btn {
-			margin-top: 40rpx;
-			width: 100%;
-			height: 80rpx;
+			// margin-top: 40rpx;
+			width: 100%; height: 80rpx;
 			background: linear-gradient(135deg, #00DEFF 0%, #0C5FFF 100%);
-			border-radius: 80rpx;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			color: #fff;
-			font-size: 36rpx;
+			border-radius: 80rpx; display: flex;
+			align-items: center; justify-content: center;
+			color: #fff; font-size: 36rpx;
 			font-weight: bold;
 			letter-spacing: 2rpx;
 		}
@@ -239,8 +180,7 @@
 		}
 
 		.silod {
-			padding: 0 39rpx;
-			margin: 0;
+			padding: 0 39rpx; margin: 0;
 			box-sizing: border-box;
 			border-left: 1rpx solid #D9D9D9FF;
 			border-right: 1rpx solid #D9D9D9FF;

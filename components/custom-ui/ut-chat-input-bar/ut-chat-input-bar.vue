@@ -23,17 +23,17 @@
 			</view>
 			<!-- 表情图标（如果不需要切换表情面板则不用写） -->
 			<!-- <view class="emoji-container">
-				<image class="emoji-img" :src="`/static/${emojiType || 'emoji'}.png`" @click="emojiChange"></image>
+				<image class="emoji-img" :src="`${$staticPath}temp/${emojiType || 'emoji'}.png`" @click="emojiChange"></image>
 			</view> -->
-			<view class="chat-input-history" @click="onLogShow()">
-				<u-icon name="/static/temp/imgs/icon-history.png" size="45rpx" />
+			<view class="chat-input-history" @click.stop="onLogShow()">
+				<u-icon :name="`${$staticPath}temp/imgs/icon-history.png`" size="45rpx" />
 			</view>
-			<view class="chat-input-plus" @click="onPlus()">
-				<u-icon name="/static/temp/imgs/icon-plus.png" size="45rpx" />
+			<view class="chat-input-plus" @click.stop="onPlus()">
+				<u-icon :name="`${$staticPath}temp/imgs/icon-plus.png`" size="45rpx" />
 			</view>
-			<view :class="{'chat-input-send': true, 'chat-input-send-disabled': !sendEnabled}" @click="sendClick">
+			<view :class="{'chat-input-send': true, 'chat-input-send-disabled': !sendEnabled}" @click.stop="sendClick">
 				<!-- <text class="chat-input-send-text">发送</text> -->
-				<u-icon name="/static/temp/imgs/icon-send.png" size="45rpx" />
+				<u-icon :name="`${$staticPath}temp/imgs/icon-send.png`" size="45rpx" />
 			</view>
 		</view>
 		<!--  表情面板，这里使用height控制隐藏显示是为了有高度变化的动画效果（如果不需要切换表情面板则不用写） -->
@@ -119,13 +119,11 @@
 			
 			// 点击了发送按钮
 			onLogShow() {
-				if (!this.sendEnabled) return;
-				this.$emit('history');
-				this.msg = '';
+				this.$emit('show-log');
 			},
-			
-			// 点击了发送按钮
-			sendClick() {
+				
+			// 点击了选择文件
+			onPlus() {
 				if (!this.sendEnabled) return;
 				
 			},

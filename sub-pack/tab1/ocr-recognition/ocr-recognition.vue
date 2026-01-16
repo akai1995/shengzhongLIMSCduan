@@ -1,5 +1,5 @@
-<style lang="less" scoped>
-@import './asserts/ocr-recognition.less';
+<style lang="scss" scoped>
+@import './asserts/ocr-recognition.scss';
 </style>
 
 <template>
@@ -30,7 +30,7 @@
                     <view class="subTip">您可以上传需要识别的图片，我们将为您智能识别提取文字信息~</view>
                     <view class="imgBox">
                         <view class="scanBox">
-                            <image src="@/static/temp/imgs/ocr-icon.png" />
+                            <image :src="`${$staticPath}temp/imgs/ocr-icon.png`" />
                         </view>
                         <view class="scanTip">请上传图文清晰的图片</view>
                     </view>
@@ -39,7 +39,7 @@
             <view slot="bottom" class="pubBotBtn pubTopLine">            
                 <view class="wrap">
                     <view class="btn icon-history" @click="onOcrResultLogShow()">
-                        <u-icon name="/static/temp/imgs/icon-history.png" size="45rpx" />
+                        <u-icon :name="`${$staticPath}temp/imgs/icon-history.png`" size="45rpx" />
                     </view>
                 </view>
                 <view class="wrap">
@@ -66,7 +66,7 @@ export default {
     },
 	data() {
 		return {
-			dataList: [], totalCount: 0, firstLoaded: false,
+			dataList: [], firstLoaded: false,
             fileList: [], fileValue: '', info: {
                 imgPath: '', content: ''
             },
@@ -94,7 +94,7 @@ export default {
         onChoose(sourceType){
             chooseFile(
                 Object.assign({
-                    accept: 'image',
+                    accept: 'media',
                     multiple: false,
                     capture: [sourceType],
                     compressed: true,

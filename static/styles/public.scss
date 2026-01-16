@@ -130,7 +130,7 @@ text {
 
 /*共用按钮（列表操作）*/
 .pubBotHandle {
-	height: 120rpx;
+	height: 100rpx;
 	display: flex;
 	align-items: center;
 	justify-content: flex-end;
@@ -138,7 +138,7 @@ text {
 
 	.btn {
 		flex-direction: column !important;
-		height: 100rpx !important;
+		// height: 100rpx !important;
 		padding: 0 20rpx !important;
 		margin: 0 0 0 20rpx !important;
 		color: #000 !important;
@@ -160,19 +160,16 @@ text {
 	}
 }
 
-
 /*共用底部按钮*/
 .pubBotBtn {
-	position: fixed;
-	left: 0;
-	bottom: 0;
-	width: 100%;
-	z-index: 5;
 	background: #fff;
+    padding: 20rpx;
+    display: flex;
+    align-items: center;
+	width: 100%;
 	.wrap {
 		padding: 20rpx;
 		display: flex;
-
 		.btn {
 			padding: 15rpx;
 			display: flex;
@@ -223,6 +220,15 @@ text {
 
 		.wrap {
 			padding: 10rpx 0;
+		}
+	}
+}
+
+
+.luBox {
+    .liItem {
+		&:last-child {
+			margin-bottom: 0 !important;
 		}
 	}
 }

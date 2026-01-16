@@ -1,11 +1,10 @@
-<style lang="less" scoped>
-@import './asserts/launch.less';
+<style lang="scss" scoped>
+@import './asserts/launch.scss';
 </style>
 
 <template>
 	<view class="page">
-		<img class="home-bg" :src="$staticPath+'device-appointment/image 39.png'" />
-
+		<image class="home-bg" :src="`${$staticPath}temp/imgs/top_bg.png`" />
 		<view class="home-head" :style="{ height: headInfo.headHeight }">
 			<view class="home-title" :style="{ marginTop: headInfo.titleTop }">eAI</view>
 		</view>

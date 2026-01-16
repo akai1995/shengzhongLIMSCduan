@@ -1,5 +1,5 @@
-<style lang="less" scoped>
-@import './asserts/device-apply.less';
+<style lang="scss" scoped>
+@import './asserts/device-apply.scss';
 </style>
 
 <template>
@@ -7,23 +7,22 @@
 		ref="paging" class="page" :paging-style="{backgroundColor: 'white'}" 
 		v-model="dataList" @query="queryList" :fixed="true" :auto="false" :auto-show-back-to-top="true"
 		:enable-back-to-top="true" :show-refresher-when-reload="true" :auto-scroll-to-top-when-reload="false" 
-		:auto-clean-list-when-reload="true" :safe-area-inset-bottom="true" empty-view-text="暂无数据"
+		:auto-clean-list-when-reload="true" :safe-area-inset-bottom="true"
+		empty-view-text="暂无数据" :loading-more-no-more-text="`已加载完，共${totalCount}条记录`"
 	>
 		<view slot="top" style="position: relative; box-sizing: border-box;">
-			<image class="home-bg" :src="$staticPath+'device-appointment/image 39.png'" />
-			<!-- <view class="home-head" :style="{ height: headInfo.headHeight }">
-				<view class="home-title" :style="{ marginTop: headInfo.titleTop }">设备预约</view>
-			</view> -->
+			<image class="home-bg" :src="`${$staticPath}temp/imgs/top_bg.png`" />
+			<!-- <view class="home-head" :style="{ height: headInfo.headHeight }"><view class="home-title" :style="{ marginTop: headInfo.titleTop }">设备预约</view></view> -->
 			<u-navbar title="设备预约" :fixed="false" bgColor="transparent"><view class="u-nav-slot" slot="left"></view></u-navbar>
 			<view class="home-search">
-				<u--input border="surround" placeholder="请输入关键词" suffixIcon="search" suffixIconStyle="color: #909399" customStyle="border-color:white;" @change="onSearch" />
+				<u--input border="surround" placeholder="请输入设备名称" suffixIcon="search" suffixIconStyle="color: #909399" customStyle="background-color: white;" @change="onSearch" />
 			</view>
 		</view>
 		<view class="home-content">
 			<project-home-card />
 			<view class="luBox">
 				<view class="luTitle">设备列表</view>
-            	<u-skeleton v-if="!firstLoaded&&dataList.length === 0" rows="10" title loading />
+            	<u-skeleton v-if="!firstLoaded&&dataList.length === 0" rows="8" title loading />
       			<project-device-apply-item v-for="item,idx in dataList" :key="item.id" :item="item" :hideLine="dataList.length-1==idx" />
 			</view>
 		</view>
@@ -48,7 +47,7 @@ export default {
 	},
 	mounted() {
 		setTimeout(() => {
-		this.$refs.paging && this.$refs.paging.refresh();
+			this.$refs.paging && this.$refs.paging.refresh();
 		}, 250);
 	},
 	methods: {
@@ -71,7 +70,7 @@ export default {
 			}).catch(()=>{
 				this.$refs.paging.complete(false)
 			}).finally(()=>{
-				this.firstLoaded = true;
+				setTimeout(()=>{ this.firstLoaded = true; }, 1750)
 				uni.hideLoading();
 			});
 		},

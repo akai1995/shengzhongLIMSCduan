@@ -16,10 +16,7 @@
 	padding: 32rpx;
 	.tipBox {
 		padding: 24rpx;
-		background-image: url('/static/temp/imgs/ocr-bg.png');
-		background-repeat: no-repeat;
-		background-position: center center;
-		background-size: cover;
+		@include background-image('temp/imgs/ocr-bg.png');
 		width: 686rpx; height: auto;
 		box-sizing: border-box;
 		border-radius: 12rpx;

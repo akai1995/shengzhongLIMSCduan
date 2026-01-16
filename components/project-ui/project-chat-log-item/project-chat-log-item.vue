@@ -21,8 +21,7 @@ export default {
         return {
             index: 1,
             content: '这是分析名称，这是分析名称，这是分析名称，这是分析名称（最多30个字符）',
-            date: '12-08 10:20:30',
-            checked: false
+            date: '12-08 10:20:30', checked: false
         }
       }
     }

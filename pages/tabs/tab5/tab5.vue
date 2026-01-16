@@ -1,38 +1,44 @@
-<style lang="less" scoped>
-@import './asserts/tab5.less';
+<style lang="scss" scoped>
+@import './asserts/tab5.scss';
 </style>
 
 <template>
-	<view class="user">
-		<image class="detail-bg" :src="$staticPath+'device-appointment/Bg.png'" />
-		<view class="detail-head" :style="{ height: headInfo.headHeight }">
-			<view class="detail-title" :style="{ marginTop: headInfo.titleTop }">我的</view>
+	<z-paging
+		ref="paging" class="tab5Page" :paging-style="{backgroundColor: 'white'}" v-model="dataList" @query="queryList"
+		:fixed="true" :auto="false" :refresher-enabled="false" :auto-show-back-to-top="true" :auto-scroll-to-top-when-reload="false"
+		:loading-more-enabled="false" :show-refresher-when-reload="false" hide-empty-view
+	>
+		<view slot="top" style="position: relative; box-sizing: border-box;">
+			<image class="home-bg" :src="`${$staticPath}temp/imgs/userBg.png`" />
+			<!-- <view class="detail-head" :style="{ height: headInfo.headHeight }">
+				<view class="detail-title" :style="{ marginTop: headInfo.titleTop }">我的</view>
+			</view> -->
+			<u-navbar title="我的" :fixed="false" bgColor="transparent"><view class="u-nav-slot" slot="left"></view></u-navbar>
 		</view>
 
-		<view class="detail-info">
-			<view class="detail-info-icon">
-				<image class="detail-info-img" :src="$staticPath+'device-appointment/image 28.png'" />
-			</view>
-			<view class="detail-info-message">
-				<view class="detail-info-message-name">{{ userName }}</view>
-				<view class="detail-info-message-sub">欢迎使用设备智约助手</view>
-			</view>
-		</view>
-
-		<view class="detail-card">
-			<view v-for="menu,idx in menuList" :key="idx" class="detail-card-item" @click="onJump(menu)">
-				<view class="detail-card-item-icon">
-					<image class="detail-card-item-img" :src="menu.icon" />
+		<view class="">
+			<view class="detail-info">
+				<view class="detail-info-icon">
+					<image class="detail-info-img" :src="`${$staticPath}temp/imgs/default_head.png`" />
 				</view>
-				<view class="detail-card-item-text">{{menu.name}}</view>
-				<view class="detail-card-item-arror">
-					<image class="detail-card-item-arror-img" :src="$staticPath+'device-appointment/icon-arrow-right.png'" />
+				<view class="detail-info-message">
+					<view class="detail-info-message-name">{{ userName }}</view>
+					<view class="detail-info-message-sub">欢迎使用设备智约助手</view>
 				</view>
 			</view>
+
+			<view class="menuList">
+				<view v-for="menu,idx in menuList" :key="idx" class="menuItem" :class="{'pubBotLine':menuList.length<idx}" @click="onJump(menu)">
+					<u-icon class="menuItemIcon" :name="menu.icon" size="36rpx" />
+					<view class="menuItem-text">{{menu.name}}</view>
+					<u-icon class="menuItemArror" name="arrow-right" size="32rpx" />
+				</view>
+			</view>
+
 		</view>
 
-		<ut-bottomNav :value="1"></ut-bottomNav>
-	</view>
+		<ut-bottomNav slot="bottom" :value="1"></ut-bottomNav>
+	</z-paging>
 </template>
 
 <script>
@@ -40,25 +46,30 @@
 export default {
 	data() {
 		return {
+			dataList: [], firstLoaded: false,
 			headInfo: { headHeight: '0px', titleTop: '0px', listHeight: '0px' },
 			userName: '尊敬的用户',
             menuList: [
                 {
                     name:'我的预约', path: '/sub-pack/tab5/reserve/reserve',
-                    icon: this.$staticPath+'device-appointment/Frame.png'
+                    icon: `${this.$staticPath}temp/imgs/icon-reserve.png`
                 },
                 {
                     name:'联系客服', path: '',
-                    icon: this.$staticPath+'device-appointment/service.png'
+                    icon: `${this.$staticPath}temp/imgs/icon-service.png`
                 },
             ]
 		};
 	},
 	onLoad() {
 		this.getHeadInfo()
-		this.checkUserInfo()
+		// this.checkUserInfo()
 	},
 	methods: {
+		queryList(pageNo, pageSize) {
+			this.$refs.paging.endRefresh()
+            uni.hideLoading();
+		},
 		getHeadInfo() {
 			// #ifdef MP-WEIXIN
 			const popInfo = uni.getMenuButtonBoundingClientRect()

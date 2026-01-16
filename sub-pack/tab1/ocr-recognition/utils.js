@@ -70,6 +70,16 @@ export function chooseFile({
     camera,
     maxCount
 }) {
+    console.log('chooseFile', {
+    accept,
+    multiple,
+    capture,
+    compressed,
+    maxDuration,
+    sizeType,
+    camera,
+    maxCount
+})
     return new Promise((resolve, reject) => {
         switch (accept) {
         case 'image':

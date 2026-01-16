@@ -1,5 +1,5 @@
 <style lang="scss" scoped>
-@import './asserts/ocr-result-log.scss';
+@import './asserts/chat-log.scss';
 </style>
 
 <template>
@@ -12,25 +12,15 @@
     >
         <view slot="top" style="z-index: 999;">
             <u-navbar 
-                :title="detailInfo?'识别记录详情':'识别记录'" :fixed="false" background="transparent" 
+                title="分析记录" :fixed="false" background="transparent" 
                 color="#000" left-icon="close" left-icon-color="#000" 
                 @leftClick="onClose" 
             />
         </view>
-        <view class="content" v-if="detailInfo">
-            <view class="ocrImgBox" v-if="detailInfo.imgPath">
-                <view class="ocrImg">
-                    <image :src="detailInfo.imgPath" />
-                </view>
-            </view>
-            <view class="datail">
-                {{ detailInfo.content }}
-            </view>
-        </view>
-        <view class="content" v-else>
+        <view class="content">
 			<view class="luBox">
             	<u-skeleton v-if="!firstLoaded&&dataList.length === 0" rows="10" title loading />
-      			<project-ocr-result-log-item v-for="item,idx in dataList" :key="item.id" :item="item" :hideLine="dataList.length-1==idx" @toggle="onToggle" @view="onView" />
+      			<project-chat-log-item v-for="item,idx in dataList" :key="item.id" :item="item" :hideLine="dataList.length-1==idx" />
             </view>
         </view>
         <view slot="bottom">
@@ -38,7 +28,7 @@
                 <view class="wrap">
                     <view class="checkbox">
                         <u-checkbox-group v-model="isAllSelect" :disabled="allDisabled" size="small" @change="checkAllChange">
-                            <u-checkbox name="全选" shape="circle" size="small" activeColor="#3B7EFFFF"></u-checkbox>
+                            <u-checkbox name="全选" shape="circle" size="small" activeColor="#3B7EFFFF">全选</u-checkbox>
                         </u-checkbox-group>
                         <text class="grey">全选</text>
                     </view>

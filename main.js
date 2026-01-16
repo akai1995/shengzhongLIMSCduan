@@ -14,7 +14,7 @@ import DictData from '@/components/DictData'
 uni.$zp = {
   config: {
     // 'empty-view-title-style': 'color:#18605a',
-    'paging-style': 'background-color: white;height: 100vh;',
+    // 'paging-style': 'background-color: white;height: 100vh;',
     'default-page-no': 1,
     // 配置分页默认pageSize为15
     'default-page-size': 10,
@@ -22,26 +22,22 @@ uni.$zp = {
     'empty-view-text': '空空如也~~',
     // 空数据view的z-index
     'empty-view-z-index': 0,
-    // ...
-  },
+  }
 }
 
 import ZPagingMixin from '@/uni_modules/z-paging/components/z-paging/js/z-paging-mixin';
 Vue.mixin(ZPagingMixin);
 
-Vue.mixin(mixins); 
-Vue.use(uView);
+Vue.mixin(mixins); Vue.use(uView);
 
 Vue.config.productionTip = false
 // 全局挂载后使用
-Vue.prototype.$staticPath = 'https://genepiapi.ypzlfx.com/file/'
+Vue.prototype.$staticPath = 'https://genepiapi.ypzlfx.com/file/eai/'
 Vue.prototype.$eUni = router
 Vue.prototype.onBack = () => {
   const canNavBack = getCurrentPages();
   if (canNavBack && canNavBack.length > 1) {
-    router.navBack({
-      delta: 1
-    });
+    router.navBack({ delta: 1 });
   } else {
     history.back();
   }

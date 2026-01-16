@@ -5,8 +5,7 @@
 		width: 100%;
 		height: auto;
 		aspect-ratio: 2.435/1;
-		top: 0;
-		left: 0;
+		top: 0; left: 0;right: 0;
 	}
 
 	.home-head {
@@ -33,7 +32,7 @@
 
 	.home-content {
 		background-color: #fff;
-		padding: 32rpx;
+		padding: 32rpx 32rpx 0;
 		.luBox {
 			width: 100%;
 			margin-top: 20rpx;

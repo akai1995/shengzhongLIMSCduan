@@ -2,12 +2,12 @@
     <view class="liItem">
         <view class="liItemInfo">
             <view class="cover">
-                <image style="width:100%;height: 100%;" :src="item.deviceImg || $staticPath+'device-appointment/image.png'" />
+                <image style="width:100%;height: 100%;" :src="item.deviceImg || $staticPath+'temp/imgs/devcieCover.png'" />
             </view>
             <view class="pecific">
                 <view class="deviceName">{{ item.deviceName }}</view>
-                <view class="summary">设备编号{{ item.deviceCode }}</view>
-                <view class="summary">收费标准{{ item.priceDesc }}</view>
+                <view class="summary">设备编号{{ item.deviceCode || '' }}</view>
+                <view class="summary">收费标准{{ item.priceDesc || '' }}</view>
                 <view class="summary">{{ item.deviceAddress || "暂无设备地址" }}</view>
             </view>
         </view>
@@ -40,7 +40,7 @@ export default {
   },
   methods: {
 		onView(id, deviceId) {
-            if (!this.checkUserInfo()){ return }
+            // if (!this.checkUserInfo()){ return }
 			this.$ut.jump(`/sub-pack/tab1/device/detail?instrumentId=${id}&deviceId=${deviceId}`);
 		}
   }
@@ -72,7 +72,7 @@ export default {
                 .deviceName {
                     color: #222;
                     font-size: 32rpx;
-                    line-height: 44rpx;
+                    line-height: 42rpx;
                     font-weight: 500;
                     overflow: hidden;
                     white-space: nowrap;
@@ -81,7 +81,7 @@ export default {
                 .summary {
                     color: #9699A1;
                     font-size: 24rpx;
-                    line-height: 44rpx;
+                    line-height: 42rpx;
                     font-weight: 400;
                     overflow: hidden;
                     white-space: nowrap;
@@ -90,28 +90,8 @@ export default {
             }
         }
 
-        .botHandle {
-            height: 95rpx;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            margin-top: 10rpx;
-            .btn {
-                background: transparent !important;
-                margin: 0 !important;
-                padding: 0 15rpx !important;
-                color: #000 !important;
-                font-size: 28rpx !important;
-                .u-icon {
-                    margin-right: 10rpx;
-                }
-                &::after {
-                    border: 0 !important;
-                }
-                &:active {
-                    opacity: 0.8;
-                }
-            }
+        .pubBotHandle {
+            margin-top: 0;
         }
     }
 </style>

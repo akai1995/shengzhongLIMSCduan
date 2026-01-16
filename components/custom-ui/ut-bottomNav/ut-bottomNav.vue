@@ -49,6 +49,9 @@ export default {
 	methods: {
 		onJump(path, idx) {
 			if (this.value === idx) return
+			if (idx!=0) {
+            	if (!this.checkUserInfo()){ return }
+			}
 			this.$eUni.redirectTo({ url: path })
 		}
 	}

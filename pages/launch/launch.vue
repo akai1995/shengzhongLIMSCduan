@@ -1,5 +1,5 @@
-<style lang="less" scoped>
-@import './asserts/launch.less';
+<style lang="scss" scoped>
+@import './asserts/launch.scss';
 </style>
 
 <template>
@@ -9,7 +9,7 @@
         :loading-more-enabled="false" :show-refresher-when-reload="false" hide-empty-view
     >
 		<view slot="top" style="height: 280rpx;position: relative; box-sizing: border-box;">
-			<img class="launch-bg" :src="$staticPath+'device-appointment/image 39.png'" />
+			<image class="launch-bg" :src="`${$staticPath}temp/imgs/top_bg.png`" />
 			<!-- <view class="launch-head" :style="{ height: headInfo.headHeight }"><view class="launch-title" :style="{ marginTop: headInfo.titleTop }">eAI</view></view> -->
 			<u-navbar title="e-AI" :fixed="false" bgColor="transparent"><view class="u-nav-slot" slot="left"></view></u-navbar>
 		</view>
@@ -29,7 +29,7 @@
 export default {
 	data() {
 		return {
-			dataList: [], totalCount: 0, firstLoaded: false,
+			dataList: [], firstLoaded: false,
 			headInfo: { headHeight: '0px', titleTop: '0px', listHeight: '0px' },
 			listData: { list: [], total: 0 },
 		};

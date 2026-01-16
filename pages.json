@@ -56,7 +56,16 @@
 	"subPackages": [
 		{
 			"root": "sub-pack/project-pages",
-			"pages": [
+			"pages": [				
+				{
+					"path": "article-detail/article-detail",					
+					"style": {
+						"navigationBarTitleText": "",
+						"navigationStyle": "custom",
+						"enablePullDownRefresh": false,
+						"navigationBarBackgroundColor": "#ffffff00"
+					}
+				},
 				{
 					"path": "login/login",					
 					"style": {

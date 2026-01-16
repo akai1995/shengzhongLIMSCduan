@@ -14,6 +14,23 @@ import MarkdownItToc from '@/static/temp/js/markdown-it-toc.js';
 import MarkdownItAttrs from '@/static/temp/js/markdown-it-attrs.min.js';
 import MarkdownItCheckbox from '@/static/temp/js/markdown-it-checkbox.min.js';
 
+// const $staticPath = 'https://genepiapi.ypzlfx.com/file/eai/'
+
+// const hljs = require($staticPath+'temp/js/highlight.min.js'); // https://highlightjs.org/
+// const MarkdownIt = require($staticPath+'temp/js/markdown-it.min.js');
+// // 还使用了以下插件
+// const MarkdownItSub = require($staticPath+'temp/js/markdown-it-sub.min.js');
+// const MarkdownItSup = require($staticPath+'temp/js/markdown-it-sup.min.js');
+// const MarkdownItFootnote = require($staticPath+'temp/js/markdown-it-footnote.min.js');
+// const MarkdownItDeflist = require($staticPath+'temp/js/markdown-it-deflist.min.js');
+// const MarkdownItAbbr = require($staticPath+'temp/js/markdown-it-abbr.min.js');
+// const MarkdownItIns = require($staticPath+'temp/js/markdown-it-ins.min.js');
+// const MarkdownItMark = require($staticPath+'temp/js/markdown-it-mark.min.js');
+// const MarkdownItContainer = require($staticPath+'temp/js/markdown-it-container.min.js');
+// const MarkdownItAnchor = require($staticPath+'temp/js/markdown-it-anchor.min.js');
+// const MarkdownItToc = require($staticPath+'temp/js/markdown-it-toc.js');
+// const MarkdownItAttrs = require($staticPath+'temp/js/markdown-it-attrs.min.js');
+// const MarkdownItCheckbox = require($staticPath+'temp/js/markdown-it-checkbox.min.js');
 
 /**
  * guid

@@ -1,5 +1,5 @@
-<style lang="less" scoped>
-@import './asserts/ocr-result.less';
+<style lang="scss" scoped>
+@import './asserts/ocr-result.scss';
 </style>
 
 <template>
