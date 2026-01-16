@@ -17,22 +17,7 @@
 				title="报告分析" :fixed="false" background="transparent"
 				color="#000" left-icon-color="#000"  @leftClick="onBack" 
 			/>
-		</view>
-		<view class="container">
-			<!-- for循环渲染聊天记录列表 -->
-			<view v-for="(item,index) in dataList" :key="index" style="position: relative;">
-				<!-- 如果要给聊天item添加长按的popup，请在popup标签上写style="transform: scaleY(-1);"，注意style="transform: scaleY(-1);"不要写在最外层，否则可能导致popup被其他聊天item盖住 -->
-				<view class="popup" style="transform: scaleY(-1);">popUp</view>			
-				<!-- style="transform: scaleY(-1)"必须写，否则会导致列表倒置 -->
-				<!-- 注意不要直接在chat-item组件标签上设置style，因为在微信小程序中是无效的，请包一层view -->
-				<view style="transform: scaleY(-1);">
-					<ut-chat-item :item="item" />
-				</view>
-			</view>
-		</view>
-		<!-- <view class="inWrap"> -->
-			<!-- 未有聊天问题时显示 -->
-			<!-- <view class="cardWarp container" v-if="!showChatList">
+			<view class="cardWarp container" v-if="!showChatList">
 				<view class="cardInfo">
 					<view class="cardTitle">Hi~我是您的报告分析助手</view>
 					<view class="cardSubTitle">您身边的智能健康伙伴，帮您读懂报告，答疑解惑，快来体验吧~</view>
@@ -40,18 +25,31 @@
 				<view class="cardIcon">
 					<image src="@/static/temp/imgs/report-icon.png" />
 				</view>
-			</view> -->
+			</view>
+		</view>
+		<view class="container" v-if="showChatList">
+			<!-- for循环渲染聊天记录列表 -->
+			<view v-for="(item,index) in dataList" :key="index" style="position: relative;">
+				<!-- 如果要给聊天item添加长按的popup，请在popup标签上写style="transform: scaleY(-1);"，注意style="transform: scaleY(-1);"不要写在最外层，否则可能导致popup被其他聊天item盖住 -->
+				<!-- <view class="popup" style="transform: scaleY(-1);">popUp</view>			 -->
+				<!-- style="transform: scaleY(-1)"必须写，否则会导致列表倒置 -->
+				<!-- 注意不要直接在chat-item组件标签上设置style，因为在微信小程序中是无效的，请包一层view -->
+				<view style="transform: scaleY(-1);">
+					<ut-chat-item :item="item" />
+				</view>
+			</view>
+		</view>
+		<view class="inWrap"  v-if="false">
+			<!-- 未有聊天问题时显示 -->
 			<!-- 聊天内容显示 -->
-			<!-- <template v-else>
-				<project-chat-list 
+			<project-chat-list 
 				ref="refChatList" 
 				:chatLogs="dataList" 
 				:currentSelectedHis="currentSelectedHis" 
 				:useMarkdown="useMarkdown" 
 				@again="againDialog($event)" @del="delDialog($event)"
 			/>
-			</template>
-		</view> -->
+		</view>
 		<!-- 底部聊天输入框 -->
 		<view slot="bottom">
 			<ut-chat-input-bar :disabled="isAnswering" ref="inputBar" @send="doSend" />
@@ -60,7 +58,7 @@
 </template>
 
 <script>
-	import { md, initMd } from '@/providers/utilities/chat.js';
+	// import { md, initMd } from '@/providers/utilities/chat.js';
 	export default {
 		data() {
 			return {
@@ -98,7 +96,7 @@
 				/**
 				 * 使用markdown的引用
 				 */
-				useMarkdown: initMd(md),
+				// useMarkdown: initMd(md),
 			}
 		},
 		methods: {
@@ -248,6 +246,7 @@
 							this.isAnswering = false;
 						}
 					})
+					this.showChatList = true
 				}, 800)
 			},
 			// 模拟生成流式数据，根据一个已知字符串每150毫秒返回一个字符

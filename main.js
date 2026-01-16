@@ -14,7 +14,7 @@ import DictData from '@/components/DictData'
 uni.$zp = {
   config: {
     // 'empty-view-title-style': 'color:#18605a',
-    'paging-style': 'background-color: white;',
+    'paging-style': 'background-color: white;height: 100vh;',
     'default-page-no': 1,
     // 配置分页默认pageSize为15
     'default-page-size': 10,

@@ -33,7 +33,7 @@
 			</view>
 			<view :class="{'chat-input-send': true, 'chat-input-send-disabled': !sendEnabled}" @click="sendClick">
 				<!-- <text class="chat-input-send-text">发送</text> -->
-				<u-icon class="chat-input-send-text" name="/static/temp/imgs/icon-send.png" size="45rpx" />
+				<u-icon name="/static/temp/imgs/icon-send.png" size="45rpx" />
 			</view>
 		</view>
 		<!--  表情面板，这里使用height控制隐藏显示是为了有高度变化的动画效果（如果不需要切换表情面板则不用写） -->
@@ -164,7 +164,8 @@
 		border-top: solid 1px #f5f5f5;
 		background-color: #f8f8f8;
 		
-		padding: 10rpx 20rpx 10rpx 40rpx;
+		padding: 20rpx;
+		box-shadow: 0 4rpx 15rpx rgba(0, 0, 0, 0.15);
 		position: relative;
 	}
 	.chat-input-container {
@@ -192,22 +193,22 @@
 
 	.chat-input-history{
 		position: absolute;
-		left: 20rpx;
-		bottom: 20rpx;
+		left: 40rpx;
+		bottom: 40rpx;
 	}
 
 	.chat-input-plus{
 		position: absolute;
-		right: 90rpx;
-		bottom: 20rpx;
+		right: 100rpx;
+		bottom: 40rpx;
 	}
 
 	.chat-input-send {
 		position: absolute;
-		right: 20rpx;
-		bottom: 20rpx;
-		background-color: #007AFF;
-		margin: 10rpx 10rpx 10rpx 20rpx;
+		right: 40rpx;
+		bottom: 40rpx;
+		/* background-color: #007AFF; */
+		/* margin: 10rpx 10rpx 10rpx 20rpx; */
 		/* border-radius: 10rpx; */
 		width: 45rpx;
 		height: 45rpx;
@@ -218,7 +219,7 @@
 		align-items: center;
 	}
 	.chat-input-send-disabled {
-		background-color: #bbbbbb;
+		/* background-color: #bbbbbb; */
 	}
 	.chat-input-send-text {
 		color: white;

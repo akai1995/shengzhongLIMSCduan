@@ -12,7 +12,8 @@
 		{
 			"path": "pages/launch/launch",
 			"style": {
-				"navigationBarTitleText": "e-AI"
+				"navigationBarTitleText": "e-AI",
+				"enablePullDownRefresh": false
 			}
 		},
 		{
