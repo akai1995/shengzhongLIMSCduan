@@ -4,7 +4,7 @@
 
 <template>
 	<z-paging 
-        ref="zPagingRef" class="launch" :paging-style="{backgroundColor: 'white'}" v-model="dataList" @query="queryList"
+        ref="paging" class="launch" :paging-style="{backgroundColor: 'white'}" v-model="dataList" @query="queryList"
         :fixed="true" :auto="false" :refresher-enabled="false" :auto-show-back-to-top="true" :auto-scroll-to-top-when-reload="false"
         :loading-more-enabled="false" :show-refresher-when-reload="false" hide-empty-view
     >
@@ -39,7 +39,7 @@ export default {
 	},
 	methods: {
 		queryList(pageNo, pageSize) {
-			this.$refs.zPagingRef.endRefresh()
+			this.$refs.paging.endRefresh()
             uni.hideLoading();
 		},
 		getHeadInfo() {

@@ -198,7 +198,7 @@
 
 	.chat-input-plus{
 		position: absolute;
-		right: 80rpx;
+		right: 90rpx;
 		bottom: 20rpx;
 	}
 
@@ -208,9 +208,9 @@
 		bottom: 20rpx;
 		background-color: #007AFF;
 		margin: 10rpx 10rpx 10rpx 20rpx;
-		border-radius: 10rpx;
-		width: 110rpx;
-		height: 60rpx;
+		/* border-radius: 10rpx; */
+		width: 45rpx;
+		height: 45rpx;
 		/* #ifndef APP-NVUE */
 		display: flex;
 		/* #endif */

@@ -26,7 +26,11 @@ uni.$zp = {
   },
 }
 
-Vue.mixin(mixins); Vue.use(uView);
+import ZPagingMixin from '@/uni_modules/z-paging/components/z-paging/js/z-paging-mixin';
+Vue.mixin(ZPagingMixin);
+
+Vue.mixin(mixins); 
+Vue.use(uView);
 
 Vue.config.productionTip = false
 // 全局挂载后使用

@@ -1,6 +1,6 @@
 <template>
 	<z-paging 
-        ref="zPagingRef" class="page" :paging-style="{ backgroundColor: '#F7F8FA' }" v-model="dataList" @query="queryList"
+        ref="paging" class="page" :paging-style="{ backgroundColor: '#F7F8FA' }" v-model="dataList" @query="queryList"
         :fixed="true" :auto="false" :refresher-enabled="false" :auto-show-back-to-top="true" :auto-scroll-to-top-when-reload="false"
         :loading-more-enabled="false" :show-refresher-when-reload="false" hide-empty-view
     >
@@ -35,21 +35,22 @@
 			</view>
 			<slot />
 		</view>
-		<view slot="bottom" class="fixed-bottom safe-area-inset-bottom pubTopLine" :style="{ zIndex: initData.area.zIndex + 99 }">
+		<!-- <view slot="bottom" style="z-index: 999;"class="fixed-bottom safe-area-inset-bottom pubTopLine" :style="{ zIndex: initData.area.zIndex + 9999 }"> -->
+		<view slot="bottom" style="z-index: 999;"class="fixed-bottom safe-area-inset-bottom pubTopLine">
 			<view v-if="(rotatable || reverseRotatable) && !!imgSrc" class="action-bar">
 				<view v-if="reverseRotatable" class="rotate-icon" @click="cropper.rotateImage270"></view>
 				<view v-if="rotatable" class="rotate-icon is-reverse" @click="cropper.rotateImage90"></view>
 			</view>
 			<!-- <view v-if="!choosable" class="choose-btn" @click="cropClick">确定</view> -->
-			<view v-if="!choosable" class="cus-action">
+			<view class="cus-action">
 				<u-icon name="close" size="45rpx" @click="onCloseCrop" />
 				<u-icon name="checkmark" size="45rpx" @click="cropClick" />
 			</view>
-			<block v-else-if="!!imgSrc">
+			<!-- <block v-else-if="!!imgSrc">
 				<view class="rechoose" @click="chooseImage">重选</view>
 				<button class="button" size="mini" @click="cropClick">确定</button>
 			</block>
-			<view v-else class="choose-btn" @click="chooseImage">选择图片</view>
+			<view v-else class="choose-btn" @click="chooseImage">选择图片</view> -->
 		</view>
 	</z-paging>
 </template>
@@ -344,7 +345,7 @@
 		},
 		methods: {
 			queryList(pageNo, pageSize) {
-				this.$refs.zPagingRef.endRefresh()
+				this.$refs.paging.endRefresh()
 				uni.hideLoading();
 			},
 			/** 提供给wxs调用，用来接收图片变更数据 */

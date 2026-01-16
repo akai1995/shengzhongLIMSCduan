@@ -4,7 +4,7 @@
 
 <template>
     <z-paging 
-        ref="zPagingRef" v-show="!!!fileValue" class="page" :paging-style="{ backgroundColor: '#F7F8FA' }" v-model="dataList" @query="queryList"
+        ref="paging" v-show="!!!fileValue" class="page" :paging-style="{ backgroundColor: '#F7F8FA' }" v-model="dataList" @query="queryList"
         :fixed="true" :auto="false" :refresher-enabled="false" :auto-show-back-to-top="true" :auto-scroll-to-top-when-reload="false"
         :loading-more-enabled="false" :show-refresher-when-reload="false" hide-empty-view
     >
@@ -62,12 +62,12 @@ export default {
 	},
 	mounted() {
 		// setTimeout(() => {
-		//     this.$refs.zPagingRef && this.$refs.zPagingRef.refresh();
+		//     this.$refs.paging && this.$refs.paging.refresh();
 		// }, 250);
 	},
 	methods: {
 		queryList(pageNo, pageSize) {
-			this.$refs.zPagingRef.endRefresh()
+			this.$refs.paging.endRefresh()
             uni.hideLoading();
 		},
         onClose() {

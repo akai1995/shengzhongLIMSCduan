@@ -6,7 +6,7 @@
 	<!-- safe-area-inset-bottom：开启底部安全区域适配 -->
 	<!-- bottom-bg-color：设置slot="bottom"容器的背景色，这里设置为和chat-input-bar的背景色一致 -->
 	<z-paging 
-		ref="zPagingRef" v-model="dataList" use-chat-record-mode safe-area-inset-bottom bottom-bg-color="#f8f8f8" 
+		ref="paging" v-model="dataList" use-chat-record-mode safe-area-inset-bottom bottom-bg-color="#f8f8f8" 
 		empty-view-text="有什么可以帮忙的？" @query="queryList" @keyboardHeightChange="keyboardHeightChange" @hidedKeyboard="hidedKeyboard"
 	>
 		<!-- 顶部提示文字 -->
@@ -58,15 +58,15 @@
 					pageNo: pageNo,
 					pageSize: pageSize,
 				}
-				this.$refs.zPagingRef.complete([]);
+				this.$refs.paging.complete([]);
 				// this.$request.queryChatList(params).then(res => {
 				// 	// 将请求的结果数组传递给z-paging
-				// 	this.$refs.zPagingRef.complete([]);
+				// 	this.$refs.paging.complete([]);
 				// }).catch(res => {
-				// 	// 如果请求失败写this.$refs.zPagingRef.complete(false);
+				// 	// 如果请求失败写this.$refs.paging.complete(false);
 				// 	// 注意，每次都需要在catch中写这句话很麻烦，z-paging提供了方案可以全局统一处理
 				// 	// 在底层的网络请求抛出异常时，写uni.$emit('z-paging-error-emit');即可
-				// 	this.$refs.zPagingRef.complete(false);
+				// 	this.$refs.paging.complete(false);
 				// })
 			},
 			// 监听键盘高度改变，请不要直接通过uni.onKeyboardHeightChange监听，否则可能导致z-paging内置的键盘高度改变监听失效（如果不需要切换表情面板则不用写）
@@ -84,7 +84,7 @@
 					return;
 				}
 				this.askMsg = msg;
-				this.$refs.zPagingRef.addChatRecordData({
+				this.$refs.paging.addChatRecordData({
 					time: '', icon: '/static/daxiong.jpg',
 					name: '大雄', content: msg,
 					isMe: true
@@ -97,7 +97,7 @@
 				// 设置在回复中
 				this.isAnswering = true;
 				// 立刻添加一个思考中的回复
-				this.$refs.zPagingRef.addChatRecordData({
+				this.$refs.paging.addChatRecordData({
 					time: '', icon: '/static/duola.jpg',
 					name: '小智', content: '思考中...',
 					isMe: false

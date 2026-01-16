@@ -52,7 +52,7 @@ export default{
 			}
 			return true;
 		},
-		showToast(msg, icon = 'none', success=()=>{}, duration = 1500) {
+		showTips(msg, icon = 'none', success=()=>{}, duration = 1500) {
 			uni.showToast({
 				msg: msg, icon: icon,
 				duration: duration,

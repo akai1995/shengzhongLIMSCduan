@@ -13,7 +13,7 @@
         <ocr-result v-if="fileValue&&info.detail" :info="info" @close="onResultClose" />
         <ocr-result-log v-if="showOcrResultLog" @close="onOcrResultLogClose" />
         <z-paging 
-            ref="zPagingRef" v-show="!!!fileValue&&!showOcrResultLog" class="page" :paging-style="{ backgroundColor: '#F7F8FA' }" v-model="dataList" @query="queryList"
+            ref="paging" v-show="!!!fileValue&&!showOcrResultLog" class="page" :paging-style="{ backgroundColor: '#F7F8FA' }" v-model="dataList" @query="queryList"
             :fixed="true" :auto="false" :refresher-enabled="false" :auto-show-back-to-top="true" :auto-scroll-to-top-when-reload="false"
             :loading-more-enabled="false" :show-refresher-when-reload="false" hide-empty-view
         >
@@ -75,7 +75,7 @@ export default {
 	},
 	mounted() {
 		setTimeout(() => {
-		    this.$refs.zPagingRef && this.$refs.zPagingRef.refresh();
+		    this.$refs.paging && this.$refs.paging.refresh();
 		}, 250);
 	},
 	methods: {
@@ -86,8 +86,8 @@ export default {
             this.showOcrResultLog = false
         },
 		queryList(pageNo, pageSize) {
-			this.$refs.zPagingRef.endRefresh()
-            // this.$refs.zPagingRef.complete()
+			this.$refs.paging.endRefresh()
+            // this.$refs.paging.complete()
             // this.firstLoaded = true;
             uni.hideLoading();
 		},
@@ -108,7 +108,7 @@ export default {
             .then((res) => {
                 console.log('res[0]', res[0])
                 this.fileList = res
-                this.fileValue = 'https://ask.dcloud.net.cn/uploads/avatar/001/67/43/81_avatar_max.jpg'
+                this.fileValue = res[0].tempFilePath || 'https://ask.dcloud.net.cn/uploads/avatar/001/67/43/81_avatar_max.jpg'
             })
             .catch((error) => {
                 this.$emit('error', error);

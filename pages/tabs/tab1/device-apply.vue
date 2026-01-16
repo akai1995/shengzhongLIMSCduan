@@ -4,7 +4,7 @@
 
 <template>
 	<z-paging 
-		ref="zPagingRef" class="page" :paging-style="{backgroundColor: 'white'}" 
+		ref="paging" class="page" :paging-style="{backgroundColor: 'white'}" 
 		v-model="dataList" @query="queryList" :fixed="true" :auto="false" :auto-show-back-to-top="true"
 		:enable-back-to-top="true" :show-refresher-when-reload="true" :auto-scroll-to-top-when-reload="false" 
 		:auto-clean-list-when-reload="true" :safe-area-inset-bottom="true" empty-view-text="暂无数据"
@@ -48,7 +48,7 @@ export default {
 	},
 	mounted() {
 		setTimeout(() => {
-		this.$refs.zPagingRef && this.$refs.zPagingRef.refresh();
+		this.$refs.paging && this.$refs.paging.refresh();
 		}, 250);
 	},
 	methods: {
@@ -61,15 +61,15 @@ export default {
 			// #endif
 		},
 		queryList(pageNo, pageSize) {
-			// this.$refs.zPagingRef.endRefresh()
+			// this.$refs.paging.endRefresh()
 			this.queryParameter.pageNo = pageNo
 			this.queryParameter.pageSize = pageSize
 			const type = pageNo>1 ? 'search': ''
 			getDeviceList(this.queryParameter).then((resp) => {
 				this.totalCount = resp&&resp.result?resp.result.total : 0 
-				this.$refs.zPagingRef.complete(resp&&resp.result?resp.result.records:false)
+				this.$refs.paging.complete(resp&&resp.result?resp.result.records:false)
 			}).catch(()=>{
-				this.$refs.zPagingRef.complete(false)
+				this.$refs.paging.complete(false)
 			}).finally(()=>{
 				this.firstLoaded = true;
 				uni.hideLoading();
@@ -78,7 +78,7 @@ export default {
 		onSearch(e) {
 			const searchData = e
 			this.queryParameter.deviceName = searchData
-			this.$refs.zPagingRef && this.$refs.zPagingRef.refresh();
+			this.$refs.paging && this.$refs.paging.refresh();
 		},
 		handleGoDetail(id, deviceId) {
             if (!this.checkUserInfo()){ return }

@@ -1,4 +1,4 @@
-import JSEncrypt from '@/providers/jsencrypt.js'
+import JSEncrypt from '@/providers/utilities/jsencrypt.js'
 import constant from '@/app/constant.js'
 
 //加密	

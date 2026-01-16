@@ -5,7 +5,7 @@
 			"^ut-(.*)": "@/components/custom-ui/ut-$1/ut-$1.vue",
 			"^project-(.*)": "@/components/project-ui/project-$1/project-$1.vue",
 			"^u-(.*)": "@/uni_modules/uview-ui/components/u-$1/u-$1.vue",
-			"^(?!z-paging-refresh|z-paging-load-more)z-paging(.*)": "@/uni_modules/z-paging/components/z-paging$1/z-paging$1.vue"
+	    	"^(?!z-paging-refresh|z-paging-load-more)z-paging(.*)": "@/uni_modules/z-paging/components/z-paging$1/z-paging$1.vue"
         }
     },
 	"pages": [
@@ -60,7 +60,6 @@
 					"path": "login/login",					
 					"style": {
 						"navigationBarTitleText": "登录",
-						// "navigationStyle": "default",
 						"enablePullDownRefresh": false,
 						"navigationBarBackgroundColor": "#ffffff00"
 					}

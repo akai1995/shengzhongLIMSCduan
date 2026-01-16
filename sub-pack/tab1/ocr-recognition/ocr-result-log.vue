@@ -4,7 +4,7 @@
 
 <template>
     <z-paging 
-        ref="zPagingRef" v-show="!!!fileValue" class="page" :paging-style="{ backgroundColor: '#F7F8FA' }" v-model="dataList" @query="queryList"
+        ref="paging" v-show="!!!fileValue" class="page" :paging-style="{ backgroundColor: '#F7F8FA' }" v-model="dataList" @query="queryList"
         :fixed="true" :auto="false" :auto-show-back-to-top="true" :enable-back-to-top="true" :show-refresher-when-reload="detailInfo?false:true" 
         :auto-scroll-to-top-when-reload="false" :auto-clean-list-when-reload="detailInfo?false:true" :safe-area-inset-bottom="true"
         :hide-empty-view="detailInfo?true:false" :refresher-enabled="detailInfo?false:true" :loading-more-enabled="detailInfo?false:true" empty-view-text="暂无数据"
@@ -76,13 +76,13 @@ export default {
     },
 	mounted() {
 		setTimeout(() => {
-		    this.$refs.zPagingRef && this.$refs.zPagingRef.refresh();
+		    this.$refs.paging && this.$refs.paging.refresh();
 		}, 250);
 	},
 	methods: {
 		queryList(pageNo, pageSize) {
-			this.$refs.zPagingRef.endRefresh()
-            this.$refs.zPagingRef.complete(Array.from({ length: 5 }, (_, index) => { 
+			this.$refs.paging.endRefresh()
+            this.$refs.paging.complete(Array.from({ length: 5 }, (_, index) => { 
                 return {
                     index: index+1,
                     imgPath: '',
