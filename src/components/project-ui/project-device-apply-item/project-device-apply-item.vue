@@ -35,8 +35,7 @@ export default {
     }
   },
   data() {
-    return {
-    };
+    return { };
   },
   methods: {
 		onView(id, deviceId) {

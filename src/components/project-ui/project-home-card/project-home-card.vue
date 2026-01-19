@@ -33,8 +33,7 @@ export default {
     }
   },
   data() {
-    return {
-    };
+    return { };
   },
   methods: {
 		onJump(name){

@@ -6,6 +6,7 @@
 	>
         <view slot="top"><u-navbar title="详情" :fixed="false" background="transparent" color="#000" left-icon-color="#000" @leftClick="handleGoHome" /></view>
         <!-- <ut-nav title="详情" @onBack="handleGoHome" border></ut-nav> -->
+		<ut-components ref="utComponents" />
         <view class="detail">
             <view class="detail-pic">
                 <image class="detail-img" :src="deviceInfo.deviceImg ? deviceInfo.deviceImg : $staticPath+'temp/imgs/devcieCover.png'" />
@@ -370,7 +371,7 @@ export default {
                 this.choose.isMore = false
                 this.getAllDayReserve()
             } else {
-                uni.showToast({ title: "该日设备不开放预约", icon: "none", });
+                this.showTips('该日设备不开放预约', 'error');
             }
         },
         handleConfirmDate(e) {
@@ -392,50 +393,50 @@ export default {
         },
         handleSubmit() {
             if (!this.time.start) {
-                uni.showToast({ title: "请选择预约开始时间", icon: "none", });
+                this.showTips('请选择预约开始时间', 'error');
                 return
             }
             if (!this.time.end) {
-                uni.showToast({ title: "请选择预约结束时间", icon: "none", });
+                this.showTips('请选择预约结束时间', 'error');
                 return
             }
 
             if (!this.timeIsNotGreaterThan(this.time.start, this.time.end)) {
-                uni.showToast({ title: "预约开始时间不能大于等于预约结束时间", icon: "none", });
+                this.showTips('预约开始时间不能大于等于预约结束时间', 'error');
                 return
             }
 
             if (!this.isTimeDifferenceValid(this.time.start, this.time.end)) {
-                uni.showToast({ title: "使用设备至少三十分钟且不超过十二小时", icon: "none", });
+                this.showTips('使用设备至少三十分钟且不超过十二小时', 'error');
                 return
             }
 
             if (!this.form.name) {
-                uni.showToast({ title: "请输入预约人姓名", icon: "none", });
+                this.showTips('请输入预约人姓名', 'error');
                 return
             }
             if (!this.form.phone) {
-                uni.showToast({ title: "请输入预约人电话", icon: "none", });
+                this.showTips('请输入预约人电话', 'error');
                 return
             }
             if (!/^1[3-9]\d{9}$/.test(this.form.phone)) {
-                uni.showToast({ title: "请输入正确的电话号码", icon: "none", });
+                this.showTips('请输入正确的电话号码', 'error');
                 return
             }
             if (!this.form.description) {
-                uni.showToast({ title: "请输入用途说明", icon: "none", });
+                this.showTips('请输入用途说明', 'error');
                 return
             }
             if (this.form.group == '') {
-                uni.showToast({ title: "请选择团队", icon: "none", });
+                this.showTips('请选择团队', 'error');
                 return
             }
             if (this.group.currCode != 'xn' && this.group.currCode != 'xw' && this.form.teacher == '') {
-                uni.showToast({ title: "请选择导师", icon: "none", });
+                this.showTips('请选择导师', 'error');
                 return
             }
             if ((this.group.currCode == 'xn' || this.group.currCode == 'xw') && this.form.school == '') {
-                uni.showToast({ title: "请填写所在学院", icon: "none", });
+                this.showTips('请填写所在学院', 'error');
                 return
             }
 
@@ -457,7 +458,7 @@ export default {
             }
             deviceSubmit(pushData).then((resp) => {
                 if (resp.code == 200) {
-                    uni.showToast({ title: "预约成功，正在跳转", icon: "none", });
+                    this.showTips('预约成功，正在跳转', 'success');
                     setTimeout(() => {
                         this.$ut.jump(`/sub-pack/tab5/reserve/detail?id=${resp.result.instrumentId}`);
                     }, 2000);

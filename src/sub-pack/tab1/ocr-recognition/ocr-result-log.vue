@@ -13,6 +13,7 @@
                 @leftClick="onClose" 
             />
         </view>
+		<ut-components ref="utComponents" />
         <view class="content" v-if="detailInfo">
             <view class="ocrImgBox" v-if="detailInfo.imgPath">
                 <view class="ocrImg">
@@ -125,25 +126,16 @@ export default {
         },
         onRemove() {
 			if (this.dataList.length === 0) {
-                uni.showToast({
-                    title: '没有可以删除的记录',
-                    icon: 'none'
-                });
+                this.showTips('没有可以删除的记录', 'error');
                 return;
             }
             const values = this.dataList.filter((row)=> row.checked)
 			if (values.length==0) {
-                uni.showToast({
-                    title: '没有选择记录',
-                    icon: 'none'
-                });
+                this.showTips('没有选择记录', 'error');
                 return;
             }
             this.dataList = this.dataList.filter((row)=> !row.checked)
-            uni.showToast({
-                title: '删除成功',
-                icon: 'none'
-            });
+            this.showTips('删除成功', 'success');
             this.isAllSelect = []
         }
 	},

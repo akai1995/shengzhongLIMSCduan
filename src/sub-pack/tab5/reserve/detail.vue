@@ -1,7 +1,7 @@
 <template>
     <view class="reserve-detail">
         <ut-nav title="预约详情" @onBack="handleGoBack" border></ut-nav>
-
+		<ut-components ref="utComponents" />
         <view class="reserve-detail-status">
             <view class="reserve-detail-status-blue"
                 v-if="detailData.deviceReserveStatus == 1 || detailData.deviceReserveStatus == 2">
@@ -119,7 +119,7 @@ export default {
         handleStart() {
             openDevice(this.reserveId).then((resp) => {
                 if (resp.code == 200) {
-                    uni.showToast({ title: "开机成功", icon: "none", });
+                    this.showTips('开机成功', 'success');
                     this.getReserveDetail()
                 }
             });
@@ -127,7 +127,7 @@ export default {
         handleClose() {
             closeDevice(this.reserveId).then((resp) => {
                 if (resp.code == 200) {
-                    uni.showToast({ title: "关机成功", icon: "none", });
+                    this.showTips('关机成功', 'success');
                     this.getReserveDetail()
                 }
             });
@@ -138,7 +138,7 @@ export default {
         },
         handleSubmitReserve() {
             if (!this.cancelReserve.description) {
-                uni.showToast({ title: "请填写取消原因", icon: "none", });
+                this.showTips('请填写取消原因', 'error');
                 return
             }
             const pushData = {
@@ -147,7 +147,7 @@ export default {
             }
             cancelReserve(pushData).then((resp) => {
                 if (resp.code == 200) {
-                    uni.showToast({ title: "取消预约成功", icon: "none", });
+                    this.showTips('取消预约成功', 'success');
                     this.getReserveDetail()
                     this.cancelReserve.button = false
                     this.cancelReserve.visible = false

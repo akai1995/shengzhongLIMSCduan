@@ -51,7 +51,7 @@
 
 <script>
 	export default {
-		name:"ut-chat-input-bar",
+		name: "ut-chat-input-bar",
 		props: {
 			disabled: {
 				type: Boolean,

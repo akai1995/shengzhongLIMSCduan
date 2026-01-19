@@ -44,6 +44,14 @@ export default{
             }
         }
     },
+    computed: {
+        /**
+         * 获取自定义组件群引用
+         */
+        utComponentsRef() {
+            return this.$refs.utComponents;
+        }
+    },
 	methods: {
 		checkUserInfo() {
 			const id = this.$store.getters.userId
@@ -53,19 +61,74 @@ export default{
 			}
 			return true;
 		},
-		showTips(msg, icon = 'none', success=()=>{}, duration = 1500) {
+		/**
+		 * 显示顶端提示
+		 * @param msg 提示内容
+		 * @param type : 'primary' | 'success' | 'info' | 'warning' | 'error'
+		 * @param duration 默认2000毫秒关闭
+		 */
+		showTips(msg, type = 'primary', success = () => {}, duration = 1500) {
+			console.log('this.utComponentsRef', this.utComponentsRef)
+			//#ifdef APP-PLUS
+			plus.nativeUI.toast(msg, { duration: duration > 2000 ? 'long' : 'short', verticalAlign: 'top' });
+			//#endif
+			//#ifndef APP-PLUS
+			this.utComponentsRef.showUViewTips(type, msg, duration);
+			//#endif
 			console.log('msg', msg)
-			uni.showToast({
-				title: msg, icon: icon,
-				duration: duration,
-				success: success
-			});
+		},
+		/**
+		 * 显示确认对话框
+		 * @param msg 问题内容 支持html
+		 * @param success 确认回调
+		 * @param cancel 取消回调
+		 * @param title 对话框标题 默认：操作确认
+		 * @param confirmText 确认按钮文字 默认：确定
+		 * @param cancelText 取消按钮文字 默认：取消
+		 * @param confirmColor 确认按钮颜色 默认：#2979ff
+		 * @param cancelColor 取消按钮颜色 默认：#606266
+		 */
+		showConfirm(msg, success = () => {}, cancel = () => {}, title = '操作确认', confirmText = '确定', cancelText = '取消', confirmColor = '#2979ff', cancelColor = '#606266') {
+			const cd = this.utComponentsRef.confirmDialog;
+			cd.show = true; cd.title = title;
+			cd.content = msg;
+			cd.confirmText = confirmText;
+			cd.confirmColor = confirmColor;
+			cd.showCancelBtn = true;
+			cd.cancelText = cancelText;
+			cd.cancelColor = cancelColor;
+			cd.confirm = () => {
+				success();
+			};
+			cd.cancel = () => {
+				if (cancel) cancel();
+			};
+		},
+		/**
+		 * 显示信息提示
+		 * @param msg 提示内容 支持html
+		 * @param success 确认回调
+		 * @param title 标题 默认：信息提示
+		 * @param confirmText 确认按钮文字 默认：确定
+		 * @param confirmColor 确认按钮颜色 默认：#2979ff
+		 */
+		showAlert(msg, success = () => {}, title = '信息提示', confirmText = '确定', confirmColor = '#2979ff') {
+			const cd = this.cusComponentsRef.confirmDialog;
+			cd.show = true;
+			cd.title = title;
+			cd.content = msg;
+			cd.confirmText = confirmText;
+			cd.confirmColor = confirmColor;
+			cd.showCancelBtn = false;
+			cd.confirm = () => {
+				if (success) success();
+			};
 		},
 		routePush({ url }) {
 			if (url) { this.$eUni.navTo({ url }) } else { this.$eUni.navTo({ url: '' }) }			
 		},
 		routeDetailEmit({ url, item }) { this.$eUni.navTo({  url, success(res) { res.eventChannel.emit('item', item) } }) },
-		async showSelct(rows, field) {
+		async showSelect(rows, field) {
 			const itemList = rows.map(({ label }) => label)
 			let that = this
 			uni.showActionSheet({
