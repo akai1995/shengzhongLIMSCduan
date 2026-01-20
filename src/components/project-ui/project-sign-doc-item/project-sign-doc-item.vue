@@ -35,7 +35,7 @@ export default {
   methods: {
 		onSign(id) {
             if (!this.checkUserInfo()){ return }
-			this.$ut.jump(`/pages/tabs/tab1/doc-sign?id=${id}&showSign=true`);
+			this.$ut.jump(`/sub-pack/tab5/sign-doc/doc-sign?id=${id}&showSign=true`);
 		}
   }
 }
@@ -43,7 +43,7 @@ export default {
 
 <style lang="scss" scoped>			
     .liItem {
-        margin-bottom: 20rpx;
+        margin-bottom: 32rpx;
         background-color: #fff;
         border-radius: 16rpx;
         box-shadow: 0 4rpx 15rpx rgba(0, 0, 0, 0.08);

@@ -74,8 +74,8 @@
 <script>
 import { mdRenderHtml } from '@/providers/utilities/chat.js';
 import '@/static/temp/styles/a11y-dark.css';
-import '@/static/temp/styles/github-markdown.css';
 import '@/static/temp/styles/markdown.scss';
+import 'github-markdown.css';
 const rect = () => {
 	let info = uni.getSystemInfoSync();
 	return { width: info.screenWidth, height: info.screenHeight };

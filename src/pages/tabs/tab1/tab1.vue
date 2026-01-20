@@ -22,7 +22,7 @@
       			<project-device-apply-item v-for="item,idx in dataList" :key="item.id" :item="item" :hideLine="dataList.length-1==idx" />
 			</view>
 		</view>
-		<ut-bottomNav slot="bottom" :value="0"></ut-bottomNav>
+		<ut-bottomNav slot="bottom" :value="0" />
 	</z-paging>
 </template>
 
@@ -33,7 +33,7 @@ export default {
 	data() {
 		return {
 			headInfo: { headHeight: '0px', titleTop: '0px', listHeight: '0px' },
-			queryParameter: { pageNo: 1, pageSize: 10, deviceName: "" },
+			queryParams: { pageNo: 1, pageSize: 10, deviceName: "" },
 			dataList: [], totalCount: 0, firstLoaded: false
 		};
 	},
@@ -57,10 +57,10 @@ export default {
 		},
 		queryList(pageNo, pageSize) {
 			// this.$refs.paging.endRefresh()
-			this.queryParameter.pageNo = pageNo
-			this.queryParameter.pageSize = pageSize
+			this.queryParams.pageNo = pageNo
+			this.queryParams.pageSize = pageSize
 			const type = pageNo>1 ? 'search': ''
-			getDeviceList(this.queryParameter).then((resp) => {
+			getDeviceList(this.queryParams).then((resp) => {
 				this.totalCount = resp&&resp.result?resp.result.total : 0 
 				this.$refs.paging.complete(resp&&resp.result?resp.result.records:false)
 			}).catch(()=>{
@@ -72,7 +72,7 @@ export default {
 		},
 		onSearch(e) {
 			const searchData = e
-			this.queryParameter.deviceName = searchData
+			this.queryParams.deviceName = searchData
 			this.$refs.paging && this.$refs.paging.refresh();
 		},
 		handleGoDetail(id, deviceId) {
@@ -85,6 +85,8 @@ export default {
 <style lang="scss" scoped>
 .page {
 	box-sizing: border-box;
+}
+
 	.home-bg {
 		position: absolute;
 		width: 100%;
@@ -126,9 +128,8 @@ export default {
 				font-weight: bold;
 				color: #222;
 				font-size: 34rpx;
-				line-height: 80rpx;
+				line-height: 70rpx;
 			}
 		}
 	}
-}
 </style>

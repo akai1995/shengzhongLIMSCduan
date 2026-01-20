@@ -23,7 +23,7 @@ const upload = config => {
   return new Promise((resolve, reject) => {
       uni.uploadFile({
         timeout: config.timeout || timeout,
-        url: baseUrl + config.url,
+        url: `${baseUrl}${config.url||'/sys/oss/file/upload'}`,
         filePath: config.filePath,
         name: config.name || 'file',
         header: config.header,

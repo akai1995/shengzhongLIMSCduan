@@ -49,8 +49,8 @@ export default {
 <style lang="scss" scoped>
     .liItem {
         // padding: 32rpx;
-        margin-bottom: 20rpx;
         border-radius: 20rpx;
+        margin-bottom: 32rpx;
         .liItemInfo {
             position: relative;
             padding: 0 0 0 244rpx;

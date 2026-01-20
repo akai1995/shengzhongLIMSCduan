@@ -15,8 +15,8 @@
         >
             <view slot="top">
                 <u-navbar 
-                    title="图文识别" :fixed="false" background="transparent" color="#000" left-icon-color="#000"
-                    @leftClick="onBack"
+                    title="图文识别" :fixed="false" background="transparent"
+                    color="#000" left-icon-color="#000" @leftClick="onBack"
                 />
             </view>
             <view class="content">
@@ -52,9 +52,11 @@
 </template>
 
 <script>
-import { chooseFile } from './utils'
-import ocrResult from './ocr-result.vue'
+import { chooseFile } from '@/providers/uploadUtils'
 import ocrResultLog from './ocr-result-log.vue'
+import { ocrUploadFile } from '@/app/api/ocr'
+import ocrResult from './ocr-result.vue'
+
 export default {
     components: {
         'ocr-result': ocrResult,
@@ -102,9 +104,17 @@ export default {
                 })
             )
             .then((res) => {
-                console.log('res[0]', res[0])
-                this.fileList = res
-                this.fileValue = res[0].tempFilePath || 'https://ask.dcloud.net.cn/uploads/avatar/001/67/43/81_avatar_max.jpg'
+                console.log('res[0]', res[0]); this.fileList = res
+                this.fileValue = res[0].url || res[0].tempFilePath || 'https://ask.dcloud.net.cn/uploads/avatar/001/67/43/81_avatar_max.jpg'
+                // uni.previewImage({ urls: [this.fileValue], current: 0 });
+                ocrUploadFile({ name:'', filePath: this.fileValue }).then((res)=>{
+                    console.log('res', res)
+                    if (res) {
+                        
+                    } 
+                }).catch((error)=>{
+                    console.log(error)   
+                })
             })
             .catch((error) => {
                 this.$emit('error', error);
@@ -119,10 +129,7 @@ export default {
             }
         },
         onCrop(e) {
-            // uni.previewImage({
-            //     urls: [e.tempFilePath],
-            //     current: 0
-            // });
+            // uni.previewImage({ urls: [e.tempFilePath], current: 0 });
             uni.showLoading({ title: '识别中...', mask: true });
             this.info = {
                 imgPath: e.tempFilePath,

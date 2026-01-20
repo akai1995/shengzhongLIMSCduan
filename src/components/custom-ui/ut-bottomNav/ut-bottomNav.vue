@@ -4,7 +4,8 @@
 			<image class="nav-img" slot="inactive-icon" :src="menu.inactive"></image>
 			<image class="nav-img" slot="active-icon" :src="menu.active"></image>
 		</u-tabbar-item> -->
-		<u-tabbar-item text="首页" @click="onJump('/pages/launch/launch', 0)">
+		<!-- <u-tabbar-item text="首页" @click="onJump('/pages/launch/launch', 0)"> -->
+		<u-tabbar-item text="首页" @click="onJump('/pages/tabs/tab1/tab1', 0)">
 			<image class="nav-img" slot="inactive-icon" src="@/static/nav/nav1-1.png"></image>
 			<image class="nav-img" slot="active-icon" src="@/static/nav/nav1-2.png"></image>
 		</u-tabbar-item>

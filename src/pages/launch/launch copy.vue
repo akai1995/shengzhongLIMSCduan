@@ -26,7 +26,7 @@ export default {
 	data() {
 		return {
 			headInfo: { headHeight: '0px', titleTop: '0px', listHeight: '0px' },
-			queryParameter: { pageNo: 1, pageSize: 10, deviceName: "" },
+			queryParams: { pageNo: 1, pageSize: 10, deviceName: "" },
 			listData: { list: [], total: 0 },
 		};
 	},

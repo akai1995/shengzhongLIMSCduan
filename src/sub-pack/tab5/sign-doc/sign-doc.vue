@@ -8,20 +8,19 @@
 		<view slot="top" style="position: relative; box-sizing: border-box;">
 			<image class="home-bg" :src="`${$staticPath}temp/imgs/top_bg.png`" />
 			<!-- <view class="home-head" :style="{ height: headInfo.headHeight }"><view class="home-title" :style="{ marginTop: headInfo.titleTop }">待签署文件</view></view> -->
-			<u-navbar title="待签署文件" :fixed="false" bgColor="transparent"><view class="u-nav-slot" slot="left"></view></u-navbar>
+			<u-navbar title="我的待签署" :fixed="false" bgColor="transparent" @leftClick="onBack" />
 			<view class="home-search">
 				<u--input border="surround" placeholder="请输入文件名称" suffixIcon="search" suffixIconStyle="color: #909399" customStyle="background-color: white;" @change="onSearch" />
 			</view>
 		</view>
 		<view class="home-content">
-			<project-home-card />
+			<!-- <project-home-card /> -->
 			<view class="luBox">
 				<view class="luTitle">待签署文件列表</view>
             	<u-skeleton v-if="!firstLoaded&&dataList.length==0" rows="8" title loading />
       			<project-sign-doc-item v-for="item,idx in dataList" :key="item.id" :item="item" :hideLine="dataList.length-1==idx" />
 			</view>
 		</view>
-		<ut-bottomNav slot="bottom" :value="0" />
 	</z-paging>
 </template>
 

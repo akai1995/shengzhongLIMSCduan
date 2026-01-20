@@ -10,14 +10,7 @@
     },
 	"pages": [
 		{
-			"path": "pages/launch/launch",
-			"style": {
-				"navigationBarTitleText": "e-AI",
-				"enablePullDownRefresh": false
-			}
-		},
-		{
-			"path": "pages/tabs/tab1/device-apply",
+			"path": "pages/tabs/tab1/tab1",
 			"style": {
 				"navigationBarTitleText": "设备预约",
 				"enablePullDownRefresh": false
@@ -31,16 +24,16 @@
 			}
 		},
 		{
-			"path": "pages/tabs/tab1/doc-sign",
+			"path": "pages/tabs/tab5/tab5",
 			"style": {
-				"navigationBarTitleText": "文件签署",
+				"navigationBarTitleText": "我的",
 				"enablePullDownRefresh": false
 			}
 		},
 		{
-			"path": "pages/tabs/tab5/tab5",
+			"path": "pages/launch/launch",
 			"style": {
-				"navigationBarTitleText": "我的",
+				"navigationBarTitleText": "e-AI",
 				"enablePullDownRefresh": false
 			}
 		},
@@ -119,6 +112,20 @@
 						"navigationBarTitleText": "预约详情",
 						"enablePullDownRefresh": false
 					}
+				},
+				{
+					"path": "sign-doc/sign-doc",
+					"style": {
+						"navigationBarTitleText": "我的待签署",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "sign-doc/doc-sign",
+					"style": {
+						"navigationBarTitleText": "文件签署",
+						"enablePullDownRefresh": false
+					}
 				}
 			]
 		}
@@ -134,8 +141,9 @@
 		"current": 0,
 		"list": [
 			{
-				"name": "pages/launch/launch",
-				"path": "e-AI", "query": ""
+				"name": "我的预约",
+				"path": "sub-pack/tab5/reserve/reserve",
+				"query": ""
 			}
 		]
 	}

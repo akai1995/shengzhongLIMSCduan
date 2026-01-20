@@ -1,36 +1,36 @@
-import hljs from '@/static/temp/js/highlight.min.js'; // https://highlightjs.org/
-import MarkdownIt from '@/static/temp/js/markdown-it.min.js';
-// 还使用了以下插件
-import MarkdownItSub from '@/static/temp/js/markdown-it-sub.min.js';
-import MarkdownItSup from '@/static/temp/js/markdown-it-sup.min.js';
-import MarkdownItFootnote from '@/static/temp/js/markdown-it-footnote.min.js';
-import MarkdownItDeflist from '@/static/temp/js/markdown-it-deflist.min.js';
-import MarkdownItAbbr from '@/static/temp/js/markdown-it-abbr.min.js';
-import MarkdownItIns from '@/static/temp/js/markdown-it-ins.min.js';
-import MarkdownItMark from '@/static/temp/js/markdown-it-mark.min.js';
-import MarkdownItContainer from '@/static/temp/js/markdown-it-container.min.js';
-import MarkdownItAnchor from '@/static/temp/js/markdown-it-anchor.min.js';
-import MarkdownItToc from '@/static/temp/js/markdown-it-toc.js';
-import MarkdownItAttrs from '@/static/temp/js/markdown-it-attrs.min.js';
-import MarkdownItCheckbox from '@/static/temp/js/markdown-it-checkbox.min.js';
+// import hljs from '@/static/temp/js/highlight.min.js'; // https://highlightjs.org/
+// import MarkdownIt from '@/static/temp/js/markdown-it.min.js';
+// // 还使用了以下插件
+// import MarkdownItSub from '@/static/temp/js/markdown-it-sub.min.js';
+// import MarkdownItSup from '@/static/temp/js/markdown-it-sup.min.js';
+// import MarkdownItFootnote from '@/static/temp/js/markdown-it-footnote.min.js';
+// import MarkdownItDeflist from '@/static/temp/js/markdown-it-deflist.min.js';
+// import MarkdownItAbbr from '@/static/temp/js/markdown-it-abbr.min.js';
+// import MarkdownItIns from '@/static/temp/js/markdown-it-ins.min.js';
+// import MarkdownItMark from '@/static/temp/js/markdown-it-mark.min.js';
+// import MarkdownItContainer from '@/static/temp/js/markdown-it-container.min.js';
+// import MarkdownItAnchor from '@/static/temp/js/markdown-it-anchor.min.js';
+// import MarkdownItToc from '@/static/temp/js/markdown-it-toc.js';
+// import MarkdownItAttrs from '@/static/temp/js/markdown-it-attrs.min.js';
+// import MarkdownItCheckbox from '@/static/temp/js/markdown-it-checkbox.min.js';
 
 // const $staticPath = 'https://genepiapi.ypzlfx.com/file/eai/'
 
-// const hljs = require($staticPath+'temp/js/highlight.min.js'); // https://highlightjs.org/
-// const MarkdownIt = require($staticPath+'temp/js/markdown-it.min.js');
-// // 还使用了以下插件
-// const MarkdownItSub = require($staticPath+'temp/js/markdown-it-sub.min.js');
-// const MarkdownItSup = require($staticPath+'temp/js/markdown-it-sup.min.js');
-// const MarkdownItFootnote = require($staticPath+'temp/js/markdown-it-footnote.min.js');
-// const MarkdownItDeflist = require($staticPath+'temp/js/markdown-it-deflist.min.js');
-// const MarkdownItAbbr = require($staticPath+'temp/js/markdown-it-abbr.min.js');
-// const MarkdownItIns = require($staticPath+'temp/js/markdown-it-ins.min.js');
-// const MarkdownItMark = require($staticPath+'temp/js/markdown-it-mark.min.js');
-// const MarkdownItContainer = require($staticPath+'temp/js/markdown-it-container.min.js');
-// const MarkdownItAnchor = require($staticPath+'temp/js/markdown-it-anchor.min.js');
-// const MarkdownItToc = require($staticPath+'temp/js/markdown-it-toc.js');
-// const MarkdownItAttrs = require($staticPath+'temp/js/markdown-it-attrs.min.js');
-// const MarkdownItCheckbox = require($staticPath+'temp/js/markdown-it-checkbox.min.js');
+import hljs from 'highlight.js'; // https://highlightjs.org/
+import MarkdownIt from 'markdown-it';
+// 还使用了以下插件
+import MarkdownItSub from 'markdown-it-sub';
+import MarkdownItSup from 'markdown-it-sup';
+import MarkdownItFootnote from 'markdown-it-footnote';
+import MarkdownItDeflist from 'markdown-it-deflist';
+import MarkdownItAbbr from 'markdown-it-abbr';
+import MarkdownItIns from 'markdown-it-ins';
+import MarkdownItMark from 'markdown-it-mark';
+import MarkdownItContainer from 'markdown-it-container';
+import MarkdownItAnchor from 'markdown-it-anchor';
+import MarkdownItToc from 'markdown-it-toc';
+import MarkdownItAttrs from 'markdown-it-attrs';
+import MarkdownItCheckbox from 'markdown-it-checkbox';
 
 /**
  * guid

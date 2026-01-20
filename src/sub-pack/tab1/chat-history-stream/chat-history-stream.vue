@@ -35,7 +35,7 @@
 					<!-- <view class="popup" style="transform: scaleY(-1);">popUp</view>			 -->
 					<!-- style="transform: scaleY(-1)"必须写，否则会导致列表倒置 -->
 					<!-- 注意不要直接在chat-item组件标签上设置style，因为在微信小程序中是无效的，请包一层view -->
-					<view style="transform: scaleY(-1);"><ut-chat-item :item="item" /></view>
+					<view style="transform: scaleY(-1);"><chat-item :item="item" /></view>
 				</view>
 			</view>
 			<view class="inWrap" v-if="false">
@@ -71,22 +71,27 @@
 			</u-modal>
 			<!-- 底部聊天输入框 -->
 			<view slot="bottom">
-				<ut-chat-input-bar :disabled="isAnswering" ref="inputBar" @show-log="onChatLogShow" @send="doSend" />
+				<chat-input :disabled="isAnswering" ref="chatInputBar" @show-log="onChatLogShow" @send="doSend" />
 			</view>
 		</z-paging>
 	</view>
 </template>
 
 <script>
+import { md, initMd } from '@/providers/utilities/chat.js';
+import chatInput from './components/chat-input.vue'
+import chatItem from './components/chat-item.vue'
 import chatLog from './chat-log.vue'
 import store from '@/store/index'
-import { md, initMd } from '@/providers/utilities/chat.js';
 export default {
-	components: { 'chat-log': chatLog },
+	components: {
+		'chat-input': chatInput,
+		'chat-item': chatItem,
+		'chat-log': chatLog,
+	},
 	data() {
 		return {
 			showChatLog: false,
-
 			/**
 			 * 控制器
 			 */
@@ -142,7 +147,10 @@ export default {
 			/**
 			 * 使用markdown的引用
 			 */
-			useMarkdown: initMd(md),			
+			useMarkdown: null,
+			isDenyPrivacy: false,
+			showPrivacy: false,
+			privacyTitle: '',
 
 			outputBuffer: '', // 用于临时存储接收到的字符串
 			outputBufferAll: '', // 用于临时存储接收到的所有字符串
@@ -162,6 +170,11 @@ export default {
 			 */
 			longPressHisChatItem: null
 		}
+	},
+	mounted() {
+		setTimeout(() => {
+			this.useMarkdown = initMd(md)
+		}, 250);
 	},
 	methods: {
 		onChatLogShow() {
@@ -192,11 +205,11 @@ export default {
 		},
 		// 监听键盘高度改变，请不要直接通过uni.onKeyboardHeightChange监听，否则可能导致z-paging内置的键盘高度改变监听失效（如果不需要切换表情面板则不用写）
 		keyboardHeightChange(res) {
-			this.$refs.inputBar.updateKeyboardHeightChange(res);
+			this.$refs.chatInputBar.updateKeyboardHeightChange(res);
 		}, 
 		// 用户尝试隐藏键盘，此时如果表情面板在展示中，应当通知chatInputBar隐藏表情面板（如果不需要切换表情面板则不用写）
 		hidedKeyboard() {
-			this.$refs.inputBar.hidedKeyboard();
+			this.$refs.chatInputBar.hidedKeyboard();
 		},
 		
 

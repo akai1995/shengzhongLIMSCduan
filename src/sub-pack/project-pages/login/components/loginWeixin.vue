@@ -1,5 +1,6 @@
 <template>
 	<view class="loginPage">
+		<ut-components ref="utComponents" />
 		<view class="login">
 			<!-- <view class="title">微信登录</view> -->
 			<!-- #ifdef MP-WEIXIN -->

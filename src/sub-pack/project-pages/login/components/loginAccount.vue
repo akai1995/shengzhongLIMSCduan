@@ -1,5 +1,6 @@
 <template>
 	<view>
+		<ut-components ref="utComponents" />
 		<view class="login">
 			<view class="title">账号登录</view>
 			<u--form :model="form" ref="uForm">
