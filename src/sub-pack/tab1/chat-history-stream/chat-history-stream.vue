@@ -15,16 +15,10 @@
 			<!-- #ifdef H5 || MP-BAIDU || MP-TOUTIAO -->
 			<!-- #endif -->
 			<view slot="top" class="">
-				<u-navbar
-					title="报告分析" :fixed="false" background="transparent"
-					color="#000" left-icon-color="#000"  @leftClick="onBack" 
-				/>
+				<u-navbar title="报告分析" :fixed="false" background="transparent" color="#000" left-icon-color="#000"  @leftClick="onBack" />
 				<view class="cardWarp container" v-if="!showChatList">
-					<view class="cardInfo">
-						<view class="cardTitle">Hi~我是您的报告分析助手</view>
-						<view class="cardSubTitle">您身边的智能健康伙伴，帮您读懂报告，答疑解惑，快来体验吧~</view>
-					</view>
-					<view class="cardIcon"><image :src="`${$staticPath}temp/imgs/report-icon.png`" /></view>
+					<view class="cardInfo"><view class="cardTitle">Hi~我是您的报告分析助手</view><view class="cardSubTitle">您身边的智能健康伙伴，帮您读懂报告，答疑解惑，快来体验吧~</view></view>
+					<view class="cardIcon"><image :src="`${$staticPath}imgs/report-icon.png`" /></view>
 				</view>
 			</view>
 			<ut-components ref="utComponents" />
@@ -39,56 +33,34 @@
 				</view>
 			</view>
 			<view class="inWrap" v-if="false">
-				<!-- 未有聊天问题时显示 -->
-				<!-- 聊天内容显示 -->
-				<!-- <project-chat-list 
-					ref="refChatList" :chatLogs="dataList"
-					:currentSelectedHis="currentSelectedHis"
-					:useMarkdown="useMarkdown"
-					@again="againDialog($event)" @del="delDialog($event)"
-				/> -->
+				<!-- 未有聊天问题时显示 --> <!-- 聊天内容显示 -->
+				<!-- <project-chat-list  ref="refChatList" :chatLogs="dataList" :currentSelectedHis="currentSelectedHis" :useMarkdown="useMarkdown" @again="againDialog($event)" @del="delDialog($event)" /> -->
 			</view>
 
 			<!-- 删除历史记录弹出层 -->
 			<u-mask class="delPopupMark" :show="showLongDel" z-index="10100" :custom-style="{ background: 'rgba(0, 0, 0, 0)' }" @click="showLongDel = false">
-				<view class="delPopup">
-					<view class="inBtn" :style="{ top: delItemTop + 'px' }">
-						<u-button class="delBtn" @click="delHis()">
-							<u-icon name="delete" custom-prefix="custom-icon" color="#0F0F0F" size="48" />
-							删除
-						</u-button>
-					</view>
-				</view>
+				<view class="delPopup"><view class="inBtn" :style="{ top: delItemTop + 'px' }"><u-button class="delBtn" @click="delHis()"><u-icon name="delete" custom-prefix="custom-icon" color="#0F0F0F" size="48" />删除</u-button></view></view>
 			</u-mask>
 
 			<!-- 微信隐私保护指引 -->
 			<u-modal :show="showPrivacy" width="90%" :show-cancel-button="true" :title="privacyTitle" :title-style="{ color: '#000', fontWeight: 'bold' }" cancel-text="拒绝" @cancel="denyPrivacy()">
-				<view class="privacyContent">
-					在您使用之前，请仔细阅读<u-button class="txtBtn" @click="handleOpenPrivacyContract()">{{ privacyTitle }}</u-button
-					>。如您同意{{ privacyTitle }}，请点击“同意”开始使用。
-				</view>
+				<view class="privacyContent">在您使用之前，请仔细阅读<u-button class="txtBtn" @click="handleOpenPrivacyContract()">{{ privacyTitle }}</u-button>。如您同意{{ privacyTitle }}，请点击“同意”开始使用。</view>
 				<button id="agree-btn" open-type="agreePrivacyAuthorization" class="u-reset-button" slot="confirm-button" @agreeprivacyauthorization="handleAgreePrivacyAuthorization">同意</button>
 			</u-modal>
 			<!-- 底部聊天输入框 -->
-			<view slot="bottom">
-				<chat-input :disabled="isAnswering" ref="chatInputBar" @show-log="onChatLogShow" @send="doSend" />
-			</view>
+			<view slot="bottom"><chat-input :disabled="isAnswering" ref="chatInputBar" @show-log="onChatLogShow" @send="doSend" /></view>
 		</z-paging>
 	</view>
 </template>
 
 <script>
-import { md, initMd } from '@/providers/utilities/chat.js';
+import { md, initMd } from '@/providers/utilities/chat';
 import chatInput from './components/chat-input.vue'
 import chatItem from './components/chat-item.vue'
 import chatLog from './chat-log.vue'
 import store from '@/store/index'
 export default {
-	components: {
-		'chat-input': chatInput,
-		'chat-item': chatItem,
-		'chat-log': chatLog,
-	},
+	components: { 'chat-input': chatInput, 'chat-item': chatItem, 'chat-log': chatLog },
 	data() {
 		return {
 			showChatLog: false,
@@ -172,9 +144,7 @@ export default {
 		}
 	},
 	mounted() {
-		setTimeout(() => {
-			this.useMarkdown = initMd(md)
-		}, 250);
+		setTimeout(() => { this.useMarkdown = initMd(md) }, 250);
 	},
 	methods: {
 		onChatLogShow() {
@@ -768,18 +738,12 @@ export default {
 			console.log(item);
 			this.showConfirm('是否确定删除此条记录', () => {
 				this.showLoading('删除中...', true);
-				this.bqsSvc.put(RouteConfigs.businessRoute.Chat.delChatLog.replace('{id}', item.id).replace('{type}', '3')).subscribe((res) => {
-					uni.hideLoading();
-					if (res.code === HttpStatusCode.服务器成功处理) {
-						let idx = this.dataList.findIndex((x) => x.id === item.id && x.role === 'assistant');
-						this.dataList.splice(idx - 1, 1);
-						idx = this.dataList.findIndex((x) => x.id === item.id && x.role === 'assistant');
-						this.dataList.splice(idx, 1);
-						this.$refs.refChatList.hideShowBotNew();
-					}
-				}).finally(()=>{					
-					uni.hideLoading()
-				});
+				let idx = this.dataList.findIndex((x) => x.id === item.id && x.role === 'assistant');
+				this.dataList.splice(idx - 1, 1);
+				idx = this.dataList.findIndex((x) => x.id === item.id && x.role === 'assistant');
+				this.dataList.splice(idx, 1);
+				this.$refs.refChatList.hideShowBotNew();
+				uni.hideLoading()
 			});
 		},
 		// 发送新消息
@@ -790,7 +754,7 @@ export default {
 			}
 			this.askMsg = msg;
 			this.$refs.paging.addChatRecordData({
-				time: '', icon: `${this.$staticPath}temp/imgs/daxiong.jpg`,
+				time: '', icon: `${this.$staticPath}imgs/daxiong.jpg`,
 				name: '大雄', content: msg,
 				isMe: true
 			});
@@ -814,7 +778,7 @@ export default {
 			this.isAnswering = true;
 			// 立刻添加一个思考中的回复
 			this.$refs.paging.addChatRecordData({
-				time: '', icon: `${this.$staticPath}temp/imgs/duola.jpg`,
+				time: '', icon: `${this.$staticPath}imgs/duola.jpg`,
 				name: '小智', content: '思考中...',
 				isMe: false
 			});
@@ -874,7 +838,7 @@ export default {
 		border-radius: 20rpx;
 		overflow: hidden;
 		padding: 56rpx 284rpx 60rpx 32rpx;
-		@include background-image('temp/imgs/report-bg.png');
+		@include background-image('imgs/report-bg.png');
 		.cardInfo{
 			.cardTitle {
 				font-weight: bold;

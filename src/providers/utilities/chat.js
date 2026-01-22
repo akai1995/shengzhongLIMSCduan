@@ -14,7 +14,8 @@
 // import MarkdownItAttrs from '@/static/temp/js/markdown-it-attrs.min.js';
 // import MarkdownItCheckbox from '@/static/temp/js/markdown-it-checkbox.min.js';
 
-// const $staticPath = 'https://genepiapi.ypzlfx.com/file/eai/'
+// import constant from '@/app/app.constant'
+// const $staticPath = constant.staticPath
 
 import hljs from 'highlight.js'; // https://highlightjs.org/
 import MarkdownIt from 'markdown-it';

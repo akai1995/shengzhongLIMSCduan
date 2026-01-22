@@ -6,7 +6,7 @@
                 <view class="cardSubTitle">扫图识字，一扫既得</view>
             </view>
             <view class="cardIcon">
-                <u-icon :name="`${$staticPath}temp/imgs/img-ocr.png`" size="140rpx" />
+                <u-icon :name="`${$staticPath}imgs/img-ocr.png`" size="140rpx" />
             </view>
         </view>
         <view class="cardWarp f2" @click="onJump('chat-history-stream/chat-history-stream')">
@@ -15,7 +15,7 @@
                 <view class="cardSubTitle">医疗报告智能分析助手</view>
             </view>
             <view class="cardIcon">
-                <u-icon :name="`${$staticPath}temp/imgs/img-report.png`" size="140rpx" />
+                <u-icon :name="`${$staticPath}imgs/img-report.png`" size="140rpx" />
             </view>
         </view>
     </view>
@@ -51,7 +51,7 @@ export default {
         justify-content: flex-start;
         gap: 22rpx;
         .f1 {
-		    @include background-image('temp/imgs/img-ocr-bg.png');
+		    @include background-image('imgs/img-ocr-bg.png');
             .cardInfo{
                 .cardSubTitle{
                     color: #7D6B54;
@@ -59,7 +59,7 @@ export default {
             }
         }
         .f2 {
-		    @include background-image('temp/imgs/img-report-bg.png');
+		    @include background-image('imgs/img-report-bg.png');
             .cardInfo{
                 .cardSubTitle {
                     color: #4B5980;

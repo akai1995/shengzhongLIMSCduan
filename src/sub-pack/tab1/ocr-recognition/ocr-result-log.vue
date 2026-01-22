@@ -1,6 +1,6 @@
 <template>
     <z-paging 
-        ref="paging" class="page" :paging-style="{ backgroundColor: '#F7F8FA' }" v-model="dataList" @query="queryList"
+        ref="pagingLog" class="page" :paging-style="{ backgroundColor: '#F7F8FA' }" v-model="dataList" @query="queryList"
         :fixed="true" :auto="false" :auto-show-back-to-top="true" :enable-back-to-top="true" :show-refresher-when-reload="detailInfo?false:true" 
         :auto-scroll-to-top-when-reload="false" :auto-clean-list-when-reload="detailInfo?false:true" :safe-area-inset-bottom="true"
         :hide-empty-view="detailInfo?true:false" :refresher-enabled="detailInfo?false:true" :loading-more-enabled="detailInfo?false:true"
@@ -13,21 +13,18 @@
                 @leftClick="onClose" 
             />
         </view>
-		<ut-components ref="utComponents" />
+		<!-- <ut-components ref="utComponents" /> -->
         <view class="content" v-if="detailInfo">
-            <view class="ocrImgBox" v-if="detailInfo.imgPath">
-                <view class="ocrImg">
-                    <image :src="detailInfo.imgPath" />
-                </view>
-            </view>
-            <view class="datail">
-                {{ detailInfo.content }}
-            </view>
+            <view class="ocrImgBox" v-if="detailInfo.filePath"><view class="ocrImg"><image :src="_self.$onlineFilePath + detailInfo.filePath.replace('/opt/upFiles/', '')" /></view></view>
+            <view class="datail"><view v-html="assistantContent(detailInfo.content)"></view></view>
         </view>
         <view class="content" v-else>
 			<view class="luBox">
             	<u-skeleton v-if="!firstLoaded&&dataList.length === 0" rows="10" title loading />
-      			<project-ocr-result-log-item v-for="item,idx in dataList" :key="item.id" :item="item" :hideLine="dataList.length-1==idx" @toggle="onToggle" @view="onView" />
+      			<project-ocr-result-log-item 
+					v-for="(item,idx) in dataList" :key="item.id" :item="{ ...item,index:idx+1 }" 
+					:hideLine="dataList.length-1==idx" @toggle="onToggle" @view="onView" 
+				/>
             </view>
         </view>
         <view slot="bottom">
@@ -49,70 +46,57 @@
 </template>
 
 <script>
+import { md, initMd, mdRenderHtml } from '@/providers/utilities/chat';
+import { getOcrInfoList, delOcrInfo } from '@/app/api/common'
 export default {
-    props: {
-        /** 图片资源地址 */
-        info: {
-            type: Object,
-            default: () => {
-                return {
-                    imgPath: '',
-                    detail: ''
-                }
-            }
-        },
-    },
 	data() {
 		return {
             isAllSelect: [], detailInfo: null, 
+			queryParams: {pageNO:1,pageSize:10},
             dataList: [], totalCount: 0, firstLoaded: false,
+			/**
+			 * 使用markdown的引用
+			 */
+			useMarkdown: null,
 		};
 	},
-    computed: {
-        allDisabled() {
-            return this.dataList.length==0
-        }
-    },
+    computed: { allDisabled() { return this.dataList.length==0 } },
 	mounted() {
 		setTimeout(() => {
-		    this.$refs.paging && this.$refs.paging.refresh();
+			this.useMarkdown = initMd(md)
+		    this.$refs.pagingLog && this.$refs.pagingLog.refresh();
 		}, 250);
 	},
 	methods: {
 		queryList(pageNo, pageSize) {
-			this.$refs.paging.endRefresh()
-            this.$refs.paging.complete(Array.from({ length: 8 }, (_, index) => { 
-                return {
-                    index: index+1, imgPath: '',
-                    content: '这是分析名称，这是分析名称，这是分析名称，这是分析名称（最多30个字符）',
-                    date: '12-08 10:20:30', checked: false
-                }
-            }))
-            this.totalCount = 8
-            this.firstLoaded = true
-            uni.hideLoading();
+			this.queryParams.pageNO = pageNo
+			this.queryParams.pageSize = pageSize
+			const type = pageNo>1 ? 'search': ''
+			getOcrInfoList(this.queryParams).then((resp) => {
+				this.totalCount = resp&&resp.result?resp.result.total : 0 
+				this.$refs.pagingLog.complete(resp&&resp.result?resp.result.records.map((row)=>({...row,checked:false})):false)
+			}).catch(()=>{
+				this.$refs.pagingLog.complete(false)
+			}).finally(()=>{
+				setTimeout(()=>{ this.firstLoaded = true; }, 1750)
+			});
 		},
-        checkAllChange(values) { 
-            console.log(values)
+        checkAllChange(values) {
 			if (this.dataList.length === 0) return;
-			if (values.length>0) {
-				this.dataList.forEach((sp) => {
-                    this.$set(sp, 'checked', true)
-				});
-			} else {
-				this.dataList.forEach((sp) => {
-                    this.$set(sp, 'checked', false)
-				});
-			}
+            this.dataList.forEach((sp) => { this.$set(sp, 'checked', values.length>0) });
         },
+		assistantContent(content) {
+			if (!content) return '';
+			return mdRenderHtml(content, this.useMarkdown);
+		},
         onToggle(item) {
-            const cusChecked = !item.checked
-            this.$set(item, 'checked', cusChecked)
-            this.dataList.forEach((sp) => {
-                this.$set(sp, 'checked', sp.index==item.index ? cusChecked : sp.checked)
-            });
-            const sel = this.dataList.filter((row)=> row.checked)
-            this.isAllSelect = this.dataList.length == sel.length?['全选']:[]
+			const _self = this;
+			_self.$nextTick(()=>{
+				const cusChecked = !item.checked; _self.$set(item, 'checked', cusChecked); console.log('toggle', cusChecked)
+				_self.dataList.forEach((sp) => { _self.$set(sp, 'checked', sp.id==item.id ? cusChecked : sp.checked) });
+				const sel = _self.dataList.filter(row=> row.checked); _self.isAllSelect = _self.dataList.length == sel.length?['全选']:[]
+				console.log('toggle _self.dataList', _self.dataList.map(row=>row.checked))
+			})
         },
         onView(item) {
             this.detailInfo = item
@@ -125,18 +109,28 @@ export default {
             }
         },
         onRemove() {
-			if (this.dataList.length === 0) {
-                this.showTips('没有可以删除的记录', 'error');
+			const _self = this
+			if (_self.dataList.length === 0) {
+                _self.showTips('没有可以删除的记录', 'error');
                 return;
             }
-            const values = this.dataList.filter((row)=> row.checked)
+            const values = _self.dataList.filter((row)=> row.checked)
 			if (values.length==0) {
-                this.showTips('没有选择记录', 'error');
+                _self.showTips('没有选择记录', 'error');
                 return;
             }
-            this.dataList = this.dataList.filter((row)=> !row.checked)
-            this.showTips('删除成功', 'success');
-            this.isAllSelect = []
+			uni.showLoading({ title: '删除中...', mask: true })
+			delOcrInfo(values.map((row)=>row.id)).then((res)=>{
+				if (res.success) {					
+					_self.dataList = _self.dataList.filter((row)=> !row.checked)
+					_self.showTips('删除成功', 'success');
+					_self.isAllSelect = []
+				}
+			}).catch(err=>{
+				
+			}).finally(()=>{
+				setTimeout(()=>{ uni.hideLoading() }, 350)
+			})
         }
 	},
 };

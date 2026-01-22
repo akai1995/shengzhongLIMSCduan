@@ -43,9 +43,9 @@
 		props: ['list', 'head'],
 		data() {
 			return {
-				icon:this.$staticPath+'temp/imgs/doctor_home.png',
+				icon:this.$staticPath+'imgs/doctor_home.png',
 				src: '',
-				img:this.$staticPath+'temp/imgs/default_doctor.png'
+				img:this.$staticPath+'imgs/default_doctor.png'
 			};
 		},
 		methods: {

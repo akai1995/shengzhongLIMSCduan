@@ -2,7 +2,7 @@
     "name" : "e-AI",
     "appid" : "__UNI__DE9C615",
     "description" : "",
-    "versionName" : "2.26.0120",
+    "versionName" : "2.26.0122",
     "versionCode" : "100",
     "transformPx" : false,
 	"transformPx": false,
@@ -79,12 +79,16 @@
     /* 小程序特有相关 */
     "mp-weixin" : {
         "appid" : "wxc5b836db531c0df1",
+        "projectname": "e-AI",
         "optimization" : {
             "subPackages" : true
         },
         "setting" : {
-            "urlCheck" : false,
-            "checkSiteMap" : false
+            "urlCheck": false,
+            "es6": true,
+            "minified": true,
+            "checkSiteMap" : false,
+            "bigPackageSizeSupport": true
         },
         "usingComponents" : true,
         "permission" : {

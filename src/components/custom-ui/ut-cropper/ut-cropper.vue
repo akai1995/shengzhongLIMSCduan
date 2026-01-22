@@ -36,15 +36,15 @@
 			<slot />
 		</view>
 		<!-- <view slot="bottom" style="z-index: 999;"class="fixed-bottom safe-area-inset-bottom pubTopLine" :style="{ zIndex: initData.area.zIndex + 9999 }"> -->
-		<view slot="bottom" style="z-index: 999;"class="fixed-bottom safe-area-inset-bottom pubTopLine">
-			<view v-if="(rotatable || reverseRotatable) && !!imgSrc" class="action-bar">
+		<view slot="bottom" style="z-index: 999;"class="fixed-bottom safe-area-inset-bottom">
+			<view v-if="(rotatable || reverseRotatable) && !!imgSrc" class="action-bar pubTopLine">
 				<view v-if="reverseRotatable" class="rotate-icon" @click="cropper.rotateImage270"></view>
 				<view v-if="rotatable" class="rotate-icon is-reverse" @click="cropper.rotateImage90"></view>
 			</view>
 			<!-- <view v-if="!choosable" class="choose-btn" @click="cropClick">确定</view> -->
 			<view class="cus-action">
-				<u-icon name="close" size="45rpx" @click="onCloseCrop" />
-				<u-icon name="checkmark" size="45rpx" @click="cropClick" />
+				<u-icon name="close" color="#fff" size="45rpx" @click="onCloseCrop" />
+				<u-icon name="checkmark" color="#fff" size="45rpx" @click="cropClick" />
 			</view>
 			<!-- <block v-else-if="!!imgSrc">
 				<view class="rechoose" @click="chooseImage">重选</view>
@@ -451,7 +451,7 @@
 						this.oldHeight = this.scaleHeight;
 					},
 					fail: (err) => {
-						console.error(err)
+						console.error(err.errMsg||err)
 					}
 				});
 			},
@@ -737,13 +737,25 @@
 			}
 		}
 
-		.cus-action{
+		.cus-action {
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
 			width: 100%; height: 100rpx;
 			padding: 15rpx 24rpx;
-			u-icon{
+			background-color:rgba(0,0,0,0.4);
+			z-index: inherit;
+			position: relative;
+			&::after {
+				position: absolute;
+				content: '';
+				left: 0; bottom: 0;
+				background: #eaeaea;
+				width: 100%; height: 1px;
+				-webkit-transform: scaleY(0.5);
+				-webkit-transform-origin: 0 bottom;
+			}
+			u-icon {
 				padding: 15rpx;
 			}
 		}

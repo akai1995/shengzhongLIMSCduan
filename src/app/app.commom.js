@@ -3,11 +3,10 @@ import router from '@/providers/utilities/router'
 import uView from '@/uni_modules/uview-ui'
 import constant from '@/app/app.constant'
 import mixins from '@/providers/mixins'
+import dict from '@/providers/dict'
 import $ut from '@/providers/index'
 import store from '@/store/index';
 
-// 字典数据组件
-import DictData from '@/components/DictData'
 // import '@/imUtil/convert.ts'
 
 export const initVue = (Vue) => {
@@ -35,19 +34,20 @@ export const initVue = (Vue) => {
     Vue.config.productionTip = false
     // 全局挂载后使用
     Vue.prototype.$staticPath = constant.staticPath
+    Vue.prototype.$onlineFilePath = constant.filePath,
     Vue.prototype.$eUni = router
     Vue.prototype.onBack = () => {
-    const canNavBack = getCurrentPages();
-    if (canNavBack && canNavBack.length > 1) {
-        router.navBack({ delta: 1 });
-    } else {
-        history.back();
-    }
+        const canNavBack = getCurrentPages();
+        if (canNavBack && canNavBack.length > 1) {
+            router.navBack({ delta: 1 });
+        } else {
+            history.back();
+        }
     }
     Vue.prototype.getDictByType = getDictByType
     Vue.prototype.$store = store
     Vue.prototype.$ut = $ut
 
     // 全局方法挂载
-    DictData.install()
+    dict.install()
 }

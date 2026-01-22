@@ -6,5 +6,4 @@ import Vue from 'vue'
 initVue(Vue);
 
 const app = new App();
-
 app.$mount(); 

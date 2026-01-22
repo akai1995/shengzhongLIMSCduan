@@ -1,6 +1,6 @@
 <template>
     <z-paging 
-        ref="paging" v-show="!!!fileValue" class="page" :paging-style="{ backgroundColor: '#F7F8FA' }" v-model="dataList" @query="queryList"
+        ref="pagingRef" v-show="!!!fileValue" class="page" :paging-style="{ backgroundColor: '#F7F8FA' }" v-model="dataList" @query="queryList"
         :fixed="true" :auto="false" :refresher-enabled="false" :auto-show-back-to-top="true" :auto-scroll-to-top-when-reload="false"
         :loading-more-enabled="false" :show-refresher-when-reload="false" hide-empty-view
     >
@@ -11,14 +11,13 @@
                 @leftClick="onClose" 
             />
         </view>
+		<ut-components ref="utComponents" />
         <view class="content">
             <view class="ocrImgBox">
-                <view class="ocrImg">
-                    <image :src="info.imgPath" />
-                </view>
+                <view class="ocrImg"> <image :src="info.imgPath" /> </view>
             </view>
             <view class="datail">
-                {{ info.content }}
+                <view v-html="assistantContent(info.content)"></view>
             </view>
         </view>
         <view slot="bottom" class="pubBotBtn pubTopLine">
@@ -38,6 +37,7 @@
 </template>
 
 <script>
+import { md, initMd, mdRenderHtml } from '@/providers/utilities/chat';
 export default {
     props: {
         /** 图片资源地址 */
@@ -45,7 +45,8 @@ export default {
             type: Object,
             default: () => {
                 return {
-                    imgPath: '',
+                    title: '',
+                    filePath: '',
                     content: ''
                 }
             }
@@ -54,41 +55,29 @@ export default {
 	data() {
 		return {
 			dataList: [], firstLoaded: false,
+			/**
+			 * 使用markdown的引用
+			 */
+			useMarkdown: null,
 		};
 	},
 	mounted() {
-		// setTimeout(() => {
-		//     this.$refs.paging && this.$refs.paging.refresh();
-		// }, 250);
+		setTimeout(() => {
+			this.useMarkdown = initMd(md)
+		    // this.$refs.pagingRef && this.$refs.pagingRef.refresh();
+		}, 250);
 	},
 	methods: {
 		queryList(pageNo, pageSize) {
-			this.$refs.paging.endRefresh()
-            uni.hideLoading();
+			this.$refs.pagingRef.endRefresh()
 		},
-        onClose() {
-            this.$emit('close');
-        },
-        onSave() {
-            uni.showToast({
-                title: '保存成功',
-                icon: 'none'
-            });
-        },
-        onCopy() {
-            uni.setClipboardData({
-                data: this.info.detail,
-                success: () => {
-                    uni.showToast({
-                        title: '复制成功',
-                        icon: 'none'
-                    });
-                },
-                fail: (err) => {
-                    console.error('复制失败', err);
-                }
-            });
-        }
+		assistantContent(content) {
+			if (!content) return '';
+			return mdRenderHtml(content, this.useMarkdown);
+		},
+        onClose(isAll=false) { this.$emit('close', isAll); },
+        onSave() { this.onClose(true) },
+        onCopy() { this.$emit('copy') }
 	},
 };
 </script>

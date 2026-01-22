@@ -2,7 +2,7 @@
     <view class="reserve-item" @click="onView(item.id)">
         <div class="reserve-item-content">
             <view class="reserve-pic">
-                <image class="reserve-img" :src="item.deviceImg ? item.deviceImg : `${$staticPath}temp/imgs/devcieCover.png`" />
+                <image class="reserve-img" :src="item.deviceImg ? item.deviceImg : `${$staticPath}imgs/devcieCover.png`" />
             </view>
             <view class="reserve-info">
                 <view class="reserve-info-head">

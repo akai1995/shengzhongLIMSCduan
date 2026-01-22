@@ -6,7 +6,7 @@
 		empty-view-text="暂无数据" :loading-more-no-more-text="`已加载完，共${totalCount}条记录`"
 	>
 		<view slot="top" style="position: relative; box-sizing: border-box;">
-			<image class="home-bg" :src="`${$staticPath}temp/imgs/top_bg.png`" />
+			<image class="home-bg" :src="`${$staticPath}imgs/top_bg.png`" />
 			<!-- <view class="home-head" :style="{ height: headInfo.headHeight }"><view class="home-title" :style="{ marginTop: headInfo.titleTop }">待签署文件</view></view> -->
 			<u-navbar title="待签署文件" :fixed="false" bgColor="transparent"><view class="u-nav-slot" slot="left"></view></u-navbar>
 			<view class="home-search">

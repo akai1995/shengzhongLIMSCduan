@@ -1,12 +1,12 @@
 <template>
     <view>
         <ut-cropper 
-            v-if="fileValue" :choosable="false" :width="1200" :height="1600" 
-            :src="fileValue" @close="onCropperClose" @crop="onCrop"
+            v-show="fileValue&&!info.imgPath" check-range :choosable="false" :width="1200" :height="1600" 
+            :src="fileValue" @close="onCropperClose" @crop="onCropSave"
         >
             <view class="slotCropper">可拖动边线裁剪识别区域</view>
         </ut-cropper>
-        <ocr-result v-if="fileValue&&info.detail" :info="info" @close="onResultClose" />
+        <ocr-result v-if="fileValue&&info.imgPath" :info="info" @copy="onCopy" @close="onResultClose" />
         <ocr-result-log v-if="showOcrResultLog" @close="onOcrResultLogClose" />
         <z-paging 
             ref="paging" v-show="!!!fileValue&&!showOcrResultLog" class="page" :paging-style="{ backgroundColor: '#F7F8FA' }" v-model="dataList" @query="queryList"
@@ -26,7 +26,7 @@
                     <view class="subTip">您可以上传需要识别的图片，我们将为您智能识别提取文字信息~</view>
                     <view class="imgBox">
                         <view class="scanBox">
-                            <image :src="`${$staticPath}temp/imgs/ocr-icon.png`" />
+                            <image :src="`${$staticPath}imgs/ocr-icon.png`" />
                         </view>
                         <view class="scanTip">请上传图文清晰的图片</view>
                     </view>
@@ -35,7 +35,7 @@
             <view slot="bottom" class="pubBotBtn pubTopLine">            
                 <view class="wrap">
                     <view class="btn icon-history" @click="onOcrResultLogShow()">
-                        <u-icon :name="`${$staticPath}temp/imgs/icon-history.png`" size="45rpx" />
+                        <u-icon :name="`${$staticPath}imgs/icon-history.png`" size="45rpx" />
                     </view>
                 </view>
                 <view class="wrap">
@@ -52,100 +52,114 @@
 </template>
 
 <script>
-import { chooseFile } from '@/providers/uploadUtils'
+import { ocrUploadFile, parseDoc, saveOcrInfo } from '@/app/api/common'
+import { onChooseFile } from '@/providers/upload'
 import ocrResultLog from './ocr-result-log.vue'
-import { ocrUploadFile } from '@/app/api/ocr'
 import ocrResult from './ocr-result.vue'
 
 export default {
-    components: {
-        'ocr-result': ocrResult,
-        'ocr-result-log': ocrResultLog
-    },
+    components: { 'ocr-result': ocrResult, 'ocr-result-log': ocrResultLog },
 	data() {
 		return {
-			dataList: [], firstLoaded: false,
-            fileList: [], fileValue: '', info: {
-                imgPath: '', content: ''
-            },
+			dataList: [], firstLoaded: false, fileList: [],
+            fileValue: '', info: { imgPath: '', content: '', filePath: '', title: '' },
             showOcrResultLog: false,
 		};
 	},
-	mounted() {
-		setTimeout(() => {
-		    this.$refs.paging && this.$refs.paging.refresh();
-		}, 250);
-	},
+	mounted() { setTimeout(() => { this.$refs.paging && this.$refs.paging.refresh(); }, 250); },
 	methods: {
-        onOcrResultLogShow() {
-            this.showOcrResultLog = true
-        },
-        onOcrResultLogClose() {
-            this.showOcrResultLog = false
-        },
+        onOcrResultLogShow() { this.showOcrResultLog = true },
+        onOcrResultLogClose() { this.showOcrResultLog = false },
 		queryList(pageNo, pageSize) {
 			this.$refs.paging.endRefresh()
-            // this.$refs.paging.complete()
-            // this.firstLoaded = true;
-            uni.hideLoading();
 		},
         onChoose(sourceType){
-            chooseFile(
-                Object.assign({
-                    accept: 'media',
-                    multiple: false,
-                    capture: [sourceType],
-                    compressed: true,
-                    maxDuration: 60,
-                    sizeType: uni.$u.props.upload.sizeType,
-                    camera: 'back',
-                }, {
-                    maxCount: 1,
+            const params = {
+                accept: 'media', multiple: false, capture: [sourceType],
+                compressed: true, maxDuration: 60, sizeType: uni.$u.props.upload.sizeType,
+                camera: 'back', maxCount: 1,
+            }
+            onChooseFile(params).then((res) => {                
+                console.log('res[0]', res[0]); this.fileList = res;
+                ocrUploadFile({ filePath: res[0].thumb, formData: {
+                    // biz: 'temp', file: res[0]
+                }}).then((resp)=>{
+                    if (resp.success) {
+                        this.fileValue = `${this.$onlineFilePath}${resp.message}`
+                        console.log('this.fileValue', this.fileValue)
+                    } else {
+                        this.showTips('上传异常', 'error');
+                    }
+                }).catch((error) => { 
+                    console.error(error);
+                    this.showTips('上传异常', 'error');
                 })
-            )
-            .then((res) => {
-                console.log('res[0]', res[0]); this.fileList = res
-                this.fileValue = res[0].url || res[0].tempFilePath || 'https://ask.dcloud.net.cn/uploads/avatar/001/67/43/81_avatar_max.jpg'
-                // uni.previewImage({ urls: [this.fileValue], current: 0 });
-                ocrUploadFile({ name:'', filePath: this.fileValue }).then((res)=>{
-                    console.log('res', res)
-                    if (res) {
-                        
-                    } 
-                }).catch((error)=>{
-                    console.log(error)   
-                })
-            })
-            .catch((error) => {
-                this.$emit('error', error);
-            });
+            }).catch((error) => { console.error(error) });
         },
         onCropperClose() {
-            this.fileList = []
-            this.fileValue = ''
-            this.info = {
-                imgPath: '',
-                content: ''
-            }
+            this.fileList = []; this.fileValue = '';
+            this.info = { title: '', imgPath: '', content: '' }
         },
-        onCrop(e) {
-            // uni.previewImage({ urls: [e.tempFilePath], current: 0 });
+        onCropSave(event) {
+            console.log('onCropSave', event)
+            const _self = this
+            // uni.previewImage({ urls: [event.tempFilePath], current: 0 });
             uni.showLoading({ title: '识别中...', mask: true });
-            this.info = {
-                imgPath: e.tempFilePath,
-                content: '主要发现 /n 右肺上叶检测到一个最大直径约15mm的实性肺结节，形态学特征提示需关注。'
-            }
-            console.log('this.info', this.info)
-            uni.hideLoading()
+            ocrUploadFile({ filePath: event.url || event.tempFilePath, formData: {
+                // biz: 'temp', file: event
+            }}).then((resp)=>{
+                console.log('onCropSave ocrUploadFile resp', resp.success, resp.message)
+                if (resp.success) {
+                    const cropPath = `${_self.$onlineFilePath}${resp.message}`
+                    console.log('cropPath', cropPath)
+                    parseDoc(resp.message).then((res)=>{
+                    console.log('parseDoc res', res.success, res.data)
+                    if (res.success) {
+                        _self.info = Object.assign(_self.info, {...res.data,imgPath: cropPath})
+                        console.log('_self.info', _self.info)
+                    }
+                    }).finally(()=>{
+                        uni.hideLoading()
+                    })
+                } else {
+                    _self.showTips('上传异常', 'error');
+                }
+            }).catch((error) => { 
+                console.error(error);
+                _self.showTips('上传异常', 'error');
+            }).finally(() => {
+                uni.hideLoading();
+            });
         },
-        onResultClose() {
-            this.info = {
-                imgPath: '',
-                content: ''
+        onCopy() {
+            uni.setClipboardData({
+                data: this.info.content,
+                success: () => { this.showTips('复制成功'); },
+                fail: (err) => { this.showTips('复制失败', 'error'); }
+            });
+        },
+        onResultClose(isAll) {
+            if (isAll) {        
+                uni.showLoading({ title: '保存中...', mask: true });        
+                saveOcrInfo(this.info).then((res)=>{
+                    console.log('saveOcrInfo', res);
+                    if (res.success) {
+                        this.showTips('保存成功'); this.fileValue = '';
+                        this.info = { title: '', imgPath: '', filePath:'', content: '' }
+                        this.showOcrResultLog = true
+                    }             
+                }).finally(()=>{
+                    setTimeout(()=>{
+                        uni.hideLoading()
+                    }, 300)
+                })
+            }
+            else {                
+                this.info = { title: '', imgPath: '', filePath:'', content: '' }
             }
         }
-	},
-};
+	}
+}
 </script>
 <style lang="scss" scoped>
 .slotCropper {
@@ -166,7 +180,7 @@ export default {
 	padding: 32rpx;
 	.tipBox {
 		padding: 24rpx;
-		@include background-image('temp/imgs/ocr-bg.png');
+		@include background-image('imgs/ocr-bg.png');
 		width: 686rpx; height: auto;
 		box-sizing: border-box;
 		border-radius: 12rpx;
@@ -189,7 +203,7 @@ export default {
 		.imgBox{
 			background-color: white;
 			border-radius: 24rpx;
-			padding: 48rpx 76rpx;
+			padding: 48rpx 48rpx;
 			.scanBox {
 				width: 100%;
 				image {

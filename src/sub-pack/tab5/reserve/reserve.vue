@@ -38,13 +38,12 @@ export default {
 	},
     methods: {
 		queryList(pageNo, pageSize) {
-			console.log('resp', resp)
 			this.queryParams.pageNo = pageNo
 			this.queryParams.pageSize = pageSize
 			getReserveList(this.queryParams).then((resp) => {
 				console.log('resp', resp)
-				this.totalCount = resp&&resp.data?resp.data.total : 0 
 				this.$refs.paging.complete(resp&&resp.data?resp.data.records:false)
+				this.totalCount = resp&&resp.data?resp.data.total : 0 
 			}).catch(()=>{
 				console.log('error')
 				this.$refs.paging.complete(false)

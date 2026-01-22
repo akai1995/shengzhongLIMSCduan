@@ -2,7 +2,7 @@
     <view class="liItem">
         <view class="liItemInfo">
             <view class="cover">
-                <image style="width:100%;height: 100%;" :src="item.deviceImg || `${$staticPath}temp/imgs/devcieCover.png`" />
+                <image style="width:100%;height: 100%;" :src="item.deviceImg || `${$staticPath}imgs/devcieCover.png`" />
             </view>
             <view class="pecific">
                 <view class="deviceName">{{ item.deviceName }}</view>

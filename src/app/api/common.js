@@ -1,4 +1,4 @@
-import upload from '@/providers/utilities/upload'
+import upload from '@/providers/upload'
 import service from '@/app/app.http';
 
 /**
@@ -7,7 +7,7 @@ import service from '@/app/app.http';
  * @returns 
  */
 export function ocrUploadFile(data) {
-    return upload({ url: '/sys/oss/file/upload', name: data.name, filePath: data.filePath })
+    return upload({ url: '/sys/common/upload', name: data.name, filePath: data.filePath })
 }
 
 /**
@@ -22,12 +22,21 @@ export function saveOcrInfo(data) {
 }
 
 /**
+ * 删除记录
+ * @param {*} ids string[]
+ * @returns 
+ */
+export function delOcrInfo(ids) {
+    return service.post({ url: '/appDevice/storageInstrumentReserve/delOcrInfo', data: { ids } })
+}
+
+/**
  * 解析出的内容
  * @param {*} filePath 
  * @returns 
  */
 export function parseDoc(filePath) {
-    return service.get({ url: '/appDevice/storageInstrumentReserve/parseDoc', params: {filePath} })
+    return service.get({ url: '/appDevice/storageInstrumentReserve/parseDoc', params: { filePath } })
 }
 
 /**

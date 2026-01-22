@@ -2,9 +2,7 @@
 
 <template>
 	<view class="chat-item">
-		<text class="chat-time" v-if="item.time&&item.time.length">
-			{{item.time}}
-		</text>
+		<text class="chat-time" v-if="item.time&&item.time.length">{{item.time}}</text>
 		<view :class="{'chat-container':true,'chat-location-me':item.isMe}">
 			<!-- <view class="chat-icon-container">
 				<image class="chat-icon" :src="item.icon" mode="aspectFill" />
@@ -24,31 +22,26 @@
 </template>
 
 <script>
-	export default {
-		name:"ut-chat-item",
-		props: {
-			item: {
-				type: Object,
-				default: function() {
-					return {
-						time: '',
-						icon: '',
-						name: '',
-						content: '',
-						isMe: false
-					}
+export default {
+	name: 'chat-item',
+	props: {
+		item: {
+			type: Object,
+			default: function() {
+				return {
+					time: '', icon: '', name: '',
+					content: '', isMe: false
 				}
 			}
-		},
-		data() {
-			return {
-				
-			};
 		}
+	},
+	data() {
+		return { }
 	}
+}
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 	.chat-item {
 		display: flex;
 		flex-direction: column;

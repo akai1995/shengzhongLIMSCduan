@@ -1,5 +1,4 @@
-import DictOptions from './DictOptions'
-import DictData from './DictData'
+import DictOptions from './DictOptions'; import DictData from './DictData'
 
 export default function(dict, dictMeta) {
   const label = determineDictField(dict, dictMeta.labelField, ...DictOptions.DEFAULT_LABEL_FIELDS)

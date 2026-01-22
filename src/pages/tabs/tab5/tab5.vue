@@ -5,7 +5,7 @@
 		:loading-more-enabled="false" :show-refresher-when-reload="false" hide-empty-view
 	>
 		<view slot="top" style="position: relative; box-sizing: border-box;">
-			<image class="home-bg" :src="`${$staticPath}temp/imgs/userBg.png`" />
+			<image class="home-bg" :src="`${$staticPath}imgs/userBg.png`" />
 			<!-- <view class="detail-head" :style="{ height: headInfo.headHeight }">
 				<view class="detail-title" :style="{ marginTop: headInfo.titleTop }">我的</view>
 			</view> -->
@@ -15,7 +15,7 @@
 		<view class="">
 			<view class="detail-info">
 				<view class="detail-info-icon">
-					<image class="detail-info-img" :src="`${$staticPath}temp/imgs/default_head.png`" />
+					<image class="detail-info-img" :src="`${$staticPath}imgs/default_head.png`" />
 				</view>
 				<view class="detail-info-message">
 					<view class="detail-info-message-name">{{ userName }}</view>
@@ -47,15 +47,15 @@ export default {
             menuList: [
                 {
                     name:'我的预约', path: '/sub-pack/tab5/reserve/reserve',
-                    icon: `${this.$staticPath}temp/imgs/icon-reserver.png`
+                    icon: `${this.$staticPath}imgs/icon-reserver.png`
                 },
                 {
                     name:'我的待签署', path: '/sub-pack/tab5/sign-doc/sign-doc',
-                    icon: `${this.$staticPath}temp/imgs/icon-reserver.png`
+                    icon: `${this.$staticPath}imgs/icon-reserver.png`
                 },
                 {
                     name:'联系客服', path: '',
-                    icon: `${this.$staticPath}temp/imgs/icon-service.png`
+                    icon: `${this.$staticPath}imgs/icon-service.png`
                 },
             ]
 		};

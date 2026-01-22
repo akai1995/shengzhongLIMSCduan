@@ -115,7 +115,7 @@ const user = {
 						const user = res.user;
 						const avatar =
 							user == null || user.avatar == '' || user.avatar == null
-								? `${this.$staticPath}temp/imgs/default_head.png`
+								? `${this.$staticPath}imgs/default_head.png`
 								: user.avatar;
 						const username = user == null || user.userName == '' || user.userName == null ? '' : user.userName;
 						if (res.roles && res.roles.length > 0) {
@@ -144,7 +144,7 @@ const user = {
 						const user = res.user;
 						const avatar =
 							user == null || user.avatar == '' || user.avatar == null
-								? this.$staticPath+'temp/imgs/default_head.png'
+								? `${this.$staticPath}imgs/default_head.png`
 								: user.avatar;
 						const username = user == null || user.username == '' || user.username == null ? '' : user.userName;
 						const idcard = user == null || user.idcard == '' || user.idcard == null ? '' : user.idcard;

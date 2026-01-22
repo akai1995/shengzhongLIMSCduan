@@ -1,4 +1,4 @@
-import upload from '@/providers/utilities/upload'
+import upload from '@/providers/upload'
 import service from '@/app/app.http';
 
 // 用户密码重置

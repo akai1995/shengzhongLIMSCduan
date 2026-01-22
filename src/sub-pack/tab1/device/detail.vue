@@ -9,7 +9,7 @@
 		<ut-components ref="utComponents" />
         <view class="detail">
             <view class="detail-pic">
-                <image class="detail-img" :src="deviceInfo.deviceImg ? deviceInfo.deviceImg : $staticPath+'temp/imgs/devcieCover.png'" />
+                <image class="detail-img" :src="deviceInfo.deviceImg ? deviceInfo.deviceImg : `${$staticPath}imgs/devcieCover.png`" />
             </view>
             <view class="detail-content">
                 <view class="detail-info">

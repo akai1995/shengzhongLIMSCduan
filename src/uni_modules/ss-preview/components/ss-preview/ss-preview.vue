@@ -1,30 +1,26 @@
 <template>
 	<view class="page">
 		<!-- 预览图片 -->
-		<swiper class="swiper" style="width:100%;height:calc(100vh - 44px);margin:0 auto;" v-if="fileType === '1'">
-			<swiper-item v-for="(item,index) in imageList" :key="'key'+index">
-				<image :src="item" style="width:100%;height:100%;" mode="aspectFit"></image>
+		<swiper class="swiper" style="width:100%;height:calc(100vh - 44px);margin:0 auto;" v-if="[1,'1'].includes(fileType)">
+			<swiper-item v-for="(item,idx) in imageList" :key="`key_${idx}`">
+				<image :src="item" style="width:100%;height:100%;" mode="aspectFit" />
 			</swiper-item>
 		</swiper>
 		<!-- 预览文件 -->
-		<web-view :webview-styles="webviewStyles" :src="src" v-if="fileType === '2'"></web-view>
+		<web-view :webview-styles="webviewStyles" :src="src" v-if="[2,'2'].includes(fileType)" />
 		<!-- 预览视频 -->
-		<view class="video-detail-page" v-if="fileType === '3'">
-			<view class="video-box">
-				<video :src="fileUrl" controls></video>
-			</view>
-		</view>
+		<view class="video-detail-page" v-if="[3,'3'].includes(fileType)"><view class="video-box"><video :src="fileUrl" controls /></view></view>
 	</view>
 </template>
 
 <script>
 export default {
-	name: 'u-preview',
+	name: 'ss-preview',
 	props: {
 		fileUrl: { type: String, default: '' },
-		/* 1.预览图片，2.预览文件，3.预览视频 */
+		/* 1.预览图片; 2.预览文件; 3.预览视频 */
 		fileType: { type: String, default: '' },
-			/* 预览图片，可以预览多张 */
+		/* 预览图片; 可以预览多张 */
 		imageList:{ type: Array, default:()=>{ return [] } },
 	},
 	data() {

@@ -3,9 +3,7 @@ import { mergeRecursive } from "@/providers/index";
 import DictMeta from './DictMeta'
 import DictData from './DictData'
 
-const DEFAULT_DICT_OPTIONS = {
-  types: [],
-}
+const DEFAULT_DICT_OPTIONS = { types: [] }
 
 /**
  * @classdesc 字典

@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import { mdRenderHtml } from '@/providers/utilities/chat.js';
+import { mdRenderHtml } from '@/providers/utilities/chat';
 import '@/static/temp/styles/a11y-dark.css';
 import '@/static/temp/styles/markdown.scss';
 import 'github-markdown.css';

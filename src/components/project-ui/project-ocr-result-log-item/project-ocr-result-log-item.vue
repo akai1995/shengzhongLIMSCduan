@@ -1,9 +1,9 @@
 <template>
-    <view class="liItem" :class="{ on: item.checked }" @click="onView">
-        <view class="lCheck" @click.stop="onToggle"><text class="widget_check"></text></view>
-        <view class="pecific">
+    <view class="liItem" :class="{ on: item.checked }" @touchmove.stop.prevent>
+        <view class="lCheck" @click="onToggle"><text class="widget_check"></text></view>
+        <view class="pecific" @click="onView">
             <view class="summary">{{ item.index }}.{{ item.content }}</view>
-            <view class="date">{{ item.date }}</view>
+            <view class="date">{{ item.createTime }}{{ item.checked }}</view>
         </view>
     </view>
 </template>
@@ -19,10 +19,8 @@ export default {
       type: Object,
       default: () => {
         return {
-            index: 1,
+            index: 1, createTime: '12-08 10:20:30', checked: false,
             content: '这是分析名称，这是分析名称，这是分析名称，这是分析名称（最多30个字符）',
-            date: '12-08 10:20:30',
-            checked: false
         }
       }
     }
@@ -46,24 +44,23 @@ export default {
         position: relative;
         padding: 24rpx 28rpx 24rpx 92rpx;
         background-color: white;
-        // padding: 32rpx;
-        margin-bottom: 20rpx;
+        margin-bottom: 32rpx;
         border-radius: 20rpx;
         .lCheck {
             position: absolute;
-            top: 48rpx; left: 30rpx;
-            width: 36rpx; height: 36rpx;
+            top: 40rpx; left: 30rpx;
+            width: 38rpx; height: 38rpx;
             .widget_check {
                 display: inline-block;
-                width: 36rpx;
-                height: 36rpx;
-                @include background-image('temp/imgs/icon-radio1.png');
+                width: 38rpx;
+                height: 38rpx;
+                @include background-image('imgs/icon-radio1.png');
             }
         }
         &.on {
             .lCheck {
                 .widget_check {
-                    @include background-image('temp/imgs/icon-radio2.png');
+                    @include background-image('imgs/icon-radio2.png');
                 }
             }
         }

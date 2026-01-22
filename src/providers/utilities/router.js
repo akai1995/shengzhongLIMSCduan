@@ -1,6 +1,8 @@
 // providers/utilities/router.js
 
-export default {
+
+export default {  
+  homePath: '/pages/tabs/tab1/tab1',
   navTo(options = {}) {
     const { url, ...restOptions } = options;
     const pages = getCurrentPages();
@@ -60,17 +62,21 @@ export default {
   },
 
   navBack(options = {}) {
-    uni.navigateBack({
-      delta: options.delta || 1,
-      success: options.success,
-      fail: options.fail,
-      complete: options.complete
-    });
+    const pages = getCurrentPages();
+    if (pages.length > 1) {
+      uni.navigateBack({
+        delta: options.delta || 1,
+        success: options.success,
+        fail: options.fail,
+        complete: options.complete
+      });
+    } else {
+      uni.reLaunch({ url: homePath });
+    }
   },
 
   buildUrlWithQueryAndParams(basePath, query, params) {
     let path = basePath;
-
     if (params) {
       Object.keys(params).forEach(key => {
         path = path.replace(`:${key}`, encodeURIComponent(params[key]));

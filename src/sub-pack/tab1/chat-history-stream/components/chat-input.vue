@@ -2,31 +2,24 @@
 	<view class="chat-input-bar-container" @touchmove.stop.prevent>
 		<!-- @touchmove.stop.prevent用于阻止touchmove冒泡，避免键盘弹出后触摸底部输入框区域还可以往上滚动的问题 -->
 		<view class="chat-input-bar">
+			<view class="fileBox">
+				<project-file-card 
+					v-for="file,idx in fileList" :key="idx"
+					border mode="small" closable :file="file"
+					@del="onDelFile(idx)"
+				/>
+			</view>
 			<view class="chat-input-container">
 				<!-- :adjust-position="false"必须设置，防止键盘弹窗自动上顶，交由z-paging内部处理 -->
-				 <!-- <view class="fileBox">
-					<view class="fileItem" v-for="item in fileList" :class="{
-							waiting: item.status=='waiting',
-							loading: item.status=='loading',
-							success: item.status=='success',
-							fail: item.status=='fail',
-						}"
-					>
-					    /* jpg jpeg png webp 图； dox docx xls xlsx pdf ppt pptx 类型图标 */
-						<view class="fileIcon"><image :src="item.status=='success'?item.path:''" /></view>
-						<view class="fileName">{{item.name}}</view>
-						<view class="fileStatus">{{statusMap[item.status]||item.name}}</view>
-					</view>
-				 </view> -->
-				<u--textarea border="none" :focus="focus" class="chat-input" v-model="chatCentent" :adjust-position="false" confirm-type="send" placeholder="请输入内容" @confirm="sendClick" />
+				<u--textarea border="none" :focus="focus" class="chat-input" v-model="chatCentent" :adjust-position="false" confirm-type="send" placeholder="请输入内容" @confirm="onSendClick" />
 			</view>
 			<!-- 表情图标（如果不需要切换表情面板则不用写） -->
 			<!-- <view class="emoji-container"><image class="emoji-img" :src="`${$staticPath}temp/${emojiType || 'emoji'}.png`" @click="emojiChange" /></view> -->
-			<view class="chat-input-history" @click.stop="onLogShow()"><u-icon :name="`${$staticPath}temp/imgs/icon-history.png`" size="45rpx" /></view>
-			<view class="chat-input-plus" :class="{ 'rotate-45': showMenu }" @click.stop="onPlus()"><u-icon :name="`${$staticPath}temp/imgs/icon-plus.png`" size="45rpx" /></view>
-			<view :class="{'chat-input-send': true, 'chat-input-send-disabled': !sendEnabled }" @click.stop="sendClick"><u-icon :name="`${$staticPath}temp/imgs/icon-send${sendEnabled?'2':''}.png`" size="45rpx" /></view>
+			<view class="chat-input-history" @click="onLogShow()"><u-icon :name="`${$staticPath}imgs/icon-history.png`" size="45rpx" /></view>
+			<view class="chat-input-plus" :class="{ 'rotate-45': showMenu }" @click="onTogglePlus()"><u-icon :name="`${$staticPath}imgs/icon-plus.png`" size="45rpx" /></view>
+			<view :class="{'chat-input-send': true, 'chat-input-send-disabled': !sendEnabled }" @click="onSendClick"><u-icon :name="`${$staticPath}imgs/icon-send${sendEnabled?'2':''}.png`" size="45rpx" /></view>
 		</view>
-		<view class="menuBox" v-if="showMenu">			
+		<view class="menuBox" v-show="showMenu">
 			<u-grid :border="false" :col="4" @click="onMenuClick">
 				<u-grid-item v-for="(menu,idx) in menuList" :key="idx">
 					<u-icon :customStyle="{paddingTop:20+'rpx'}" :name="menu.icon" :size="22" />
@@ -35,23 +28,16 @@
 			</u-grid>
 		</view>
 		<!--  表情面板，这里使用height控制隐藏显示是为了有高度变化的动画效果（如果不需要切换表情面板则不用写） -->
-		<view class="emoji-panel-container" :style="[{height: emojiType === 'keyboard' ? '400rpx' : '0px'}]">
-			<scroll-view scroll-y style="height: 100%;flex: 1;">
-				<view class="emoji-panel">
-					<text class="emoji-panel-text" v-for="(item, index) in emojisArr" :key="index" @click="emojiClick(item)">
-						{{item}}
-					</text>
-				</view>
-			</scroll-view>
-		</view>
+		<view class="emoji-panel-container" :style="[{height: emojiType === 'keyboard' ? '400rpx' : '0px'}]"><scroll-view scroll-y style="height: 100%;flex: 1;"><view class="emoji-panel"><text class="emoji-panel-text" v-for="(item, index) in emojisArr" :key="index" @click="emojiClick(item)">{{item}}</text></view></scroll-view></view>
 	</view>
 </template>
 
 <script>
-import { chooseFile } from '@/providers/uploadUtils'
+import { ocrUploadFile, parseDoc } from '@/app/api/common'
+import { onChooseFile } from '@/providers/upload'
 import constant from '@/app/app.constant'
 export default {
-	name: "ut-chat-input-bar",
+	name: 'chat-input',
 	props: {
 		disabled: {
 			type: Boolean,
@@ -63,26 +49,30 @@ export default {
 			statusMap: {
 				waiting: '等待中...',
 				loading: '上传中...',
+				analysis: '解析中...',
 				success: '',
 				fail: '上传失败',
 			},
 			// jpg jpeg png webp dox docx xls xlsx pdf ppt pptx
 			// name size type path
-			flieList: [],
-			showMenu: true,
+			fileList: [], showMenu: false,
 			menuList: [
 				{
-					icon: `${constant.staticPath}temp/imgs/icon-camera.png`,
+					icon: `${constant.staticPath}imgs/icon-camera.png`,
 					name: '拍照', type: 'camera'
 				},
 				{
-					icon: `${constant.staticPath}temp/imgs/icon-album.png`,
+					icon: `${constant.staticPath}imgs/icon-album.png`,
 					name: '相册', type: 'album'
 				},
 				{
-					icon: `${constant.staticPath}temp/imgs/icon-file.png`,
+					icon: `${constant.staticPath}imgs/icon-file.png`,
 					name: '本地文件', type: 'file'
-				}
+				},
+				// {
+				// 	icon: ``,
+				// 	name: '', type: ''
+				// }
 			],
 			chatCentent: '',
 			
@@ -138,7 +128,7 @@ export default {
 		},
 			
 		// 点击了选择文件
-		onPlus() {
+		onTogglePlus() {
 			// if (this.showMenu) return;
 			this.showMenu = !this.showMenu
 		},
@@ -146,55 +136,57 @@ export default {
 		 * 
 		 */
 		onMenuClick(idx) {
-			console.log('onMenuClick', idx)
-			const menu = this.menuList[idx];
-			console.log('menu', menu)
+			const _self = this
+			const menu = _self.menuList[idx];
 			let fileParams = {
 				accept: 'media', multiple: true,
-				capture: ['camera','album'],
-				mediaType: 'image',
+				capture: ['camera','album'], mediaType: 'image',
 				compressed: true, maxDuration: 60,
 				sizeType: uni.$u.props.upload.sizeType,
 				camera: 'back', maxCount: 1
 			}
 			switch(menu.type) {
 				case 'camera':
-					fileParams = Object.assign(fileParams, 
-					{
-						capture: ['camera'],
-						mediaType: ['image'],
-						maxCount: 1
-					})
+					fileParams = Object.assign(fileParams, { capture: ['camera'], mediaType: ['image'] })
 					break;
 				case 'album':
-					fileParams = Object.assign(fileParams, 
-					{
-						capture: ['album'],
-						mediaType: ['image'],
-						maxCount: 3
-					})
+					fileParams = Object.assign(fileParams, { capture: ['album'], mediaType: ['image'], maxCount: 3 })
 					break;
 				case 'file':
-					fileParams = Object.assign(fileParams, 
-					{
-						accept: 'file',
-						maxCount: 3
-					})
+					fileParams = Object.assign(fileParams, { accept: 'file', maxCount: 3 })
 					break;
 			}
-            chooseFile(fileParams)
-            .then((res) => {
-                console.log('res[0]', res[0])
-                this.fileList = res
-                this.fileValue = res[0].tempFilePath || 'https://ask.dcloud.net.cn/uploads/avatar/001/67/43/81_avatar_max.jpg'
-            })
-            .catch((error) => {
-                this.$emit('error', error);
-            });
+            onChooseFile(fileParams).then((res) => {
+				_self.fileList = _self.fileList == 0 ? res.map((row)=>({ ...row, status: 'waiting' })) : [ ...res.map((row)=>({ ...row, status: 'waiting' })), ..._self.fileList ];
+				console.log('onChooseFile _self.fileList', _self.fileList);
+                _self.fileList.forEach((row, idx)=>{ _self.$set(row, 'status', 'loading');
+					ocrUploadFile({ filePath: _self.fileList[idx].thumb, formData: { /* biz: 'temp', file: res[0] */ }}).then((resp)=>{
+						if (resp.success) {
+							const filePath = `${_self.$onlineFilePath}${resp.message}`; _self.$set(_self.fileList[idx], 'imgPath', filePath); _self.$set(_self.fileList[idx], 'status', 'analysis')
+							parseDoc(resp.message).then((response)=>{
+								if (response.success) {
+									const { title, filePath, content } = response.data
+									_self.$set(_self.fileList[idx], 'title', title)
+									_self.$set(_self.fileList[idx], 'filePath', filePath)
+									_self.$set(_self.fileList[idx], 'content', content)
+									_self.$set(_self.fileList[idx], 'status', 'success')
+								} else { _self.$set(_self.fileList[idx], 'status', 'fail') }
+							}).catch((error)=>{
+								console.error('parseDoc error', error); _self.$set(_self.fileList[idx], 'status', 'fail') 
+							}).finally(()=>{
+								setTimeout(()=>{ uni.hideLoading() }, 300)
+							})
+						} else { _self.$set(_self.fileList[idx], 'status', 'fail') }
+					}).catch((error)=>{ console.error('ocrUploadFile error', error); _self.$set(_self.fileList[idx], 'status', 'fail') })
+				})
+            }).catch((error) => { console.error('onChooseFile error', error); });
 		},
-		
+		onDelFile(index) {
+			console.log('onDelFile index', index)
+			this.fileList.splice(index, 1)
+		},
 		// 点击了发送按钮
-		sendClick() {
+		onSendClick() {
 			if (!this.sendEnabled) return;
 			this.$emit('send', this.chatCentent);
 			this.chatCentent = '';
@@ -202,57 +194,90 @@ export default {
 	}
 }
 </script>
-
 <style lang="scss" scoped>
-	.fileBox{
-
-	}
-	.fileItem{
-		
-	}
-	.fileIcon{
-		
-	}
-	.fileName{
-		
-	}
-	.fileName{
-		
-	}
-
 	.chat-input-bar {
-		display: flex;
-		flex-direction: row;
-		align-items: center;
+		// display: flex;
+		// flex-direction: row;
+		// align-items: center;
 		border-top: solid 1px #f5f5f5;
 		background-color: #f8f8f8;
 		
 		padding: 20rpx;
 		/* box-shadow: 0 4rpx 15rpx rgba(0, 0, 0, 0.15); */
 		position: relative;
-	}
-	.chat-input-container {
-		flex: 1;
-		/* #ifndef APP-NVUE */
-		display: flex;
-		/* #endif */
-		padding: 15rpx;
-		background-color: white;
-		border-radius: 10rpx;
-	}
-	.chat-input {
-		flex: 1;
-		font-size: 28rpx;
-	}
-	.rotate-45 {
-		transform: rotate(45deg);
-		/* 如果需要调整旋转中心点 */
-		transform-origin: center center;
+		.fileBox{
+			margin-bottom: 20rpx;
+			display: flex;
+			align-items: center;
+			overflow: hidden;
+			overflow-y: hidden;
+			overflow-x: scroll;
+			gap: 24rpx;
+		}
+		.chat-input-container {
+			flex: 1;
+			/* #ifndef APP-NVUE */
+			display: flex;
+			/* #endif */
+			padding: 15rpx;
+			background-color: white;
+			border-radius: 10rpx;
+			.chat-input {
+				flex: 1;
+				font-size: 28rpx;
+			}
+		}
+		.chat-input-history{
+			z-index: 999;
+			position: absolute;
+			left: 40rpx;
+			bottom: 40rpx;
+		}
+
+		.chat-input-plus{
+			z-index: 999;
+			position: absolute;
+			right: 100rpx;
+			bottom: 40rpx;
+			
+			&.rotate-45 {
+				transform: rotate(45deg);
+				/* 如果需要调整旋转中心点 */
+				transform-origin: center center;
+			}
+		}
+		.chat-input-send {
+			z-index: 999;
+			position: absolute;
+			right: 40rpx;
+			bottom: 40rpx;
+			/* background-color: #007AFF; */
+			/* margin: 10rpx 10rpx 10rpx 20rpx; */
+			/* border-radius: 10rpx; */
+			width: 45rpx;
+			height: 45rpx;
+			/* #ifndef APP-NVUE */
+			display: flex;
+			/* #endif */
+			justify-content: center;
+			align-items: center;
+			&.chat-input-send-disabled {
+				/* background-color: #bbbbbb; */
+			}
+			.chat-input-send-text {
+				color: white;
+				font-size: 26rpx;
+			}
+		}
 	}
 	.menuBox{
 		padding: 0 24rpx 32rpx;
 		@include x-padding-bottom('36rpx');
-	}	
+	}
+	.grid-text{
+		font-size: 24rpx;
+		color: #5e6d82;
+	}
 	.emoji-container {
 		width: 54rpx;
 		height: 54rpx;
@@ -263,40 +288,7 @@ export default {
 		height: 54rpx;
 	}
 
-	.chat-input-history{
-		position: absolute;
-		left: 40rpx;
-		bottom: 40rpx;
-	}
 
-	.chat-input-plus{
-		position: absolute;
-		right: 100rpx;
-		bottom: 40rpx;
-	}
-
-	.chat-input-send {
-		position: absolute;
-		right: 40rpx;
-		bottom: 40rpx;
-		/* background-color: #007AFF; */
-		/* margin: 10rpx 10rpx 10rpx 20rpx; */
-		/* border-radius: 10rpx; */
-		width: 45rpx;
-		height: 45rpx;
-		/* #ifndef APP-NVUE */
-		display: flex;
-		/* #endif */
-		justify-content: center;
-		align-items: center;
-	}
-	.chat-input-send-disabled {
-		/* background-color: #bbbbbb; */
-	}
-	.chat-input-send-text {
-		color: white;
-		font-size: 26rpx;
-	}
 	.emoji-panel-container {
 		background-color: #f8f8f8;
 		overflow: hidden;

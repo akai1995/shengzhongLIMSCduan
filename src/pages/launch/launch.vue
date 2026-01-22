@@ -5,7 +5,7 @@
         :loading-more-enabled="false" :show-refresher-when-reload="false" hide-empty-view
     >
 		<view slot="top" style="height: 280rpx;position: relative; box-sizing: border-box;">
-			<image class="launch-bg" :src="`${$staticPath}temp/imgs/top_bg.png`" />
+			<image class="launch-bg" :src="`${$staticPath}imgs/top_bg.png`" />
 			<!-- <view class="launch-head" :style="{ height: headInfo.headHeight }"><view class="launch-title" :style="{ marginTop: headInfo.titleTop }">eAI</view></view> -->
 			<u-navbar title="e-AI" :fixed="false" bgColor="transparent"><view class="u-nav-slot" slot="left"></view></u-navbar>
 		</view>

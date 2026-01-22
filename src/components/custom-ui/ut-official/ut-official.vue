@@ -2,17 +2,17 @@
 	<!-- <view class="mg-32 official-box">
 		<view class="pb-20 flex">
 			<u--image
-				:src="`${$staticPath}temp/imgs/wechat.png"
+				:src="`${$staticPath}imgs/wechat.png"
 				width="32rpx" height="32rpx" mode="widthFix"></u--image>
 			<view class="h1" style="padding-left: 20rpx;">关注【基因派】微信公众号</view>
 		</view>
 		<view class="hs-bg">
 			<view class="flex desc-gz"><u--image
-				:src="`${$staticPath}temp/imgs/√.png"
+				:src="`${$staticPath}imgs/√.png"
 				width="32rpx" height="32rpx" mode="widthFix"></u--image> <text
 				style="padding-left: 16rpx;">账号动态，实时提醒</text> </view>
 			<view class="flex desc-gz"><u--image
-				:src="`${$staticPath}temp/imgs/√.png"
+				:src="`${$staticPath}imgs/√.png"
 				width="32rpx" height="32rpx" mode="widthFix"></u--image> <text
 				style="padding-left: 16rpx;">权威专家，健康科普</text> </view>
 		</view>

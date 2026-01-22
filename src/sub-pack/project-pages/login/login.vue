@@ -7,7 +7,7 @@
 		<!-- <u-navbar title="基因派" bgColor="transparent"></u-navbar> -->
         <view slot="top"><u-navbar title="登录" :fixed="false" leftIcon="close" bgColor="transparent" @leftClick="onBack" /></view>
 		<!-- <view class="back" @click="onBack()" v-if="false"><u-icon name="arrow-left" color="#333" bold size="36rpx" /></view> -->
-		<view class="head"><image class="logo" :src="`${$staticPath}temp/imgs/logo.png`" mode="" />
+		<view class="head"><image class="logo" :src="`${$staticPath}imgs/logo.png`" mode="" />
 		</view>
 		<template>
 			<loginWeixin v-if="type == 0" @onSwitch="onSwitch"></loginWeixin>
@@ -41,7 +41,7 @@
 
 <style lang="scss" scoped>
 	.loginPage{
-		@include background-image('temp/imgs/loginBg.png');
+		@include background-image('imgs/loginBg.png');
 		width: 100vw; height: 100vh;
 	}
 	.head{

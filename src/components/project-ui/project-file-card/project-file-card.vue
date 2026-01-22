@@ -1,10 +1,14 @@
 <template>
     <view class="fileBox" :class="[mode||'large', { border: border }]">
-        <u-icon class="fileIcon" :name="iconName" :size="mode=='large'?'56rpx':mode=='samll'?'48rpx':'50rpx'" />
-        <view class="fileInfo">
-            <view class="fileName">{{ name }}</view>
-            <view class="fileSummary">{{ typeName }}</view>
+        <view class="fileIcon" @click="onView">
+            <u-image :src="imageUrl" webp
+                :showLoading="['waiting','uploading'].includes(file.status)"
+                :width="mode=='large'?'56rpx':mode=='samll'?'48rpx':'50rpx'"
+                :height="mode=='large'?'56rpx':mode=='samll'?'48rpx':'50rpx'"
+            />
         </view>
+        <view class="fileInfo" @click="onView"><view class="fileName">{{ file.name }}</view><view class="fileSummary">{{ typeName }}</view></view>
+        <view class="fileIconClose" v-if="closable" @click="onClosable()"><u-icon class="fileIconClose" name="close" color="red" size="32rpx" /></view>
     </view>
 </template>
 
@@ -97,97 +101,190 @@ export default {
             type: String,
             default: 'large'
         },
-        name: {
-            type: String,
-            default: ''
+        closable: {
+            type: Boolean,
+            default: false
         },
-        size: {
-            type: Number,
-            default: 0
+        file: {
+            type: Object,
+            default: () => {
+                return {
+                    name: '', size: 0, type: '',
+                    filePath: '', status: 'waiting'
+                }
+            }
         },
-        status: {
-            /* uploading analysis uploaded */
-            type: String,
-            default: 'uploading'
-        }
     },
     data() {
         return { };
     },
     computed: {
         typeName() {
-            return getFileExt(this.name)
-        },
-        iconName() {
-            const ext = getFileExt(this.name, false)
-            let icon = ''
-            switch(this.status) {
-                case 'uploading':
-                    icon = 'ai-chat-loaded.apng'
-                    break;
-                case 'analysis':
-                    icon = 'ai-chat-loading.apng'
-                    break;
-                case 'uploaded':
-                    switch(ext) {
-                        case 'jpg': case 'jpeg': case 'png': case 'webp':
-                            icon = 'icon-img.png'
-                            break;
-                        case 'doc': case 'docx':
-                            icon = 'icon-doc.png'
-                            break;
-                        case 'pdf':
-                            icon = 'icon-pdf.png'
-                            break;
-                        case 'xls': case 'xlsx':
-                            icon = 'icon-xlsx.png'
-                            break;
-                        case 'ppt': case 'pptx':
-                            icon = ''
-                            break;
-                    }
-                    break;
-            }
-            return `${this.$staticPath}temp/imgs/${icon}`
+            const { name } = this.file
+            return getFileExt(name)
         },
         typeName() {
-            const ext = getFileExt(this.name)
+            const { name, status, size } = this.file
+            const ext = getFileExt(name)
             let txt = ''
-            switch(this.status) {
+            switch(status) {
+                case 'waiting':
                 case 'uploading':
-                    txt = '上传中'
+                    txt = '上传中...'
                     break;
                 case 'analysis':
-                    txt = '解析中'
+                    txt = '解析中...'
                     break;
+                case 'success':
                 case 'uploaded':
-                    txt = `${ext} ${formatFileSize(this.size)}`
+                    txt = `${ext} ${formatFileSize(size)}`
+                    break;
+                case 'fail':
+                    txt = '上传失败'
+                    break;
+                default:
+                    txt = '上传中...'
                     break;
             }
             return txt
         },
+        imageUrl() {
+            const { name, status, filePath } = this.file
+            const ext = getFileExt(name, false)
+            let icon = `${this.$staticPath}imgs/`
+            switch(status) {
+                case 'waiting':
+                case 'uploading':
+                    icon += 'ai-chat-loading.apng'
+                    break;
+                case 'analysis':
+                    icon += 'ai-chat-loading.apng'
+                    break;
+                case 'success':
+                case 'uploaded':
+                    switch(ext) {
+                        case 'jpg': case 'jpeg': case 'png': case 'webp':
+                            /* icon = 'icon-img.png' */
+                            console.log('imageUrl', filePath)
+                            icon = this.$onlineFilePath + filePath.replace('/opt/upFiles/', '')
+                            break;
+                        case 'doc': case 'docx':
+                            icon += 'icon-doc.png'
+                            break;
+                        case 'pdf':
+                            icon += 'icon-pdf.png'
+                            break;
+                        case 'xls': case 'xlsx':
+                            icon += 'icon-xlsx.png'
+                            break;
+                        case 'ppt': case 'pptx':
+                            icon += 'ai-chat-loaded.apng'
+                            break;
+                        default:
+                            icon += 'ai-chat-loaded.apng'
+                            break;
+                    }
+                    break;
+                case 'fail':
+                    icon += 'ai-chat-loaded.apng'
+                    break;
+                default:
+                    icon += 'ai-chat-loading.apng'
+                    break;
+            }
+
+            return icon
+        },
     },
     methods: {
-        
+        onView(){
+            const _self = this
+            const { name, filePath, status } = _self.file
+            if (!['success','uploaded'].includes(status)) {
+              return   
+            }
+            const ext = getFileExt(name, false)
+            switch(ext) {
+                case 'jpg': case 'jpeg': case 'png': case 'webp':
+                    _self.showPreviewImage(_self.$onlineFilePath + filePath.replace('/opt/upFiles/', ''))
+                    break;
+                case 'doc': case 'docx':
+                case 'pdf':
+                case 'xls': case 'xlsx':
+                case 'ppt': case 'pptx':
+                    _self.$eUni.navTo({
+                        url: '/sub-pack/tab1/chat-history-stream/preview',
+                        query: {
+                            ext, uri: _self.$onlineFilePath + filePath.replace('/opt/upFiles/', '')
+                        }
+                    })
+                    break;
+            }
+
+        },
+        onClosable() { this.$emit('del') },
     }
 }
 </script>
 
 <style lang="scss" scoped>
 .fileBox{
-    width: 332rpx;
-    height: 200rpx;
+    width: 332rpx; height: 200rpx;
     position: relative;
     padding: 24rpx 32rpx 24rpx 112rpx;
     border-radius: 20rpx 4rpx 20rpx 20rpx;
-    &.border{
-        border: 1rpx solid #E6E9F1;
+    &.border { border: 1rpx solid #E6E9F1; }
+    &.default{
+        width: 280rpx; height: 110rpx;
+        padding: 12rpx 20rpx 12rpx 80rpx;
+        border-radius: 20rpx;
+        .fileIcon {
+            left: 16rpx; 
+            width: 48rpx; height: 48rpx;
+        }
+        .fileInfo {
+            .fileName {
+                font-size: 24rpx;
+                line-height: 50rpx;
+            }
+            .fileSummary {
+                font-size: 20rpx;
+                line-height: 34rpx;
+            }
+        }
+    }
+    &.small {
+        width: 250rpx; height: 110rpx;
+        padding: 12rpx 20rpx 12rpx 70rpx;
+        border-radius: 20rpx;
+        .fileIcon {
+            left: 12rpx; 
+            width: 48rpx; height: 48rpx;
+        }
+        .fileInfo {
+            .fileName {
+                font-size: 22rpx;
+                line-height: 48rpx;
+            }
+            .fileSummary {
+                font-size: 20rpx;
+                line-height: 34rpx;
+            }
+        }
+        .fileIconClose{
+            top: 12rpx; right: 12rpx; 
+        }
     }
     .fileIcon {
         position: absolute;
         left: 28rpx; top: 50%;
         transform: translateY(-50%);
         width: 56rpx; height: 56rpx;
+    }
+    .fileIconClose{
+        position: absolute;
+        top: 16rpx; right: 16rpx; 
+        width: 32rpx; height: 32rpx;
     }
     .fileInfo {
         .fileName {
@@ -204,24 +301,6 @@ export default {
             font-weight: 400;
             font-size: 24rpx;
             line-height: 34rpx;
-        }
-    }
-    &.mini {
-        padding: 12rpx 16rpx 24rpx 80rpx;
-        border-radius: 20rpx;
-        .fileIcon {
-            left: 16rpx; 
-            width: 48rpx; height: 48rpx;
-        }
-        .fileInfo {
-            .fileName {
-                font-size: 24rpx;
-                line-height: 50rpx;
-            }
-            .fileSummary {
-                font-size: 20rpx;
-                line-height: 34rpx;
-            }
         }
     }
 }

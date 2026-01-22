@@ -16,13 +16,13 @@
 				"enablePullDownRefresh": false
 			}
 		},
-		{
-			"path": "pages/tabs/tab1/sign-doc",
-			"style": {
-				"navigationBarTitleText": "待签署文件",
-				"enablePullDownRefresh": false
-			}
-		},
+		// {
+		// 	"path": "pages/tabs/tab1/sign-doc",
+		// 	"style": {
+		// 		"navigationBarTitleText": "待签署文件",
+		// 		"enablePullDownRefresh": false
+		// 	}
+		// },
 		{
 			"path": "pages/tabs/tab5/tab5",
 			"style": {
@@ -30,16 +30,15 @@
 				"enablePullDownRefresh": false
 			}
 		},
-		{
-			"path": "pages/launch/launch",
-			"style": {
-				"navigationBarTitleText": "e-AI",
-				"enablePullDownRefresh": false
-			}
-		},
+		// {
+		// 	"path": "pages/launch/launch",
+		// 	"style": {
+		// 		"navigationBarTitleText": "e-AI",
+		// 		"enablePullDownRefresh": false
+		// 	}
+		// },
 		{
 			"path": "pages/404/404",
-			"name": "404",
 			"style": {
 				"navigationStyle": "default",
 				"enablePullDownRefresh": false,
@@ -50,7 +49,7 @@
 	"subPackages": [
 		{
 			"root": "sub-pack/project-pages",
-			"pages": [				
+			"pages": [		
 				{
 					"path": "article-detail/article-detail",					
 					"style": {
@@ -80,6 +79,13 @@
 						"enablePullDownRefresh": false
 					}
 				},
+				{
+					"path": "chat-history-stream/preview",
+					"style": {
+						"navigationBarTitleText": "文档预览",
+						"enablePullDownRefresh": false
+					}
+				},	
 				{
 					"path": "device/detail",
 					"style": {
@@ -140,6 +146,27 @@
 	"condition": {
 		"current": 0,
 		"list": [
+			{
+				"name": "文档预览",
+				"path": "sub-pack/tab1/chat-history-stream/preview",
+				"query": "ext=pdf&uri=http%253A%252F%252F192.168.0.151%253A9889%252Feai-lims%252Fsys%252Fcommon%252Fstatic%252Ftemp%252FWSkNYwOthG1zc4692bb1260e55c7d186be6ef46f8e3d_1769079056561.pdf"
+			},
+			{
+				"name": "报告分析",
+				"path": "sub-pack/tab1/chat-history-stream/chat-history-stream",
+				"query": ""
+			},
+			{
+				"name": "图片识别",
+				"path": "sub-pack/tab1/ocr-recognition/ocr-recognition",
+				"query": ""
+			},
+				
+			{
+				"name": "文件签署",
+				"path": "/sub-pack/tab5/sign-doc/doc-sign",
+				"query": "id=${id}&showSign=true"
+			},
 			{
 				"name": "我的预约",
 				"path": "sub-pack/tab5/reserve/reserve",

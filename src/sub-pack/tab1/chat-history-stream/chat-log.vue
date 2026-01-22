@@ -1,6 +1,6 @@
 <template>
     <z-paging 
-        ref="paging" class="page" :paging-style="{ backgroundColor: '#F7F8FA' }" v-model="dataList" @query="queryList"
+        ref="pagingLog" class="page" :paging-style="{ backgroundColor: '#F7F8FA' }" v-model="dataList" @query="queryList"
         :fixed="true" :auto="false" :auto-show-back-to-top="true" :enable-back-to-top="true" :show-refresher-when-reload="detailInfo?false:true" 
         :auto-scroll-to-top-when-reload="false" :auto-clean-list-when-reload="detailInfo?false:true" :safe-area-inset-bottom="true"
         :hide-empty-view="detailInfo?true:false" :refresher-enabled="detailInfo?false:true" :loading-more-enabled="detailInfo?false:true"
@@ -17,7 +17,7 @@
         <view class="content">
 			<view class="luBox">
             	<u-skeleton v-if="!firstLoaded&&dataList.length === 0" rows="10" title loading />
-      			<project-chat-log-item v-for="item,idx in dataList" :key="item.id" :item="item" :hideLine="dataList.length-1==idx" />
+      			<project-chat-log-item v-for="item,idx in dataList" :key="item.id" :item="{ ...item,index:idx+1 }" :hideLine="dataList.length-1==idx" />
             </view>
         </view>
         <view slot="bottom">
@@ -70,8 +70,8 @@ export default {
 	},
 	methods: {
 		queryList(pageNo, pageSize) {
-			this.$refs.paging.endRefresh()
-            this.$refs.paging.complete(Array.from({ length: 8 }, (_, index) => { 
+			this.$refs.pagingLog.endRefresh()
+            this.$refs.pagingLog.complete(Array.from({ length: 8 }, (_, index) => { 
                 return {
                     index: index+1, imgPath: '',
                     content: '这是分析名称，这是分析名称，这是分析名称，这是分析名称（最多30个字符）',
@@ -80,29 +80,19 @@ export default {
             }))
             this.totalCount = 8
             this.firstLoaded = true
-            uni.hideLoading();
 		},
         checkAllChange(values) { 
             console.log(values)
 			if (this.dataList.length === 0) return;
-			if (values.length>0) {
-				this.dataList.forEach((sp) => {
-                    this.$set(sp, 'checked', true)
-				});
-			} else {
-				this.dataList.forEach((sp) => {
-                    this.$set(sp, 'checked', false)
-				});
-			}
+            this.dataList.forEach((sp) => { this.$set(sp, 'checked', values.length>0) });
         },
         onToggle(item) {
-            const cusChecked = !item.checked
-            this.$set(item, 'checked', cusChecked)
-            this.dataList.forEach((sp) => {
-                this.$set(sp, 'checked', sp.index==item.index ? cusChecked : sp.checked)
-            });
-            const sel = this.dataList.filter((row)=> row.checked)
-            this.isAllSelect = this.dataList.length == sel.length?['全选']:[]
+			const _self = this;
+			_self.$nextTick(()=>{
+				const cusChecked = !item.checked; _self.$set(item, 'checked', cusChecked); console.log('toggle', cusChecked);
+				_self.dataList.forEach((sp) => { _self.$set(sp, 'checked', sp.id==item.id ? cusChecked : sp.checked) });
+				const sel = _self.dataList.filter((row)=> row.checked); _self.isAllSelect = _self.dataList.length == sel.length?['全选']:[]
+			})
         },
         onView(item) {
             this.detailInfo = item
@@ -115,18 +105,19 @@ export default {
             }
         },
         onRemove() {
-			if (this.dataList.length === 0) {
-                this.showTips('没有可以删除的记录', 'error');
+			const _self = this
+			if (_self.dataList.length === 0) {
+                _self.showTips('没有可以删除的记录', 'error');
                 return;
             }
-            const values = this.dataList.filter((row)=> row.checked)
+            const values = _self.dataList.filter((row)=> row.checked)
 			if (values.length==0) {
-                this.showTips('没有选择记录', 'error');
+                _self.showTips('没有选择记录', 'error');
                 return;
             }
-            this.dataList = this.dataList.filter((row)=> !row.checked)
-            this.showTips('删除成功', 'success');
-            this.isAllSelect = []
+            _self.dataList = _self.dataList.filter((row)=> !row.checked)
+            _self.showTips('删除成功', 'success');
+            _self.isAllSelect = []
         }
 	},
 };
