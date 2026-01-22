@@ -211,13 +211,30 @@ export default {
                 case 'doc': case 'docx':
                 case 'pdf':
                 case 'xls': case 'xlsx':
-                case 'ppt': case 'pptx':
-                    _self.$eUni.navTo({
-                        url: '/sub-pack/tab1/chat-history-stream/preview',
-                        query: {
-                            ext, uri: _self.$onlineFilePath + filePath.replace('/opt/upFiles/', '')
+                case 'ppt': case 'pptx':                    
+                    uni.showLoading({ title: '正在加载中...', mask: true })
+                    uni.downloadFile({
+                        url: _self.$onlineFilePath + filePath.replace('/opt/upFiles/', ''),
+                        success: (res) => {
+                            const filePath = res.tempFilePath;
+                            uni.openDocument({
+                                filePath: filePath, showMenu: true,
+                                success: (res) => {
+                                    console.log('打开文档成功');
+                                    uni.hideLoading()
+                                },
+                            });
+                        },
+                        complete: (r) => {
+                            uni.hideLoading()
                         }
-                    })
+                    });
+                    // _self.$eUni.navTo({
+                    //     url: '/sub-pack/tab1/chat-history-stream/preview',
+                    //     query: {
+                    //         ext, uri: _self.$onlineFilePath + filePath.replace('/opt/upFiles/', '')
+                    //     }
+                    // })
                     break;
             }
 
