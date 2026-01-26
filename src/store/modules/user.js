@@ -3,6 +3,7 @@ import { getToken, setToken, removeToken, setStorageOrgId } from '@/providers/au
 import { login, wxLogin, logout, getInfo, getWxInfo } from '@/app/api/login';
 import { getInfoByToken } from '@/app/api/personalCenter/personalCenter';
 import storage from '@/providers/utilities/storage';
+import wsUtil from '@/providers/utilities/wsUtil';
 import AppConfig from '@/app/app.constant';
 import config from '@/app/app.config';
 

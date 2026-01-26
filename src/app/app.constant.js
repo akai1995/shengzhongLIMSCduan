@@ -33,14 +33,14 @@ export default {
 	GAODE_KEY: '48e30049122fc8432b1c5bf43e86d398',
 	/* 发送语音时探测录音的音量阈值 0-100 */ VOICE_THRESHOLD: 6,
 	/* 最小录音时长阈值 */ minSpeechDurationThreshold: 1500,
-	/* 录音文件类型 */ audioType: 'wav',
+	/* 录音文件类型 */ audioType: 'mp3',
 	/* 录音采样率 */ audioSampleRate: 48000,
 	/* 录音比特率 */ audioBitRate: 16,
 	/* 音频流发送时间间隔 */ audioSendServerInterval: 300,
 	/* 语音实时发送 */ useRealTimeSend: true,
 	/* 应用信息 */
 	appInfo: {
-		/* 应用名称 */ name: 'e-AI',
+		/* 应用名称 */ name: 'eAI',
 		/* 应用版本 */ version: '2.26.0122',
 		/* 应用logo */ logo: '/static/logo.png',
 		/* 官方网站 */ site_url: 'http://ruoyi.vip',

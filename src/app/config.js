@@ -35,7 +35,7 @@ export default {
 	// 应用信息
 	appInfo: {
 		// 应用名称
-		name: 'e-AI',
+		name: 'eAI',
 		// 应用版本
 		version: '2.26.0116',
 		// 应用logo

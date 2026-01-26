@@ -14,7 +14,7 @@ export default{
 			// #endif
 			default_img: `${AppConfig.staticPath}imgs/default_doctor.png`,
             shareParams: {
-                title: 'e-AI', path: '/pages/launch/launch',
+                title: 'eAI', path: '/pages/launch/launch',
                 imageUrl: `${AppConfig.staticPath}imgs/logo.png`,
                 desc: '', content: '', success: (res) => {
                     console.log(res, '发生过是');

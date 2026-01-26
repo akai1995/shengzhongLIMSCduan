@@ -147,9 +147,32 @@ import AppConfig from '@/app/app.constant'
 import { guid } from '@/providers/index';
 import chatLog from './chat-log.vue'
 import store from '@/store/index'
-import Recorder from 'recorder-core';
-//引入相应格式支持文件；如果需要多个格式支持，把这些格式的编码引擎js文件放到后面统统引入进来即可
-import 'recorder-core/src/engine/wav';
+/**这里是逻辑层**/
+//必须引入的Recorder核心（文件路径是 /src/recorder-core.js 下同），使用import、require都行
+import Recorder from 'recorder-core' //注意如果未引用Recorder变量，可能编译时会被优化删除（如vue3 tree-shaking），请改成 import 'recorder-core'，或随便调用一下 Recorder.a=1 保证强引用
+
+//必须引入的RecordApp核心文件（文件路径是 /src/app-support/app.js）
+import RecordApp from 'recorder-core/src/app-support/app'
+
+//所有平台必须引入的uni-app支持文件（如果编译出现路径错误，请把@换成 ../../ 这种）
+import '@/uni_modules/Recorder-UniCore/app-uni-support.js'
+
+/** 需要编译成微信小程序时，引入微信小程序支持文件 **/
+// #ifdef MP-WEIXIN
+import 'recorder-core/src/app-support/app-miniProgram-wx-support.js'
+// #endif
+
+/** H5、小程序环境中：引入需要的格式编码器、可视化插件，App环境中在renderjs中引入 **/
+// 注意：如果App中需要在逻辑层中调用Recorder的编码/转码功能，需要去掉此条件编译，否则会报未加载编码器的错误
+// #ifdef H5 || MP-WEIXIN
+//按需引入你需要的录音格式支持文件，如果需要多个格式支持，把这些格式的编码引擎js文件统统引入进来即可
+import 'recorder-core/src/engine/mp3'
+import 'recorder-core/src/engine/mp3-engine' //如果此格式有额外的编码引擎（*-engine.js）的话，必须要加上
+
+//可选的插件支持项，把需要的插件按需引入进来即可
+import 'recorder-core/src/extensions/waveview'
+// #endif
+
 export default {
 	components: { 'chat-input': chatInput, 'chat-item': chatItem, 'chat-log': chatLog },
 	data() {
@@ -669,16 +692,16 @@ export default {
 						const base64 = (/.+;\s*base64\s*,\s*(.+)$/i.exec(reader.result.toString()) || [])[1];
 
 						//可以实现
-						//WebSocket send(base64) ...
-						//WebRTC send(base64) ...
-						//XMLHttpRequest send(base64) ...
+						/* WebSocket send(base64) ... */
+						/* WebRTC send(base64) ... */
+						/* XMLHttpRequest send(base64) ... */
 						const audioMessage = {
 							command: 2,
 							taskId: this.currentConversationTaskId,
 							data: {
 								requireId: this.realTimeAudioRequiredId,
 								chunkIndex: number - 1,
-								chunkData: base64, // 将 audio 数据转换为 base64 并去掉前缀
+								chunkData: base64, /* 将 audio 数据转换为 base64 并去掉前缀 */
 								end: false
 							}
 						};
@@ -690,12 +713,12 @@ export default {
 				reader.readAsDataURL(blob);
 
 				//*********发送方式二：Blob二进制发送***************
-				//可以实现
-				//WebSocket send(blob) ...
-				//WebRTC send(blob) ...
-				//XMLHttpRequest send(blob) ...
+				/* 可以实现 */
+				/* WebSocket send(blob) ... */
+				/* WebRTC send(blob) ... */
+				/* XMLHttpRequest send(blob) ... */
 
-				//****这里仅 console.log一下 意思意思****
+				/* 这里仅 console.log一下 意思意思 */
 				const numberFail = number < this.transferUploadNumberMax ? '<span style="color:red">顺序错乱的数据，如果要求不高可以直接丢弃，或者调大SendInterval试试</span>' : '';
 				const logMsg = 'No.' + (number < 100 ? ('000' + number).substr(-3) : '') + numberFail;
 
@@ -709,14 +732,14 @@ export default {
 
 				this.audioQueue.splice(0);
 				if (!this.prepareSendMsg({ content: '发送语音消息', chatImage: '' })) {
-					// 清理录音数据
-					this.audioChunks = []; //清空录音数据数组
+					/* 清理录音数据 */
+					this.audioChunks = []; /*清空录音数据数组 */
 					return;
 				}
 				this.outputSpeed = 30;
 				this.outputBuffer = '';
 				this.outputBufferAll = '';
-				//所有块发送完毕后发送结束消息
+				/*所有块发送完毕后发送结束消息 */
 				const dt = {
 					command: 2,
 					taskId: this.currentConversationTaskId,
@@ -730,8 +753,8 @@ export default {
 				console.log('发送录音结束信号给服务器', dt);
 				store.commit('sendSocketMessage', JSON.stringify(dt));
 
-				// 3. 清理录音数据
-				this.audioChunks = []; //清空录音数据数组
+				/* 3. 清理录音数据 */
+				this.audioChunks = []; /*清空录音数据数组 */
 			}
 		},
 
@@ -740,7 +763,7 @@ export default {
 		 * *************************************************/
 		startH5Recording() {
 			if (this.rec && !this.isHoldRecording) {
-				this.audioChunks = []; // 清空录音数据
+				this.audioChunks = []; /* 清空录音数据 */
 				this.isHoldRecording = true;
 				this.openPermission(() => {
 					if (AppConfig.useRealTimeSend) {
@@ -770,10 +793,10 @@ export default {
 						return;
 					}
 
-					//1. 存储录音数据
+					/* 1. 存储录音数据 */
 					this.audioChunks.push(blob);
 
-					//2. 处理录音数据
+					/* 2. 处理录音数据 */
 					this.processAudioData();
 				},
 				(msg) => {
@@ -791,18 +814,18 @@ export default {
 		processAudioData() {
 			if (this.audioChunks.length <= 0) return;
 
-			// 1. 合并录音数据
+			/* 1. 合并录音数据 */
 			const audioBlob = new Blob(this.audioChunks, { type: `audio/${AppConfig.audioType}` });
 
-			// 分片大小
+			/* 分片大小 */
 			const CHUNK_SIZE = 16 * 1024;
-			// 分片序号
+			/* 分片序号 */
 			let chunkIndex = 0;
 
 			const requiredId = `${Date.now()}-${Math.random().toString(32)}`;
 			this.currentConversationTaskId = MathUnitl.guid;
 
-			// 2. 音频分片传输
+			/* 2. 音频分片传输 */
 			const sendChunk = (offset) => {
 				if (offset < audioBlob.size) {
 					const chunk = audioBlob.slice(offset, offset + CHUNK_SIZE);
@@ -815,7 +838,7 @@ export default {
 							data: {
 								requireId: requiredId,
 								chunkIndex: chunkIndex,
-								chunkData: chunkData?.split(',')[1], // 将 audio 数据转换为 base64 并去掉前缀
+								chunkData: chunkData?.split(',')[1], /* 将 audio 数据转换为 base64 并去掉前缀 */
 								end: false
 							}
 						};
@@ -825,40 +848,33 @@ export default {
 					};
 					reader.readAsDataURL(chunk);
 				} else {
-					// 判断如果当前是显示着聊天记录的情况,判断如果上一条记录不是语音，新建会话
+					/* 判断如果当前是显示着聊天记录的情况,判断如果上一条记录不是语音，新建会话 */
 					let cvid = this.currentConversationId;
 					// if (this.showChatList) {
 					// 	const mdc = this.choices[this.choices.length - 1];
-					// 	if (mdc.chat_type !== 'voice') {
-					// 		this.choices.splice(0);
-					// 		cvid = '';
-					// 	}
+					// 	if (mdc.chat_type !== 'voice') { this.choices.splice(0); cvid = ''; }
 					// }
 					this.audioQueue.splice(0);
 					if (!this.prepareSendMsg({ content: '发送语音消息', chatImage: '' })) {
-						// 清理录音数据
-						this.audioChunks = []; //清空录音数据数组
+						/* 清理录音数据 */
+						this.audioChunks = []; /* 清空录音数据数组 */
 						return;
 					}
-					this.outputSpeed = 30;
-					this.outputBuffer = '';
-					this.outputBufferAll = '';
-					//所有块发送完毕后发送结束消息
+					this.outputSpeed = 30; this.outputBuffer = ''; this.outputBufferAll = '';
+					/* 所有块发送完毕后发送结束消息 */
 					const dt = {
-						command: 2,
-						taskId: this.currentConversationTaskId,
+						command: 2, taskId: this.currentConversationTaskId,
 						data: {
 							requireId: requiredId,
 							userTag: this.$store.getters.userId,
-							conversationId: cvid,
-							end: true
+							conversationId: cvid, end: true
 						}
 					};
 					console.log('发送录音结束信号给服务器', dt);
 					store.commit('sendSocketMessage', JSON.stringify(dt));
 
-					// 3. 清理录音数据
-					this.audioChunks = []; //清空录音数据数组
+					/* 3. 清理录音数据 */
+					this.audioChunks = []; /* 清空录音数据数组 */
 				}
 			};
 			sendChunk(0);
@@ -867,17 +883,9 @@ export default {
 		 * 切换语音输入
 		 */
 		onToggleVoice() {
-			if (!this.checkUserInfo()) {
-				return;
-			}
-			if (this.isGenChat) {
-				this.showTips('正在生成结果中，请稍后再进行操作!', 'info');
-				return;
-			}
-			if (this.isProcessingSSEData) {
-				this.showTips('正在输出结果中，请稍后再进行操作!', 'info');
-				return;
-			}
+			if (!this.checkUserInfo()) { return; }
+			if (this.isGenChat) { this.showTips('正在生成结果中，请稍后再进行操作!', 'info'); return; }
+			if (this.isProcessingSSEData) { this.showTips('正在输出结果中，请稍后再进行操作!', 'info'); return; }
 			this.showUpload = false;
 			if (!this.showVoice) {
 				const ws = store.getters.socket;
@@ -892,22 +900,16 @@ export default {
 					 */
 					this.openPermission(
 						() => {
-							uni.hideLoading();
-							this.chatType = 'voice';
-							this.showVoice = true;
-							console.log('open permission');
+							uni.hideLoading(); this.chatType = 'voice';
+							this.showVoice = true; console.log('open permission');
 						},
 						() => {
-							uni.hideLoading();
-							this.showVoice = false;
-							this.rec = null;
+							uni.hideLoading(); this.showVoice = false; this.rec = null;
 							this.showTips('录音权限未开启，请开启录音权限后再试', 'info');
 						}
 					);
 				} else {
-					this.chatType = 'voice';
-					this.showVoice = true;
-					console.log('rec实例存在');
+					this.chatType = 'voice'; this.showVoice = true; console.log('rec实例存在');
 				}
 			} else {
 				if (this.rec) this.rec.close();
@@ -964,7 +966,7 @@ export default {
 			uni.showActionSheet({ 
 				itemList: [
 					'选择相机拍照的图片',
-					// '选择会话中的图片',
+					/* '选择会话中的图片', */
 					'选择相册中的图片',
 					'选择会话中的文档'
 				], 
@@ -994,30 +996,15 @@ export default {
 		onSendClick() {
 			if (this.fileList.length>0) {
 				const i = this.fileList.findIndex((row)=>['uploading'].includes(row.status))
-				if (i>-1) {
-					this.showTips('图片/文件还在上传中...', 'warning')
-					return
-				}
+				if (i>-1) { this.showTips('图片/文件还在上传中...', 'warning'); return;	}
 				const index = this.fileList.findIndex((row)=>['analysis'].includes(row.status))
-				if (index>-1) {
-					this.showTips('图片/文件还在解析中...', 'warning')
-					return
-				}
+				if (index>-1) { this.showTips('图片/文件还在解析中...', 'warning'); return;	}
 				const idx = this.fileList.findIndex((row)=>['upload-fail','fail'].includes(row.status))
-				if (idx>-1) {
-					this.showTips('请删除上传失败/异常文件', 'warning')
-					return
-				}
+				if (idx>-1) { this.showTips('请删除上传失败/异常文件', 'warning'); return;	}
 			}
 			if (!this.sendEnabled) return;
-			this.doSend({
-				msg: this.chatCentent,
-				files: this.fileList,
-			});
-			setTimeout(()=>{
-				this.chatCentent = '';
-				this.fileList = [];
-			}, 350)
+			this.doSend({ msg: this.chatCentent, files: this.fileList, });
+			setTimeout(()=>{ this.chatCentent = ''; this.fileList = []; }, 350)
 		},
 		
 
@@ -1047,14 +1034,8 @@ export default {
 			console.log(this.longPressHisChatItem, '删除聊天记录');
 			this.showLongDel = false;
 			if (this.longPressHisChatItem == null) return;
-			if (this.isGenChat) {
-				this.showTips('正在生成结果中，请稍后再进行操作!', 'info');
-				return;
-			}
-			if (this.isProcessingSSEData) {
-				this.showTips('正在输出结果中，请稍后再进行操作!', 'info');
-				return;
-			}
+			if (this.isGenChat) { this.showTips('正在生成结果中，请稍后再进行操作!', 'info'); return; }
+			if (this.isProcessingSSEData) { this.showTips('正在输出结果中，请稍后再进行操作!', 'info'); return; }
 			this.showConfirm(
 				`是否确定删除此条聊天记录？`,
 				() => {
@@ -1073,24 +1054,10 @@ export default {
 		 * 删除所有会话
 		 */
 		delAllHis() {
-			if (this.isDenyPrivacy) {
-				this.showConfirm('您拒绝了微信隐私保护指引，是否重新同意隐私保护？', () => { this.showPrivacy = true; });
-				return;
-			}
-			if (this.isGenChat) {
-				this.showTips('正在生成结果中，请稍后再进行操作!', 'info');
-				return;
-			}
-			if (this.isProcessingSSEData) {
-				this.showTips('正在输出结果中，请稍后再进行操作!', 'info');
-				return;
-			}
-			this.showConfirm(`是否确定删除所有会话记录？`, () => {
-				this.showLoading('正在删除...', true);
-				uni.hideLoading();
-				this.dataList.splice(0);
-				this.newChat();
-			});
+			if (this.isDenyPrivacy) { this.showConfirm('您拒绝了微信隐私保护指引，是否重新同意隐私保护？', () => { this.showPrivacy = true; }); return; }
+			if (this.isGenChat) { this.showTips('正在生成结果中，请稍后再进行操作!', 'info'); return; }
+			if (this.isProcessingSSEData) { this.showTips('正在输出结果中，请稍后再进行操作!', 'info'); return; }
+			this.showConfirm(`是否确定删除所有会话记录？`, () => { this.showLoading('正在删除...', true); uni.hideLoading(); this.dataList.splice(0); this.newChat(); });
 		},
 
 		/**
@@ -1104,18 +1071,11 @@ export default {
 			const mdc = this.dataList[this.dataList.length - 1];
 
 			if (typeof data == 'object') {
-				if (data.taskId !== this.currentConversationTaskId) {
-					this.isRequestVoice = false;
-					return;
-				}
+				if (data.taskId !== this.currentConversationTaskId) { this.isRequestVoice = false; return; }
 				switch (data.command) {
 					case 1: //文字消息
-						const dt = JSON.parse(data.data);
-						console.log('收到文字消息', dt);
-						if (dt.event === 'tts_message_end' || dt.event === 'message_end' || dt.event.indexOf('message_end') !== -1) {
-							this.onSSEMessageClose(mdc);
-							return;
-						}
+						const dt = JSON.parse(data.data); console.log('收到文字消息', dt);
+						if (dt.event === 'tts_message_end' || dt.event === 'message_end' || dt.event.indexOf('message_end') !== -1) { this.onSSEMessageClose(mdc); return; }
 						this.onSSEMessage(dt, true);
 						break;
 				}
@@ -1126,28 +1086,11 @@ export default {
 		 */
 		async onAgentChat() {
 			if (!this.checkAppHubAuth()) return;
-			if (this.isDenyPrivacy) {
-				this.showConfirm('您拒绝了微信隐私保护指引，是否重新同意隐私保护？', () => {
-					this.showPrivacy = true;
-				});
-				return;
-			}
-			if (Ruler.empty(this.chatContent)) {
-				this.showTips('请输入您的问题', 'error');
-				return;
-			}
-			if (this.isGenChat) {
-				this.showTips('正在生成结果中，请稍后再进行操作!', 'info');
-				return;
-			}
-			if (this.isProcessingSSEData) {
-				this.showTips('正在输出结果中，请稍后再进行操作!', 'info');
-				return;
-			}
-			if (this.isUploading) {
-				this.showTips('正在上传图片...,请稍后', 'info');
-				return;
-			}
+			if (this.isDenyPrivacy) { this.showConfirm('您拒绝了微信隐私保护指引，是否重新同意隐私保护？', () => { this.showPrivacy = true; }); return; }
+			if (Ruler.empty(this.chatContent)) { this.showTips('请输入您的问题', 'error'); return; }
+			if (this.isGenChat) { this.showTips('正在生成结果中，请稍后再进行操作!', 'info'); return; }
+			if (this.isProcessingSSEData) { this.showTips('正在输出结果中，请稍后再进行操作!', 'info'); return; }
+			if (this.isUploading) { this.showTips('正在上传图片...,请稍后', 'info'); return; }
 
 			const customData = {
 				chatImage: this.chatImageUrl,
@@ -1182,39 +1125,40 @@ export default {
 		 */
 		onSSEMessage(dt, isWebSocket = false) {
 			if (!this.isGenChat) return;
-			if (this.hubApp().appPlatform === 2) {
-				// coze
-				if (dt.message && (dt.message.type === 'answer' || dt.message.type === 'follow_up' || dt.message.type === 'verbose')) {
-					console.log(dt.message.content);
-					if (dt.conversation_id) this.currentConversationId = dt.conversation_id;
-					if (!isWebSocket && dt.task_id) this.currentConversationTaskId = dt.task_id;
-					if (this.dataList[this.dataList.length - 1].messageId === '') this.dataList[this.dataList.length - 1].messageId = dt.message_id;
-					if (dt.message.type == 'answer') {
-						this.outputBuffer += dt.message.content;
-						this.outputBufferAll += dt.message.content;
-						if (!this.isProcessingSSEData) {
-							this.processBuffer(true);
-						}
-					}
-				}
-			}
-			if (this.hubApp().appPlatform === 1) {
-				// Dify
-				if (dt.answer) {
-					if (dt.conversation_id) this.currentConversationId = dt.conversation_id;
-					if (!isWebSocket && dt.task_id) this.currentConversationTaskId = dt.task_id;
-					if (this.dataList[this.dataList.length - 1].messageId === '') this.dataList[this.dataList.length - 1].messageId = dt.message_id;
+			// if (this.hubApp().appPlatform === 2) {
+			// 	/* coze */
+			// 	if (dt.message && (dt.message.type === 'answer' || dt.message.type === 'follow_up' || dt.message.type === 'verbose')) {
+			// 		console.log(dt.message.content);
+			// 		if (dt.conversation_id) this.currentConversationId = dt.conversation_id;
+			// 		if (!isWebSocket && dt.task_id) this.currentConversationTaskId = dt.task_id;
+			// 		if (this.dataList[this.dataList.length - 1].messageId === '') this.dataList[this.dataList.length - 1].messageId = dt.message_id;
+			// 		if (dt.message.type == 'answer') {
+			// 			this.outputBuffer += dt.message.content; this.outputBufferAll += dt.message.content;
+			// 			if (!this.isProcessingSSEData) { this.processBuffer(true); }
+			// 		}
+			// 	}
+			// }
+			// if (this.hubApp().appPlatform === 1) {
+			// 	/* Dify */
+			// 	if (dt.answer) {
+			// 		if (dt.conversation_id) this.currentConversationId = dt.conversation_id;
+			// 		if (!isWebSocket && dt.task_id) this.currentConversationTaskId = dt.task_id;
+			// 		if (this.dataList[this.dataList.length - 1].messageId === '') this.dataList[this.dataList.length - 1].messageId = dt.message_id;
 
-					this.outputBuffer += dt.answer;
-					this.outputBufferAll += dt.answer;
-					if (!this.isProcessingSSEData) {
-						this.processBuffer(true);
-					}
-				}
+			// 		this.outputBuffer += dt.answer; this.outputBufferAll += dt.answer;
+			// 		if (!this.isProcessingSSEData) { this.processBuffer(true); }
+			// 	}
+			// }
+			/* Deepseek */
+			if (dt.answer) {
+				if (dt.conversation_id) this.currentConversationId = dt.conversation_id;
+				if (!isWebSocket && dt.task_id) this.currentConversationTaskId = dt.task_id;
+				if (this.dataList[this.dataList.length - 1].messageId === '') this.dataList[this.dataList.length - 1].messageId = dt.message_id;
+
+				this.outputBuffer += dt.answer; this.outputBufferAll += dt.answer;
+				if (!this.isProcessingSSEData) { this.processBuffer(true); }
 			}
-			setTimeout(() => {
-				this.$refs.refChatList.scrollBtn();
-			}, 300);
+			setTimeout(() => { this.$refs.refChatList.scrollBtn(); }, 300);
 		},
 
 		/**
@@ -1223,22 +1167,17 @@ export default {
 		onSSEMessageClose(mdc) {
 			this.outputSpeed = 10;
 			if (Ruler.empty(mdc.content)) {
-				this.isGenChat = false;
-				mdc.isGenChat = false;
+				this.isGenChat = false; mdc.isGenChat = false;
 				mdc.content = '<strong>抱歉，[AI] 异常 无法回答您的问题</strong>';
-				mdc.isAbandon = true;
-				mdc.isContentComplete = true;
+				mdc.isAbandon = true; mdc.isContentComplete = true;
 			} else {
 				this.releaseVoice();
 				this.speakContent(mdc, false, this.outputBufferAll, false, true);
 				this.renderChatLog();
 			}
-			this.chatType = 'text';
-			this.clearChatAttachAttr();
+			this.chatType = 'text'; this.clearChatAttachAttr();
 			// this.currentConversationTaskId = '';
-			setTimeout(() => {
-				this.$refs.refChatList.scrollBtn();
-			}, 500);
+			setTimeout(() => { this.$refs.refChatList.scrollBtn(); }, 500);
 		},
 
 		/**
@@ -1254,23 +1193,18 @@ export default {
 					this.outputBuffer = this.outputBuffer.slice(1);
 					if (words === 85) {
 						words = 0;
-						setTimeout(() => {
-							this.$refs.refChatList.scrollBtn();
-						}, 500);
+						setTimeout(() => { this.$refs.refChatList.scrollBtn(); }, 500);
 					}
 					// 使用 setTimeout 分批处理数据，防止页面卡死
 					setTimeout(() => {
 						processChunk(words, needUpdateReplyMsg);
 					}, this.outputSpeed);
 				} else {
-					this.isProcessingSSEData = false;
-					words = 0;
+					this.isProcessingSSEData = false; words = 0;
 					this.phoneCallWaitingAnswerBack = false;
 					setTimeout(() => {
 						// 这里只有发送的是文字消息，回复渲染完成时才会执行
-						if (needUpdateReplyMsg && this.$refs.refChatList) {
-							this.updateFormatedChatLog('processBuffer');
-						}
+						if (needUpdateReplyMsg && this.$refs.refChatList) { this.updateFormatedChatLog('processBuffer'); }
 						this.$refs.refChatList.scrollBtn();
 					}, 1000);
 				}
@@ -1286,12 +1220,11 @@ export default {
 			console.log(`调用了${tip}中的updateFormatedChatLog方法`);
 			const mdc = this.dataList[this.dataList.length - 1];
 			if (mdc.content.indexOf('您终止了请求...') === -1) {
-				if (mdc.id !== this.sendTextOrVoiceChatLogId) {
-					
+				if (mdc.id !== this.sendTextOrVoiceChatLogId) {					
 					console.log(`${tip}中成功更新了聊天记录内容,获取组件用的mdc.id=${mdc.id}`);
-					// mdc.content = txtRef.$el.innerHTML;
-					// mdc.isContentComplete = true;
-					// this.sendTextOrVoiceChatLogId = '';
+					/* mdc.content = txtRef.$el.innerHTML; */
+					/* mdc.isContentComplete = true; */
+					/* this.sendTextOrVoiceChatLogId = ''; */
 						
 				} else console.log(`${tip}中更新聊天记录内容是发现id为前端构造id或内容已经更新过，忽略更新`);
 			} else console.log(`${tip}中更新聊天记录内容是发现内容是终止了, mdc.id=${mdc.id}, this.sendTextOrVoiceChatLogId=${this.sendTextOrVoiceChatLogId}`);
@@ -1302,38 +1235,24 @@ export default {
 		 */
 		prepareSendMsg(customData) {
 			this.dataList.push({
-				id: guid(),
-				role: 'user',
-				content: customData.content,
+				id: guid(), role: 'user', content: customData.content,
 				sendAttachment: customData.chatImage,
-				isPlayingVoice: false,
-				isContentComplete: false,
-				isGenChat: false
+				isPlayingVoice: false, isContentComplete: false, isGenChat: false
 			});
 			this.sendTextOrVoiceChatLogId = guid();
 			this.dataList.push({
 				id: this.sendTextOrVoiceChatLogId,
 				role: 'assistant', content: '',
-				renderContent: '',
-				isAbandon: false,
-				messageId: '',
-				replyAttachment: '',
-				chat_type: this.chatType,
-				isPlayingVoice: false,
-				isContentComplete: false,
+				renderContent: '', isAbandon: false, messageId: '',
+				replyAttachment: '', chat_type: this.chatType,
+				isPlayingVoice: false, isContentComplete: false,
 				isGenChat: false
 			});
-			if (this.chatType !== 'voice') {
-				this.chatContent = '';
-				this.clearChatAttachAttr();
-			}
+			if (this.chatType !== 'voice') { this.chatContent = ''; this.clearChatAttachAttr(); }
 			this.showUpload = false;
 
-			this.showChatList = true;
-			this.isGenChat = true;
-			setTimeout(() => {
-				this.$refs.refChatList.scrollBtn();
-			}, 300);
+			this.showChatList = true; this.isGenChat = true;
+			setTimeout(() => { this.$refs.refChatList.scrollBtn(); }, 300);
 
 			return true;
 		},
@@ -1389,31 +1308,19 @@ export default {
 		 */
 		endChat() {
 			if (!this.isGenChat) return;
-			this.isGenChat = false;
-			this.outputBuffer = '';
-			this.outputBufferAll = '';
-			this.outputSpeed = 30;
+			this.isGenChat = false; this.outputBuffer = '';
+			this.outputBufferAll = ''; this.outputSpeed = 30;
 			if (this.chatType !== 'voice') {
 				if (this.ctrl != null) this.ctrl.abort();
-				this.chatType = 'text';
-				this.clearChatAttachAttr();
-
-				if (this.currentConversationTaskId !== '') {
-					this.endWebsocket();
-				}
-			} else {
-				// 语音消息
-				this.endWebsocket();
-			}
+				this.chatType = 'text'; this.clearChatAttachAttr();
+				if (this.currentConversationTaskId !== '') { this.endWebsocket(); }
+			} else { /* 语音消息 */ this.endWebsocket(); }
 
 			if (this.dataList.length === 0) return;
 			const mdc = this.dataList[this.dataList.length - 1];
-			mdc.isGenChat = false;
-			mdc.isAbandon = true;
-			mdc.isContentComplete = false;
-			if (Ruler.empty(mdc.content)) {
-				mdc.content = '<strong>您终止了请求...</strong>';
-			} else mdc.content += '<br><strong>您终止了请求...</strong>';
+			mdc.isGenChat = false; mdc.isAbandon = true; mdc.isContentComplete = false;
+			if (Ruler.empty(mdc.content)) { mdc.content = '<strong>您终止了请求...</strong>'; }
+			else {mdc.content += '<br><strong>您终止了请求...</strong>';}
 		},
 
 		/**
@@ -1421,12 +1328,8 @@ export default {
 		 */
 		endWebsocket() {
 			if (this.currentConversationTaskId !== '') {
-				const dt = {
-					command: -1,
-					taskId: this.currentConversationTaskId
-				};
-				console.log('发送消息终止 命令', dt);
-				this.currentConversationTaskId = '';
+				const dt = { command: -1, taskId: this.currentConversationTaskId };
+				console.log('发送消息终止 命令', dt); this.currentConversationTaskId = '';
 				store.commit('sendSocketMessage', JSON.stringify(dt));
 			}
 		},
@@ -1435,27 +1338,12 @@ export default {
 		 * 新建聊天
 		 */
 		newChat(showTip = true, hideMenu = true, clearSelect = true) {
-			if (!this.checkAppHubAuth()) return;
-			if (this.isDenyPrivacy) {
-				this.showConfirm('您拒绝了微信隐私保护指引，是否重新同意隐私保护？', () => {
-					this.showPrivacy = true;
-				});
-				return;
-			}
-			if (this.isGenChat) {
-				this.showTips('正在生成结果中，请稍后再进行操作!', 'info');
-				return;
-			}
-			if (this.isProcessingSSEData) {
-				this.showTips('正在输出结果中，请稍后再进行操作!', 'info');
-				return;
-			}
-			this.currentConversationId = '';
-			this.currentConversationTaskId = '';
-			if (clearSelect) this.dataList.splice(0);
-			this.releaseVoice();
-			this.clickHubAppName(hideMenu, clearSelect);
-			if (showTip) this.showToast('已开启新的话题');
+			if (this.isDenyPrivacy) { this.showConfirm('您拒绝了微信隐私保护指引，是否重新同意隐私保护？', () => { this.showPrivacy = true; }); return; }
+			if (this.isGenChat) { this.showTips('正在生成结果中，请稍后再进行操作!', 'info'); return; }
+			if (this.isProcessingSSEData) { this.showTips('正在输出结果中，请稍后再进行操作!', 'info'); return; }
+			this.currentConversationId = ''; this.currentConversationTaskId = '';
+			if (clearSelect) { this.dataList.splice(0); }
+			this.releaseVoice(); if (showTip) { this.showTips('已开启新的话题'); }
 		},
 
 		/**
@@ -1463,87 +1351,39 @@ export default {
 		 */
 		discovery() {
 			this.showMenu = false;
-			if (!this.checkAppHubAuth()) return;
-			if (this.isDenyPrivacy) {
-				this.showConfirm('您拒绝了微信隐私保护指引，是否重新同意隐私保护？', () => {
-					this.showPrivacy = true;
-				});
-				return;
-			}
-			if (this.isGenChat) {
-				this.showTips('正在生成结果中，请稍后再进行操作!', 'info');
-				return;
-			}
-			if (this.isProcessingSSEData) {
-				this.showTips('正在输出结果中，请稍后再进行操作!', 'info');
-				return;
-			}
-			this.releaseVoice();
-			this.navToPage('discovery');
+			if (this.isDenyPrivacy) { this.showConfirm('您拒绝了微信隐私保护指引，是否重新同意隐私保护？', () => { this.showPrivacy = true; }); return; }
+			if (this.isGenChat) { this.showTips('正在生成结果中，请稍后再进行操作!', 'info'); return; }
+			if (this.isProcessingSSEData) { this.showTips('正在输出结果中，请稍后再进行操作!', 'info'); return; }
+			this.releaseVoice(); this.navToPage('discovery');
 		},
 
 		againDialog(item) {
-			if (this.isGenChat) {
-				this.showTips('正在生成结果中，请稍后再进行操作!', 'info');
-				return;
-			}
-			if (this.isProcessingSSEData) {
-				this.showTips('正在输出结果中，请稍后再进行操作!', 'info');
-				return;
-			}
+			if (this.isGenChat) { this.showTips('正在生成结果中，请稍后再进行操作!', 'info'); return; }
+			if (this.isProcessingSSEData) { this.showTips('正在输出结果中，请稍后再进行操作!', 'info'); return; }
 			console.log(item, '重新生成对话');
-			if (item.sendAttachment != null && item.sendAttachment !== '') {
-				this.chatType = 'image';
-				this.chatImageUrl = item.sendAttachment;
-			}
+			if (item.sendAttachment != null && item.sendAttachment !== '') { this.chatType = 'image'; this.chatImageUrl = item.sendAttachment; }
 			// 操作终止了请求的记录，这个时候messageId是空
-			if (Ruler.empty(item.sendMsg)) {
-				const md = this.dataList[this.dataList.length - 2];
-				if (md == null) return;
-				this.chatContent = md.content;
-			} else this.chatContent = item.sendMsg;
-			this.sendChat(this.chatContent);
+			if (Ruler.empty(item.sendMsg)) { const md = this.dataList[this.dataList.length - 2]; if (md == null) return; this.chatContent = md.content; }
+			else { this.chatContent = item.sendMsg; } this.sendChat(this.chatContent);
 		},
 
 		againDialog(item) {
-			if (this.isGenChat) {
-				this.showTips('正在生成结果中，请稍后再进行操作!', 'info');
-				return;
-			}
-			if (this.isProcessingSSEData) {
-				this.showTips('正在输出结果中，请稍后再进行操作!', 'info');
-				return;
-			}
+			if (this.isGenChat) { this.showTips('正在生成结果中，请稍后再进行操作!', 'info'); return; }
+			if (this.isProcessingSSEData) { this.showTips('正在输出结果中，请稍后再进行操作!', 'info'); return; }
 			console.log(item, '重新生成对话');
-			if (item.sendAttachment != null && item.sendAttachment !== '') {
-				this.chatType = 'image';
-				this.chatImageUrl = item.sendAttachment;
-			}
+			if (item.sendAttachment != null && item.sendAttachment !== '') { this.chatType = 'image'; this.chatImageUrl = item.sendAttachment; }
 			// 操作终止了请求的记录，这个时候messageId是空
-			if (Ruler.empty(item.sendMsg)) {
-				const md = this.dataList[this.dataList.length - 2];
-				if (md == null) return;
-				this.chatContent = md.content;
-			} else this.chatContent = item.sendMsg;
-			this.doSend(this.chatContent);
+			if (Ruler.empty(item.sendMsg)) { const md = this.dataList[this.dataList.length - 2]; if (md == null) return; this.chatContent = md.content; }
+			else { this.chatContent = item.sendMsg; } this.doSend(this.chatContent);
 		},
 
 		/**
 		 * 删除聊天记录
 		 */
 		delDialog(item) {
-			if (this.currentUser() == null || !this.currentUser().isLogined) {
-				this.onLogin();
-				return;
-			}
-			if (this.isGenChat) {
-				this.showTips('正在生成结果中，请稍后再进行操作!', 'info');
-				return;
-			}
-			if (this.isProcessingSSEData) {
-				this.showTips('正在输出结果中，请稍后再进行操作!', 'info');
-				return;
-			}
+            if (!this.checkUserInfo()){ return }
+			if (this.isGenChat) { this.showTips('正在生成结果中，请稍后再进行操作!', 'info'); return; }
+			if (this.isProcessingSSEData) { this.showTips('正在输出结果中，请稍后再进行操作!', 'info'); return; }
 			// 删除终止了请求的记录，这个时候messageId是空
 			if (Ruler.empty(item.messageId)) {
 				let idx = this.dataList.findIndex((x) => x.content === item.content && x.role === 'assistant');
@@ -1583,14 +1423,11 @@ export default {
 		},
 		renderChatList(conversation) {
 			conversation.chatLogs.forEach((m) => {
-				let ct = 'text';
-				if (m.sendAttachment) ct = 'image';
+				let ct = 'text'; if (m.sendAttachment) { ct = 'image'; }
 				this.dataList.push({ role: 'user', content: m.sendMsg, chat_type: ct, isPlayingVoice: false, isContentComplete: true, isGenChat: false, ...m });
 				this.dataList.push({ role: 'assistant', content: m.replyMsg == null || m.replyMsg === '' ? '被终止的消息' : m.replyMsg, chat_type: ct, isAbandon: false, isPlayingVoice: false, isContentComplete: true, isGenChat: false, ...m });
 			});
-			setTimeout(() => {
-				this.$refs.refChatList.scrollBtn();
-			}, 300);
+			setTimeout(() => { this.$refs.refChatList.scrollBtn(); }, 300);
 		},
 		// 回复消息
 		doAnswer() {

@@ -7,7 +7,7 @@
 		<view slot="top" style="height: 280rpx;position: relative; box-sizing: border-box;">
 			<image class="launch-bg" :src="`${$staticPath}imgs/top_bg.png`" />
 			<!-- <view class="launch-head" :style="{ height: headInfo.headHeight }"><view class="launch-title" :style="{ marginTop: headInfo.titleTop }">eAI</view></view> -->
-			<u-navbar title="e-AI" :fixed="false" bgColor="transparent"><view class="u-nav-slot" slot="left"></view></u-navbar>
+			<u-navbar title="eAI" :fixed="false" bgColor="transparent"><view class="u-nav-slot" slot="left"></view></u-navbar>
 		</view>
 		<view class="launch-content">
 			<view class="launch-welcome">欢迎使用eAI系统</view>

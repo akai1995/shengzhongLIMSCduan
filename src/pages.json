@@ -5,6 +5,7 @@
 			"^ut-(.*)": "@/components/custom-ui/ut-$1/ut-$1.vue",
 			"^project-(.*)": "@/components/project-ui/project-$1/project-$1.vue",
 			"^u-(.*)": "@/uni_modules/uview-ui/components/u-$1/u-$1.vue",
+			"^Recorder-(.*)": "@/uni_modules/Recorder-UniCore/components/Recorder-$1/Recorder-$1.vue",			
 	    	"^(?!z-paging-refresh|z-paging-load-more)z-paging(.*)": "@/uni_modules/z-paging/components/z-paging$1/z-paging$1.vue"
         }
     },
@@ -33,7 +34,7 @@
 		// {
 		// 	"path": "pages/launch/launch",
 		// 	"style": {
-		// 		"navigationBarTitleText": "e-AI",
+		// 		"navigationBarTitleText": "eAI",
 		// 		"enablePullDownRefresh": false
 		// 	}
 		// },
@@ -139,7 +140,7 @@
 	"globalStyle": {
 		"navigationStyle": "custom",
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "e-AI",
+		"navigationBarTitleText": "eAI",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8"
 	},
