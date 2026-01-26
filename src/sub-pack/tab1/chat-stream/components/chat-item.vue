@@ -4,13 +4,14 @@
 	<view class="chat-item">
 		<text class="chat-time" v-if="item.time&&item.time.length">{{item.time}}</text>
 		<view :class="{'chat-container':true,'chat-location-me':item.isMe}">
-			<!-- <view class="chat-icon-container">
-				<image class="chat-icon" :src="item.icon" mode="aspectFill" />
-			</view> -->
+			<text :class="{'chat-user-name':true,'chat-location-me':item.isMe}">
+				{{item.name}}
+			</text>
+			<view class="fileWarp" v-if="item.files&&item.files.length>0">
+				<project-file-card v-for="file,idx in item.files" :key="idx" :file="file" border @del="onDelFile(idx)" />
+			</view>
+			<!-- <view class="chat-icon-container"><image class="chat-icon" :src="item.icon" mode="aspectFill" /> </view> -->
 			<view class="chat-content-container">
-				<text :class="{'chat-user-name':true,'chat-location-me':item.isMe}">
-					{{item.name}}
-				</text>
 				<view class="chat-text-container-super" :style="[{justifyContent:item.isMe?'flex-end':'flex-start'}]">
 					<view :class="{'chat-text-container':true,'chat-text-container-me':item.isMe}">
 						<text :class="{'chat-text':true,'chat-text-me':item.isMe}">{{item.content}}</text>
@@ -55,10 +56,17 @@ export default {
 	}
 	.chat-container {
 		display: flex;
-		flex-direction: row;
+		flex-direction: column;
+	}
+	.fileWarp{
+		display: flex;
+		align-items: flex-end;
+		flex-direction: column;
+		text-align: left;
+		gap: 24rpx;
 	}
 	.chat-location-me {
-		flex-direction: row-reverse;
+		flex-direction: column;
 		text-align: right;
 	}
 	.chat-icon-container {

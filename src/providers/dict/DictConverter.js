@@ -9,7 +9,7 @@ export default function(dict, dictMeta) {
 /**
  * 确定字典字段
  * @param {DictData} dict
- * @param  {...String} fields
+ * @param  {string[]} fields
  */
 function determineDictField(dict, ...fields) {
   return fields.find(f => Object.prototype.hasOwnProperty.call(dict, f))

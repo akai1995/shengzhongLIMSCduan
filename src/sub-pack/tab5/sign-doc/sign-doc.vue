@@ -14,7 +14,6 @@
 			</view>
 		</view>
 		<view class="home-content">
-			<!-- <project-home-card /> -->
 			<view class="luBox">
 				<view class="luTitle">待签署文件列表</view>
             	<u-skeleton v-if="!firstLoaded&&dataList.length==0" rows="8" title loading />
@@ -25,9 +24,7 @@
 </template>
 
 <script>
-// 注意：这里需要替换为实际的API调用
-import { getSignFileList } from '@/app/api/signPaper/index.js'
-
+import { getSignFileList } from '@/app/api/signPaper/index'
 export default {
 	data() {
 		return {
@@ -36,15 +33,13 @@ export default {
 			dataList: [], totalCount: 0, firstLoaded: false
 		};
 	},
-	onShow() {
-		this.getHeadInfo()
-	},
+	onShow() { this.getHeadInfo() },
 	mounted() {
-		setTimeout(() => {
-			this.$refs.paging && this.$refs.paging.refresh();
-		}, 250);
+		uni.$on('app-list-refresh', this.eventHandle)
+		setTimeout(() => { this.$refs.paging && this.$refs.paging.refresh() }, 250);
 	},
 	methods: {
+		eventHandle() { setTimeout(() => { this.$refs.paging && this.$refs.paging.refresh() }, 250) },
 		getHeadInfo() {
 			// #ifdef MP-WEIXIN
 			// const popInfo = uni.getMenuButtonBoundingClientRect()
@@ -64,21 +59,15 @@ export default {
 			}).catch(()=>{
 				this.$refs.paging.complete(false)
 			}).finally(()=>{
-				setTimeout(()=>{ this.firstLoaded = true; }, 1750)
+				setTimeout(()=>{ this.firstLoaded = true }, 1750)
 				uni.hideLoading();
 			});
 		},
-		onSearch(e) {
-			const searchData = e
-			this.queryParams.keyword = searchData
-			this.$refs.paging && this.$refs.paging.refresh();
-		},
-		handleGoSign(id) {
-            if (!this.checkUserInfo()){ return }
-			this.$ut.jump(`/pages/tabs/tab1/doc-sign?id=${id}&showSign=true`);
-		}
+		onSearch(event) { const searchData = event; this.queryParams.keyword = searchData; this.$refs.paging && this.$refs.paging.refresh() },
+		handleGoSign(id) { if (!this.checkUserInfo()){ return } this.$ut.jump(`/pages/tabs/tab1/doc-sign?id=${id}&showSign=true`) }
 	},
-};
+	destroyed() { uni.$off('app-list-refresh', this.eventHandle) }
+}
 </script>
 <style lang="scss" scoped>
 .page {

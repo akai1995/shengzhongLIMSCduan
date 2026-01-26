@@ -2,19 +2,20 @@
 const accountInfo = uni.getAccountInfoSync();
 let envWx = accountInfo.miniProgram.envVersion;
 // #endif
-import constant from '@/app/app.constant'
+import AppConfig from '@/app/app.constant'
 export default{
 	filters: { toFixdNum (value, num) { if (+value) { return +(+value.toFixed(num)) } return 0; } },
     data(){
         return {
 			// #ifdef MP-WEIXIN
-			envWx, $staticPath: constant.staticPath,
-			$onlineFilePath: constant.filePath,
+			envWx,
+			$onlineFilePath: AppConfig.onlineFilePath,
+			$staticPath: AppConfig.staticPath,
 			// #endif
-			default_img: `${constant.staticPath}imgs/default_doctor.png`,
+			default_img: `${AppConfig.staticPath}imgs/default_doctor.png`,
             shareParams: {
                 title: 'e-AI', path: '/pages/launch/launch',
-                imageUrl: `${constant.staticPath}imgs/logo.png`,
+                imageUrl: `${AppConfig.staticPath}imgs/logo.png`,
                 desc: '', content: '', success: (res) => {
                     console.log(res, '发生过是');
                     if (res.errMsg == 'shareAppMessage:ok') {
@@ -41,20 +42,30 @@ export default{
          */
         utComponentsRef() { return this.$refs.utComponents; }
     },
+	mounted() {	
+		// #ifdef MP-WEIXIN
+		this.$onlineFilePath = AppConfig.onlineFilePath,
+		this.$staticPath = AppConfig.staticPath,
+		// #endif
+		this.default_img = `${AppConfig.staticPath}imgs/default_doctor.png`,
+		this.shareParams.imageUrl = `${AppConfig.staticPath}imgs/logo.png`
+	},
 	methods: {
+		hidePhone(phone) { if (phone){ return phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2') } else { return phone } },
 		checkUserInfo() {
 			const id = this.$store.getters.userId
 			if (!id) { this.$ut.jump('/sub-pack/project-pages/login/login'); return false; }
 			return true;
 		},
 		showTips(msg, type = 'primary', duration = 1500) {
-			console.log('this.utComponentsRef', msg, this.utComponentsRef)
+			console.log('this.utComponentsRef msg', msg)
 			console.log('msg', msg)
 			//#ifdef APP-PLUS
 			plus.nativeUI.toast(msg, { duration: duration > 2000 ? 'long' : 'short', verticalAlign: 'top' });
 			//#endif
 			//#ifndef APP-PLUS
-			if (this.utComponentsRef) {
+			console.log('this.utComponentsRef', this.utComponentsRef)
+			if (this.utComponentsRef&&this.utComponentsRef.showUViewTips) {
 				this.utComponentsRef.showUViewTips(type, msg, duration);
 			} else {
 				uni.showToast({ title: msg, icon: 'none', duration, mask: true })

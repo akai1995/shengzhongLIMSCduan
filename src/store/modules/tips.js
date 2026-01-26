@@ -1,20 +1,17 @@
 import storage from '@/providers/utilities/storage'
-import constant from '@/app/app.constant'
+import AppConfig from '@/app/app.constant'
 const tips = {
 	state:{
-		isTips: storage.get(constant.vuex.tips),
-		
+		isTips: storage.get(AppConfig.vuex.tips),		
 	},
 	getters:{
-		isTips:(state) => state.isTips,
-		
+		isTips:(state) => state.isTips,		
 	},
 	mutations:{
 		SET_TIPS:(state,isTips)=>{
 			state.isTips = isTips
-			storage.set(constant.vuex.tips, isTips)
-		},
-	
+			storage.set(AppConfig.vuex.tips, isTips)
+		}	
 	}
 }
 export default tips

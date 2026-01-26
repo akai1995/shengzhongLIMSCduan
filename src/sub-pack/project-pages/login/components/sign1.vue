@@ -61,7 +61,7 @@
 	}
 </script>
 
-<style lang="less">
+<style lang="scss">
 	.login {
 		width: 90%;
 		min-height: 270rpx;

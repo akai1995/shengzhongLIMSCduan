@@ -4,9 +4,14 @@
 			<view class="h1 pop-title">时间筛选</view>
 			<view style="padding: 0 20rpx;">
 				<view class="item d-flex js-b-c">
-					<template v-for="(item, index) in ksList">
-						<view :key="item.type" @click="changeKs(item.type)" class="btn-pop"
-							:class="{ 'active': item.type == curType }">{{ item.name }}</view>
+					<template>
+						<view 
+							v-for="(item, index) in ksList" :key="item.type"
+							class="btn-pop" :class="{ 'active': item.type == curType }"
+							@click="changeKs(item.type)"
+						>
+							{{ item.name }}
+						</view>
 					</template>
 
 				</view>
@@ -29,7 +34,7 @@
 </template>
 
 <script>
-	import { dateFormat } from '@/providers/index.js';
+	import { dateFormat } from '@/providers/index';
 	export default {
 		name: "ut-range-time",
 		props: {

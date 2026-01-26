@@ -11,14 +11,17 @@
 			<!-- <view class="home-head" :style="{ height: headInfo.headHeight }"><view class="home-title" :style="{ marginTop: headInfo.titleTop }">设备预约</view></view> -->
 			<u-navbar title="设备预约" :fixed="false" bgColor="transparent"><view class="u-nav-slot" slot="left"></view></u-navbar>
 			<view class="home-search">
-				<u--input border="surround" placeholder="请输入设备名称" suffixIcon="search" suffixIconStyle="color: #909399" customStyle="background-color: white;" @change="onSearch" />
+				<u--input
+					border="surround" placeholder="请输入设备名称"
+					suffixIcon="search" suffixIconStyle="color: #909399"
+					customStyle="background-color: white;" @change="onSearch"
+				/>
 			</view>
 		</view>
 		<view class="home-content">
 			<project-home-card />
 			<view class="luBox">
-				<view class="luTitle">设备列表</view>
-            	<u-skeleton v-if="!firstLoaded&&dataList.length==0" rows="8" title loading />
+				<view class="luTitle">设备列表</view><u-skeleton v-if="!firstLoaded&&dataList.length==0" rows="8" title loading />
       			<project-device-apply-item v-for="item,idx in dataList" :key="item.id" :item="item" :hideLine="dataList.length-1==idx" />
 			</view>
 		</view>
@@ -27,8 +30,7 @@
 </template>
 
 <script>
-import { getDeviceList } from '@/app/api/device/index.js'
-
+import { getDeviceList } from '@/app/api/device/index'
 export default {
 	data() {
 		return {
@@ -42,9 +44,7 @@ export default {
 		// this.getDeviceList()
 	},
 	mounted() {
-		setTimeout(() => {
-			this.$refs.paging && this.$refs.paging.refresh();
-		}, 250);
+		setTimeout(() => { this.$refs.paging && this.$refs.paging.refresh() }, 250);
 	},
 	methods: {
 		getHeadInfo() {

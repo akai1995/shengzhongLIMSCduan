@@ -6,13 +6,7 @@
         :hide-empty-view="detailInfo?true:false" :refresher-enabled="detailInfo?false:true" :loading-more-enabled="detailInfo?false:true"
         empty-view-text="暂无分析记录" :loading-more-no-more-text="`已加载完，共${totalCount}条记录`"
     >
-        <view slot="top" style="z-index: 999;">
-            <u-navbar 
-                title="分析记录" :fixed="false" background="transparent" 
-                color="#000" left-icon="close" left-icon-color="#000" 
-                @leftClick="onClose" 
-            />
-        </view>
+        <view slot="top" style="z-index: 999;"><u-navbar  title="分析记录" :fixed="false" background="transparent"  color="#000" left-icon="close" left-icon-color="#000"  @leftClick="onClose" /></view>
 		<ut-components ref="utComponents" />
         <view class="content">
 			<view class="luBox">
@@ -24,14 +18,10 @@
             <view class="botHandle pubTopLine" v-if="!detailInfo">
                 <view class="wrap">
                     <view class="checkbox">
-                        <u-checkbox-group v-model="isAllSelect" :disabled="allDisabled" size="small" @change="checkAllChange">
-                            <u-checkbox name="全选" shape="circle" size="small" activeColor="#3B7EFFFF">全选</u-checkbox>
-                        </u-checkbox-group>
+                        <u-checkbox-group v-model="isAllSelect" :disabled="allDisabled" size="small" @change="checkAllChange"><u-checkbox name="全选" shape="circle" size="small" activeColor="#3B7EFFFF">全选</u-checkbox></u-checkbox-group>
                         <text class="grey">全选</text>
                     </view>
-                    <view class="removeBtn" @click="onRemove()">
-                        <u-button size="small" type="error" plain text="删除" />
-                    </view>
+                    <view class="removeBtn" @click="onRemove()"><u-button size="small" type="error" plain text="删除" /></view>
                 </view>
             </view>
         </view>

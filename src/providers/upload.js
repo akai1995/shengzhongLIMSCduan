@@ -73,8 +73,85 @@ const upload = config => {
 
 export default upload
 
+/**
+ * 获取文件扩展名，可控制大小写
+ * @param {string} filename - 文件名
+ * @param {boolean} toUpperCase - 是否转换为大写，默认false（小写）
+ * @returns {string} 文件扩展名，无扩展名时返回空字符串
+ */
+export function getFileExt(filename, toUpperCase = true) {
+  // 1. 判空和类型检查
+  if (!filename || typeof filename !== 'string') {
+    console.warn('文件名必须是有效的字符串');
+    return '';
+  }
+  
+  // 2. 去除首尾空格
+  const trimmedName = filename.trim();
+  
+  // 3. 空字符串检查
+  if (trimmedName.length === 0) {
+    return '';
+  }
+  
+  // 4. 查找最后一个点号
+  const lastDotIndex = trimmedName.lastIndexOf('.');
+  
+  // 5. 检查点号位置
+  if (lastDotIndex === -1 || 
+      lastDotIndex === 0 || 
+      lastDotIndex === trimmedName.length - 1) {
+    return '';
+  }
+  
+  // 6. 提取扩展名
+  const extension = trimmedName.slice(lastDotIndex + 1);
+  
+  // 7. 根据参数控制大小写
+  return toUpperCase ? extension.toUpperCase() : extension.toLowerCase();
+}
+
+/**
+ * 增强版（处理边缘情况）
+ * @param {number} bytes - 文件大小
+ * @param {number} decimals - 文件名
+ */
+export function formatFileSize(bytes, decimals = 2) {
+  // 输入验证
+  if (typeof bytes !== 'number' || !isFinite(bytes) || bytes < 0) {
+    return '0 B';
+  }
+  
+  if (bytes === 0) return '0 B';
+  
+  const k = 1024;
+  const units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+  
+  // 对于小于1KB的情况特殊处理
+  if (bytes < k) {
+    return bytes + ' B';
+  }
+  
+  // 计算单位
+  const i = Math.min(
+    Math.floor(Math.log(bytes) / Math.log(k)),
+    units.length - 1
+  );
+  
+  const size = bytes / Math.pow(k, i);
+  
+  // 判断是否为整数（考虑浮点数精度问题）
+  const isInteger = Math.abs(size - Math.round(size)) < 0.00001;
+  
+  if (isInteger) {
+    return Math.round(size) + ' ' + units[i];
+  } else {
+    // 非整数时保留指定小数位
+    return size.toFixed(decimals) + ' ' + units[i];
+  }
+}
+
 function pickExclude(obj, keys) {
-	// 某些情况下，type可能会为
     if (!['[object Object]', '[object File]'].includes(Object.prototype.toString.call(obj))) { return {} }
     return Object.keys(obj).reduce((prev, key) => {
         if (!keys.includes(key)) { prev[key] = obj[key] }
@@ -85,7 +162,8 @@ function pickExclude(obj, keys) {
 function formatImage(res) {
     return res.tempFiles.map((item) => ({
         ...pickExclude(item, ['path']), type: 'image',
-        url: item.path, thumb: item.path, size: item.size,
+        url: item.path, thumb: item.path, size: item.size, 
+        summaryName: `${getFileExt(item.path)} ${formatFileSize(item.size)}`,
 		// #ifdef H5
 		name: item.name
 		// #endif
@@ -97,6 +175,7 @@ function formatVideo(res) {
         {
             ...pickExclude(res, ['tempFilePath', 'thumbTempFilePath', 'errMsg']),
             type: 'video', url: res.tempFilePath, thumb: res.thumbTempFilePath, size: res.size,
+            summaryName: `${getFileExt(item.thumbTempFilePath)} ${formatFileSize(item.size)}`,
 			// #ifdef H5
 			name: res.name
 			// #endif
@@ -109,8 +188,9 @@ function formatMedia(res) {
     return tempFiles.map((item) => {        
         const thumb = type === 'video' ? item.thumbTempFilePath : item.tempFilePath;
         return ({
-            /* ...item, */ ...pickExclude(item, ['fileType', 'thumbTempFilePath', 'tempFilePath']),
+            ...pickExclude(item, ['fileType', 'thumbTempFilePath', 'tempFilePath']),
             type: type, thumb, size: item.size, name: thumb.slice(thumb.lastIndexOf('/')+1, thumb.length),
+            summaryName: `${getFileExt(thumb)} ${formatFileSize(item.size)}`,
         })
     })
 }
@@ -119,28 +199,23 @@ function formatFile(res) {
     console.log('formatFile res:',res)
     const { tempFiles } = res
     return tempFiles.map((item) => ({
-        // ...item,
-        ...pickExclude(item, ['path']), 
-		thumb: item.path,  size:item.size,
+        ...pickExclude(item, ['path']), thumb: item.path,  size:item.size,
         name: item.path.slice(item.path.lastIndexOf('/')+1, item.path.length),
+        summaryName: `${getFileExt(item.path)} ${formatFileSize(item.size)}`,
 		// #ifdef H5
 		name: item.name, type: item.type
 		// #endif 
 	}))
 }
 
+const imgDocExt = ['.tif','.pjp','.jfif','.ico','.tiff','.gif','.svg','.xbm','.jxl','.jpeg','.svgz','.jpg','.webp','.png','.bmp','.pjpeg','.avif', '.doc','.docx','.txt','.pdf','.csv','.xls','.xlsx','xlsm','ppt','pptx']
 /**
  * 
- * @param {string} accept  image media video file
- * @param {string} mediaType  image	只能拍摄图片或从相册选择图片
- *                 video	只能拍摄视频或从相册选择视频
- *                 mix	可同时选择图片和视频
- * @param {boolean} multiple  image media video file
+ * @param {string} accept  image media video file message-image message-file
+ * @param {string} mediaType  ['image','video','mix']
+ * @param {boolean} multiple  
  * @param {string} capture  ['camera','album']
  * @param {string} mediaType  ['image','video','mix'] 
- *                  image	只能拍摄图片或从相册选择图片
- *                  video	只能拍摄视频或从相册选择视频
- *                  mix	可同时选择图片和视频
  * @returns 
  */
 export function onChooseFile(fileObj) {
@@ -156,7 +231,6 @@ export function onChooseFile(fileObj) {
                 })
                 break
                 // #ifdef MP-WEIXIN
-                // 只有微信小程序才支持chooseMedia接口
             case 'media':
                 wx.chooseMedia({
                     count: multiple ? Math.min(maxCount, 9) : 1,
@@ -176,20 +250,51 @@ export function onChooseFile(fileObj) {
                 })
                 break
                 // #ifdef MP-WEIXIN || H5
-                // 只有微信小程序才支持chooseMessageFile接口
-            case 'file':
-                console.log('accept', accept)
+            case 'message-image':
                 // #ifdef MP-WEIXIN
                 wx.chooseMessageFile({
-                    count: multiple ? maxCount : 1, type: accept,
+                    count: multiple ? maxCount : 1, type: 'image',
                     success: (res) => resolve(formatFile(res)),
                     fail: reject
                 })
                 // #endif
                 // #ifdef H5
-                // 需要hx2.9.9以上才支持uni.onChooseFile
                 uni.onChooseFile({
-                    count: multiple ? maxCount : 1, type: accept,
+                    count: multiple ? maxCount : 1, type: 'image',
+                    success: (res) => resolve(formatFile(res)),
+                    fail: reject
+                })
+                // #endif
+                break
+            case 'message-file':
+                // #ifdef MP-WEIXIN
+                wx.chooseMessageFile({
+                    count: multiple ? maxCount : 1, type: 'file',
+                    success: (res) => resolve(formatFile(res)),
+                    fail: reject
+                })
+                // #endif
+                // #ifdef H5
+                uni.onChooseFile({
+                    count: multiple ? maxCount : 1, extension: ['.doc','.docx','.txt','.pdf','.csv','.xls','.xlsx','xlsm','ppt','pptx'],
+                    success: (res) => resolve(formatFile(res)),
+                    fail: reject
+                })
+                // #endif
+                break
+            case 'file':
+                // #ifdef MP-WEIXIN
+                wx.chooseMessageFile({
+                    count: multiple ? maxCount : 1, /* type: accept, */
+                    extension: imgDocExt,
+                    success: (res) => resolve(formatFile(res)),
+                    fail: reject
+                })
+                // #endif
+                // #ifdef H5
+                uni.onChooseFile({
+                    count: multiple ? maxCount : 1, /* type: accept, */
+                    extension: imgDocExt,
                     success: (res) => resolve(formatFile(res)),
                     fail: reject
                 })
@@ -197,18 +302,18 @@ export function onChooseFile(fileObj) {
                 break
                 // #endif
             default: 
-                // 此为保底选项，在accept不为上面任意一项的时候选取全部文件
                 // #ifdef MP-WEIXIN
                 wx.chooseMessageFile({
-                    count: multiple ? maxCount : 1, type: 'all',
+                    count: multiple ? maxCount : 1, /* type: 'all', */
+                    extension: imgDocExt,
                     success: (res) => resolve(formatFile(res)),
                     fail: reject
                 })
                 // #endif
                 // #ifdef H5
-                // 需要hx2.9.9以上才支持uni.onChooseFile
                 uni.onChooseFile({
-                    count: multiple ? maxCount : 1, type: 'all',
+                    count: multiple ? maxCount : 1, /* type: 'all', */
+                    extension: imgDocExt,
                     success: (res) => resolve(formatFile(res)),
                     fail: reject
                 })

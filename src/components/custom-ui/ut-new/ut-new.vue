@@ -2,23 +2,15 @@
 	<view class="new">
 		<view class="new-list" v-for="(item,index) in list" :key="index" @click="onClick(item)">
 			<view class="img">
-				<image  :src="item.titlePicture" lazy-load mode="aspectFill"></image>
-				
-				<view class="play" v-if="isPlay">
-					<u-icon name="play-circle" color="#fff" size="28"></u-icon>
-				</view>
+				<image :src="item.titlePicture" lazy-load mode="aspectFill" />				
+				<view class="play" v-if="isPlay"><u-icon name="play-circle" color="#fff" size="28" /></view>
 			</view>
 			<view class="view">
 				<view class="title ellipsis2">{{item.title}}</view>
 				<!-- <view class="text">{{item.txtContent}}</view> -->
 				<view class="tag">
 					<view>{{item.createTime}}</view>
-					<view class="flex"  v-if="item.readCount">
-						<view class="m-r1">
-							<u-icon name="eye" color="#A8A8A8FF" size="9"></u-icon>
-						</view>
-						 {{item.readCount}}
-					</view>
+					<view class="flex"  v-if="item.readCount"><view class="m-r1"><u-icon name="eye" color="#A8A8A8FF" size="9" /></view>{{item.readCount}}</view>
 				</view>
 			</view>
 		</view>
@@ -42,7 +34,7 @@
 	}
 </script>
 
-<style lang="less">
+<style lang="scss">
 	.new {
 		width: 100%;
 		height: auto;

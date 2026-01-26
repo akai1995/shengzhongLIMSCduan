@@ -1,50 +1,24 @@
 <template>
     <view>
-        <ut-cropper 
-            v-show="fileValue&&!info.imgPath" check-range :choosable="false" :width="1200" :height="1600" 
-            :src="fileValue" @close="onCropperClose" @crop="onCropSave"
-        >
-            <view class="slotCropper">可拖动边线裁剪识别区域</view>
-        </ut-cropper>
-        <ocr-result v-if="fileValue&&info.imgPath" :info="info" @copy="onCopy" @close="onResultClose" />
-        <ocr-result-log v-if="showOcrResultLog" @close="onOcrResultLogClose" />
+        <ut-cropper v-show="fileValue&&!info.imgPath" check-range :choosable="false" :width="1200" :height="1600" :src="fileValue" @close="onCropperClose" @crop="onCropSave"><view class="slotCropper">可拖动边线裁剪识别区域</view></ut-cropper>
+        <ocr-result v-if="fileValue&&info.imgPath" :info="info" @copy="onCopy" @close="onResultClose" /><ocr-result-log v-if="showOcrResultLog" @close="onOcrResultLogClose" />
         <z-paging 
             ref="paging" v-show="!!!fileValue&&!showOcrResultLog" class="page" :paging-style="{ backgroundColor: '#F7F8FA' }" v-model="dataList" @query="queryList"
             :fixed="true" :auto="false" :refresher-enabled="false" :auto-show-back-to-top="true" :auto-scroll-to-top-when-reload="false"
             :loading-more-enabled="false" :show-refresher-when-reload="false" hide-empty-view
         >
-            <view slot="top">
-                <u-navbar 
-                    title="图文识别" :fixed="false" background="transparent"
-                    color="#000" left-icon-color="#000" @leftClick="onBack"
-                />
-            </view>
+            <view slot="top"><u-navbar  title="图文识别" :fixed="false" background="transparent" color="#000" left-icon-color="#000" @leftClick="onBack" /></view>
             <view class="content">
                 <view class="tipBox">
-                    <view class="tipTitle">上传图片</view>
-                    <view class="tipTitle">帮您<text class="tipBb">OCR智能识别提取文字</text></view>
-                    <view class="subTip">您可以上传需要识别的图片，我们将为您智能识别提取文字信息~</view>
-                    <view class="imgBox">
-                        <view class="scanBox">
-                            <image :src="`${$staticPath}imgs/ocr-icon.png`" />
-                        </view>
-                        <view class="scanTip">请上传图文清晰的图片</view>
-                    </view>
+                    <view class="tipTitle">上传图片</view><view class="tipTitle">帮您<text class="tipBb">OCR智能识别提取文字</text></view><view class="subTip">您可以上传需要识别的图片，我们将为您智能识别提取文字信息~</view>
+                    <view class="imgBox"><view class="scanBox"><image :src="`${$staticPath}imgs/ocr-icon.png`" /></view><view class="scanTip">请上传图文清晰的图片</view></view>
                 </view>
             </view>
             <view slot="bottom" class="pubBotBtn pubTopLine">            
+                <view class="wrap"><view class="btn icon-history" @click="onOcrResultLogShow()"><u-icon :name="`${$staticPath}imgs/icon-history.png`" size="45rpx" /></view></view>
                 <view class="wrap">
-                    <view class="btn icon-history" @click="onOcrResultLogShow()">
-                        <u-icon :name="`${$staticPath}imgs/icon-history.png`" size="45rpx" />
-                    </view>
-                </view>
-                <view class="wrap">
-                    <view class="btn" @click="onChoose('album')">
-                        <u-button type="primary" size="small" text="相册上传" />
-                    </view>
-                    <view class="btn" @click="onChoose('camera')">
-                        <u-button type="primary" size="small" text="拍照上传" />
-                    </view>
+                    <view class="btn" @click="onChoose('album')"><u-button type="primary" size="small" text="相册上传" /></view>
+                    <view class="btn" @click="onChoose('camera')"><u-button type="primary" size="small" text="拍照上传" /></view>
                 </view>
             </view>
         </z-paging>

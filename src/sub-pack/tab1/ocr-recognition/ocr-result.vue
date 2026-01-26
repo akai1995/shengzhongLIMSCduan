@@ -4,33 +4,17 @@
         :fixed="true" :auto="false" :refresher-enabled="false" :auto-show-back-to-top="true" :auto-scroll-to-top-when-reload="false"
         :loading-more-enabled="false" :show-refresher-when-reload="false" hide-empty-view
     >
-        <view slot="top" style="z-index: 999;">
-            <u-navbar 
-                title="图文识别" :fixed="false" background="transparent" 
-                color="#000" left-icon="close" left-icon-color="#000" 
-                @leftClick="onClose" 
-            />
-        </view>
+        <view slot="top" style="z-index: 999;"><u-navbar title="图文识别" :fixed="false" background="transparent" color="#000" left-icon="close" left-icon-color="#000" @leftClick="onClose" /></view>
 		<ut-components ref="utComponents" />
         <view class="content">
-            <view class="ocrImgBox">
-                <view class="ocrImg"> <image :src="info.imgPath" /> </view>
-            </view>
-            <view class="datail">
-                <view v-html="assistantContent(info.content)"></view>
-            </view>
+            <view class="ocrImgBox"><view class="ocrImg"><image :src="info.imgPath" /></view></view>
+            <view class="datail"><view v-html="assistantContent(info.content)"></view></view>
         </view>
         <view slot="bottom" class="pubBotBtn pubTopLine">
             <view class="wrap">
-                <view class="btn" @click="onClose()">
-                    <u-button size="small" text="撤销" />
-                </view>
-                <view class="btn" @click="onSave()">
-                    <u-button size="small" text="保存" />
-                </view>
-                <view class="btn" @click="onCopy()">
-                    <u-button size="small" type="primary" plain text="复制" />
-                </view>
+                <view class="btn" @click="onClose()"><u-button size="small" text="撤销" /></view>
+                <view class="btn" @click="onSave()"><u-button size="small" text="保存" /></view>
+                <view class="btn" @click="onCopy()"><u-button size="small" type="primary" plain text="复制" /></view>
             </view>
         </view>
     </z-paging>

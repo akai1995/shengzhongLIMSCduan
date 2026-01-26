@@ -6,14 +6,8 @@
     >
         <view slot="top" style="z-index: 999;"> <u-navbar title="图文识别" :fixed="false" background="transparent" color="#000" left-icon="close" left-icon-color="#000" @leftClick="onCloseCrop" /> </view>
 		<view class="image-cropper" :style="{ zIndex }" @wheel="cropper.mousewheel">
-			<canvas v-if="use2d" type="2d" id="imgCanvas" class="img-canvas" :style="{
-				width: `${canvansWidth}px`,
-				height: `${canvansHeight}px`
-			}" />
-			<canvas v-else id="imgCanvas" canvas-id="imgCanvas" class="img-canvas" :style="{
-				width: `${canvansWidth}px`,
-				height: `${canvansHeight}px`
-			}" />
+			<canvas v-if="use2d" type="2d" id="imgCanvas" class="img-canvas" :style="{ width: `${canvansWidth}px`, height: `${canvansHeight}px` }" />
+			<canvas v-else id="imgCanvas" canvas-id="imgCanvas" class="img-canvas" :style="{ width: `${canvansWidth}px`, height: `${canvansHeight}px` }" />
 			<view id="pic-preview" class="pic-preview" :change:init="cropper.initObserver" :init="initData" @touchstart="cropper.touchstart" @touchmove="cropper.touchmove" @touchend="cropper.touchend">
 				<image v-if="imgSrc" id="crop-image" class="crop-image" :style="cropper.imageStyles" :src="imgSrc" webp></image>
 				<view v-for="(item, index) in maskList" :key="item.id" :id="item.id" class="crop-mask-block" :style="cropper.maskStylesList[index]"></view>
@@ -26,10 +20,7 @@
 				</block>
 				<block v-if="showAngle">
 					<view v-for="(item, index) in angleList" :key="item.id" :id="item.id" class="crop-angle" :style="cropper.angleStylesList[index]">
-						<view :style="[{
-							width: `${angleSize}px`,
-							height: `${angleSize}px`
-						}]"></view>
+						<view :style="[{ width: `${angleSize}px`, height: `${angleSize}px` }]"></view>
 					</view>
 				</block>
 			</view>
@@ -60,9 +51,7 @@
 	import cropper from './ut-cropper.render.js';
 	// vue3 app renderjs中条件编译无效
 	cropper.setPlatform('APP');
-	export default {
-		mixins: [ cropper ]
-	}
+	export default { mixins: [ cropper ] }
 </script>
 <!-- #endif -->
 <!-- #ifdef H5 -->

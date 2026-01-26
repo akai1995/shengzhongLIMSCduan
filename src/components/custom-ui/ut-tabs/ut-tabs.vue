@@ -1,6 +1,10 @@
 <template>
 	<view class="tabs">
-		<view class="tabs-item" :class="current==item.id?'active':''" @click="onItem(item,index)" v-for="(item,index) in tabList" :key="index">
+		<view
+			v-for="(item,idx) in tabList" :key="idx"
+			class="tabs-item" :class="current==item.id?'active':''"
+			@click="onItem(item,idx)"
+		>
 			{{item.name}}
 		</view>
 	</view>
@@ -34,7 +38,7 @@
 	}
 </script>
 
-<style lang="less">
+<style lang="scss">
 	page{
 		background: #F8F8F8;
 	}

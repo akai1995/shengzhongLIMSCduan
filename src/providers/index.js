@@ -37,19 +37,15 @@ export const showConfirm = (content) => {
 	})
 }
 
-/**
- * 参数处理
- * @param params 参数
- */
 export const tansParams = (params) =>  {
 	let result = ''
 	for (const propName of Object.keys(params)) {
 		const value = params[propName]
 		var part = encodeURIComponent(propName) + "="
-		if (value !== null && value !== "" && typeof(value) !== "undefined") {
+		if (value !== null && value !== '' && typeof(value) !== "undefined") {
 			if (typeof value === 'object') {
 				for (const key of Object.keys(value)) {
-					if (value[key] !== null && value[key] !== "" && typeof(value[key]) !== 'undefined') {
+					if (value[key] !== null && value[key] !== '' && typeof(value[key]) !== 'undefined') {
 						let params = propName + '[' + key + ']'
 						var subPart = encodeURIComponent(params) + "="
 						result += subPart + encodeURIComponent(value[key]) + "&"
@@ -61,6 +57,13 @@ export const tansParams = (params) =>  {
 		}
 	}
 	return result
+}
+
+export const guid = () => {
+	return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+		var r = (Math.random() * 16) | 0, v = c == 'x' ? r : (r & 0x3) | 0x8;
+		return v.toString(16);
+	});
 }
 
 export const debounce = (fn, delay = 500) => {
@@ -95,8 +98,6 @@ export const dateFormat = (date, fmt = 'YYYY-mm-dd') => { //author: meizz
 	};
 	return fmt;
 }
-
-/** 通用js方法封装处理 */
 
 /* 日期格式化 */
 export const parseTime = (time, pattern) => {
@@ -161,7 +162,7 @@ export const addDateRange = (params, dateRange, propName) => {
 /* 回显数据字典 */
 export const selectDictLabel = (datas, value) => {
   if (value === undefined) {
-    return "";
+    return '';
   }
   var actions = [];
   Object.keys(datas).some((key) => {
@@ -179,13 +180,13 @@ export const selectDictLabel = (datas, value) => {
 /* 回显数据字典（字符串、数组） */
 export const selectDictLabels = (datas, value, separator) => {
   if (value === undefined || value.length ===0) {
-    return "";
+    return '';
   }
   if (Array.isArray(value)) {
-    value = value.join(",");
+    value = value.join(',');
   }
   var actions = [];
-  var currentSeparator = undefined === separator ? "," : separator;
+  var currentSeparator = undefined === separator ? ',' : separator;
   var temp = value.split(currentSeparator);
   Object.keys(value.split(currentSeparator)).some((val) => {
     var match = false;
@@ -216,10 +217,10 @@ export const sprintf = (str) => {
   return flag ? str : '';
 }
 
-/* 转换字符串，undefined,null等转化为"" */
+/* 转换字符串，undefined,null等转化为'' */
 export const parseStrEmpty = (str) => {
   if (!str || str == "undefined" || str == "null") {
-    return "";
+    return '';
   }
   return str;
 }

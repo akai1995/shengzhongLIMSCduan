@@ -1,240 +1,126 @@
 <template>
     <view class="fileBox" :class="[mode||'large', { border: border }]">
         <view class="fileIcon" @click="onView">
-            <u-image :src="imageUrl" webp
-                :showLoading="['waiting','uploading'].includes(file.status)"
+            <u-loading-icon
+                v-if="['waiting','uploading','analysis'].includes(file.status)"
+                color="#3c9cff" :size="mode=='large'?'56rpx':mode=='samll'?'48rpx':'50rpx'"
+            />
+            <u-image 
+                v-else :src="imageUrl" webp
+                :showLoading="['waiting','uploading','analysis'].includes(file.status)"
                 :width="mode=='large'?'56rpx':mode=='samll'?'48rpx':'50rpx'"
                 :height="mode=='large'?'56rpx':mode=='samll'?'48rpx':'50rpx'"
-            />
+            />            
         </view>
-        <view class="fileInfo" @click="onView"><view class="fileName">{{ file.name }}</view><view class="fileSummary">{{ typeName }}</view></view>
-        <view class="fileIconClose" v-if="closable" @click="onClosable()"><u-icon class="fileIconClose" name="close" color="red" size="32rpx" /></view>
+        <view class="fileInfo" @click="onView">
+            <view class="fileName">{{ file.name }}</view>
+            <view class="fileSummary" :style="styleName">{{ summaryName }}</view>
+        </view>
+        <view class="fileIconClose" v-if="closable" @click="onClosable()">
+            <u-icon class="fileIconClose" name="close-circle-fill" color="red" size="32rpx" />
+        </view>
     </view>
 </template>
 
 <script>
-/**
- * 获取文件扩展名，可控制大小写
- * @param {string} filename - 文件名
- * @param {boolean} toUpperCase - 是否转换为大写，默认false（小写）
- * @returns {string} 文件扩展名，无扩展名时返回空字符串
- */
-function getFileExt(filename, toUpperCase = true) {
-  // 1. 判空和类型检查
-  if (!filename || typeof filename !== 'string') {
-    console.warn('文件名必须是有效的字符串');
-    return '';
-  }
-  
-  // 2. 去除首尾空格
-  const trimmedName = filename.trim();
-  
-  // 3. 空字符串检查
-  if (trimmedName.length === 0) {
-    return '';
-  }
-  
-  // 4. 查找最后一个点号
-  const lastDotIndex = trimmedName.lastIndexOf('.');
-  
-  // 5. 检查点号位置
-  if (lastDotIndex === -1 || 
-      lastDotIndex === 0 || 
-      lastDotIndex === trimmedName.length - 1) {
-    return '';
-  }
-  
-  // 6. 提取扩展名
-  const extension = trimmedName.slice(lastDotIndex + 1);
-  
-  // 7. 根据参数控制大小写
-  return toUpperCase ? extension.toUpperCase() : extension.toLowerCase();
-}
-
-/**
- * 增强版（处理边缘情况）
- * @param {number} bytes - 文件大小
- * @param {number} decimals - 文件名
- */
-function formatFileSize(bytes, decimals = 2) {
-  // 输入验证
-  if (typeof bytes !== 'number' || !isFinite(bytes) || bytes < 0) {
-    return '0 B';
-  }
-  
-  if (bytes === 0) return '0 B';
-  
-  const k = 1024;
-  const units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-  
-  // 对于小于1KB的情况特殊处理
-  if (bytes < k) {
-    return bytes + ' B';
-  }
-  
-  // 计算单位
-  const i = Math.min(
-    Math.floor(Math.log(bytes) / Math.log(k)),
-    units.length - 1
-  );
-  
-  const size = bytes / Math.pow(k, i);
-  
-  // 判断是否为整数（考虑浮点数精度问题）
-  const isInteger = Math.abs(size - Math.round(size)) < 0.00001;
-  
-  if (isInteger) {
-    return Math.round(size) + ' ' + units[i];
-  } else {
-    // 非整数时保留指定小数位
-    return size.toFixed(decimals) + ' ' + units[i];
-  }
-}
+import { getFileExt, formatFileSize } from '@/providers/upload'
 export default {
     props: {
-        border: {
-            type: Boolean,
-            default: false
-        },
-        mode: {
-            /* large default small */
-            type: String,
-            default: 'large'
-        },
-        closable: {
-            type: Boolean,
-            default: false
-        },
-        file: {
-            type: Object,
-            default: () => {
+        border: { type: Boolean, default: false },
+        /* large default small */
+        mode: { type: String, default: 'large' },
+        closable: { type: Boolean, default: false },
+        file: { type: Object, default: () => {
                 return {
-                    name: '', size: 0, type: '',
-                    filePath: '', status: 'waiting'
+                    time: '', title: '',filePath: '',content: '',
+                    type: '', uiid: '', name: '', size: 0, thumb: '',
+                    status: 'waiting'
                 }
             }
-        },
+        }
     },
-    data() {
-        return { };
-    },
+    data() { return { }; },
     computed: {
-        typeName() {
-            const { name } = this.file
-            return getFileExt(name)
-        },
-        typeName() {
-            const { name, status, size } = this.file
-            const ext = getFileExt(name)
-            let txt = ''
+        styleName() {
+            const { status } = this.file; let name = '';
             switch(status) {
-                case 'waiting':
-                case 'uploading':
-                    txt = '上传中...'
-                    break;
-                case 'analysis':
-                    txt = '解析中...'
-                    break;
-                case 'success':
-                case 'uploaded':
-                    txt = `${ext} ${formatFileSize(size)}`
-                    break;
-                case 'fail':
-                    txt = '上传失败'
-                    break;
-                default:
-                    txt = '上传中...'
-                    break;
+                case 'waiting': case 'uploading': case 'analysis': name = 'color:#3c9cff'; break;
+                case 'upload-fail': case 'fail': name = 'color:red'; break;
+                case 'success': case 'uploaded': default: name = ''; break;
             }
-            return txt
+            this.$forceUpdate()
+            return name
         },
         imageUrl() {
-            const { name, status, filePath } = this.file
-            const ext = getFileExt(name, false)
-            let icon = `${this.$staticPath}imgs/`
+            const _self = this; const { name, status, filePath } = _self.file;
+            const ext = getFileExt(name, false); let icon = `${_self.$staticPath}imgs/`
             switch(status) {
-                case 'waiting':
-                case 'uploading':
-                    icon += 'ai-chat-loading.apng'
-                    break;
-                case 'analysis':
-                    icon += 'ai-chat-loading.apng'
-                    break;
-                case 'success':
-                case 'uploaded':
+                case 'waiting': case 'uploading': case 'analysis': icon += 'ai-chat-loading.apng'; break;
+                case 'upload-fail': case 'fail': icon += 'ai-chat-loaded.apng'; break;
+                case 'success': case 'uploaded': default:
                     switch(ext) {
-                        case 'jpg': case 'jpeg': case 'png': case 'webp':
-                            /* icon = 'icon-img.png' */
-                            console.log('imageUrl', filePath)
-                            icon = this.$onlineFilePath + filePath.replace('/opt/upFiles/', '')
+                        case 'tif': case 'pjp': case 'jfif': case 'ico':
+                        case 'tiff': case 'gif': case 'svg': case 'xbm':
+                        case 'jxl': case 'jpeg': case 'svgz': case 'jpg':
+                        case 'webp': case 'png': case 'bmp': case 'pjpeg':
+                        case 'avif':
+                            console.log('imageUrl', filePath);
+                            if (filePath) {
+                                icon = `${_self.$onlineFilePath}${filePath.replace('/opt/upFiles/', '')}`;
+                            } else {
+                                icon += 'ai-chat-loaded.apng'
+                            }
                             break;
-                        case 'doc': case 'docx':
-                            icon += 'icon-doc.png'
-                            break;
-                        case 'pdf':
-                            icon += 'icon-pdf.png'
-                            break;
-                        case 'xls': case 'xlsx':
-                            icon += 'icon-xlsx.png'
-                            break;
-                        case 'ppt': case 'pptx':
-                            icon += 'ai-chat-loaded.apng'
-                            break;
-                        default:
-                            icon += 'ai-chat-loaded.apng'
-                            break;
+                        case 'doc': case 'docx': case 'txt': icon += 'icon-doc.png'; break;
+                        case 'pdf': icon += 'icon-pdf.png'; break;
+                        case 'csv': case 'xls': case 'xlsx': case 'xlsm': icon += 'icon-xlsx.png'; break;
+                        case 'ppt': case 'pptx': icon += 'ai-chat-loaded.apng'; break;
+                        default: icon += 'ai-chat-loaded.apng'; break;
                     }
                     break;
-                case 'fail':
-                    icon += 'ai-chat-loaded.apng'
-                    break;
-                default:
-                    icon += 'ai-chat-loading.apng'
-                    break;
             }
-
+            this.$forceUpdate()
             return icon
+        },
+        summaryName() {
+            const { name, status, size } = this.file; const ext = getFileExt(name); let txt = '';
+            switch(status) {
+                case 'waiting': case 'uploading': txt = '上传中...'; break;
+                case 'analysis': txt = '解析中...'; break;
+                case 'upload-fail': txt = '上传失败'; break;
+                case 'fail': txt = '系统服务异常'; break;
+                case 'success': case 'uploaded': default: txt = `${ext} ${formatFileSize(size)}`; break;
+            }
+            console.log('summaryName', `name：${name}`, `status：${status}`, `txt：${txt}`);
+            this.$forceUpdate()
+            return txt
         },
     },
     methods: {
-        onView(){
-            const _self = this
-            const { name, filePath, status } = _self.file
+        onView() {
+            const _self = this; const { name, filePath, status } = _self.file
             if (!['success','uploaded'].includes(status)) {
               return   
             }
             const ext = getFileExt(name, false)
             switch(ext) {
-                case 'jpg': case 'jpeg': case 'png': case 'webp':
-                    _self.showPreviewImage(_self.$onlineFilePath + filePath.replace('/opt/upFiles/', ''))
+                case 'tif': case 'pjp': case 'jfif': case 'ico':
+                case 'tiff': case 'gif': case 'svg': case 'xbm':
+                case 'jxl': case 'jpeg': case 'svgz': case 'jpg':
+                case 'webp': case 'png': case 'bmp': case 'pjpeg':
+                case 'avif':
+                    _self.showPreviewImage(`${_self.$onlineFilePath}${filePath.replace('/opt/upFiles/', '')}`)
                     break;
-                case 'doc': case 'docx':
-                case 'pdf':
-                case 'xls': case 'xlsx':
+                case 'doc': case 'docx': case 'txt': case 'pdf':
+                case 'csv': case 'xls': case 'xlsx': case 'xlsm':
                 case 'ppt': case 'pptx':                    
                     uni.showLoading({ title: '正在加载中...', mask: true })
                     uni.downloadFile({
-                        url: _self.$onlineFilePath + filePath.replace('/opt/upFiles/', ''),
-                        success: (res) => {
-                            const filePath = res.tempFilePath;
-                            uni.openDocument({
-                                filePath: filePath, showMenu: true,
-                                success: (res) => {
-                                    console.log('打开文档成功');
-                                    uni.hideLoading()
-                                },
-                            });
-                        },
-                        complete: (r) => {
-                            uni.hideLoading()
-                        }
+                        url: `${_self.$onlineFilePath}${filePath.replace('/opt/upFiles/', '')}`,
+                        success: (res) => { const filePath = res.tempFilePath; uni.openDocument({ filePath: filePath, showMenu: true, success: (res) => { console.log('打开文档成功'); uni.hideLoading() } }); },
+                        complete: (r) => { uni.hideLoading() }
                     });
-                    // _self.$eUni.navTo({
-                    //     url: '/sub-pack/tab1/chat-history-stream/preview',
-                    //     query: {
-                    //         ext, uri: _self.$onlineFilePath + filePath.replace('/opt/upFiles/', '')
-                    //     }
-                    // })
+                    /* _self.$eUni.navTo({ url: '/sub-pack/tab1/chat-stream/preview', query: { ext, uri: _self.$onlineFilePath + filePath.replace('/opt/upFiles/', '') } }) */
                     break;
             }
 
@@ -246,18 +132,18 @@ export default {
 
 <style lang="scss" scoped>
 .fileBox{
-    width: 332rpx; height: 200rpx;
     position: relative;
-    padding: 24rpx 32rpx 24rpx 112rpx;
+    width: 332rpx; height: 136rpx;
+    padding: 20rpx 28rpx 20rpx 90rpx;
     border-radius: 20rpx 4rpx 20rpx 20rpx;
     &.border { border: 1rpx solid #E6E9F1; }
     &.default{
         width: 280rpx; height: 110rpx;
-        padding: 12rpx 20rpx 12rpx 80rpx;
+        padding: 12rpx 24rpx 12rpx 80rpx;
         border-radius: 20rpx;
         .fileIcon {
             left: 16rpx; 
-            width: 48rpx; height: 48rpx;
+            width: 42rpx; height: 42rpx;
         }
         .fileInfo {
             .fileName {
@@ -272,7 +158,7 @@ export default {
     }
     &.small {
         width: 250rpx; height: 110rpx;
-        padding: 12rpx 20rpx 12rpx 70rpx;
+        padding: 12rpx 24rpx 12rpx 70rpx;
         border-radius: 20rpx;
         .fileIcon {
             left: 12rpx; 
@@ -294,7 +180,7 @@ export default {
     }
     .fileIcon {
         position: absolute;
-        left: 28rpx; top: 50%;
+        left: 18rpx; top: 50%;
         transform: translateY(-50%);
         width: 56rpx; height: 56rpx;
     }
@@ -312,12 +198,14 @@ export default {
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
+		    text-align: left;
         }
         .fileSummary {
             color: #9699A1;
             font-weight: 400;
             font-size: 24rpx;
             line-height: 34rpx;
+		    text-align: left;
         }
     }
 }

@@ -6,17 +6,13 @@
 	>
 		<view slot="top" style="position: relative; box-sizing: border-box;">
 			<image class="home-bg" :src="`${$staticPath}imgs/userBg.png`" />
-			<!-- <view class="detail-head" :style="{ height: headInfo.headHeight }">
-				<view class="detail-title" :style="{ marginTop: headInfo.titleTop }">我的</view>
-			</view> -->
+			<!-- <view class="detail-head" :style="{ height: headInfo.headHeight }"><view class="detail-title" :style="{ marginTop: headInfo.titleTop }">我的</view></view> -->
 			<u-navbar title="我的" :fixed="false" bgColor="transparent"><view class="u-nav-slot" slot="left"></view></u-navbar>
 		</view>
 
 		<view class="">
 			<view class="detail-info">
-				<view class="detail-info-icon">
-					<image class="detail-info-img" :src="`${$staticPath}imgs/default_head.png`" />
-				</view>
+				<view class="detail-info-icon"><image class="detail-info-img" :src="`${$staticPath}imgs/default_head.png`" /></view>
 				<view class="detail-info-message">
 					<view class="detail-info-message-name">{{ userName }}</view>
 					<view class="detail-info-message-sub">欢迎使用设备智约助手</view>

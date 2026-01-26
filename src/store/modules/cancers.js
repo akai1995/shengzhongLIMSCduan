@@ -1,9 +1,9 @@
 import storage from '@/providers/utilities/storage'
-import constant from '@/app/app.constant'
+import AppConfig from '@/app/app.constant'
 const cancers = {
 	state: {
-		pickerLabel: storage.get(constant.vuex.pickerLabel),
-		cancerUser: storage.get(constant.vuex.cancerUser)
+		pickerLabel: storage.get(AppConfig.vuex.pickerLabel),
+		cancerUser: storage.get(AppConfig.vuex.cancerUser)
 	},
 	getters: {
 		cancerUser: (state) => state.cancerUser,
@@ -12,11 +12,11 @@ const cancers = {
 	mutations: {
 		SET_CANCER_USER: (state, info) => {
 			state.cancerUser = info
-			storage.set(constant.vuex.cancerUser, info)
+			storage.set(AppConfig.vuex.cancerUser, info)
 		},
 		SET_pickerLabel: (state, info) => {
 			state.pickerLabel = info
-			storage.set(constant.vuex.pickerLabel, info)
+			storage.set(AppConfig.vuex.pickerLabel, info)
 		},
 	},
 	actions: {

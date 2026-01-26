@@ -1,0 +1,263 @@
+.detail {
+	width: 100%;
+	box-sizing: border-box;
+	background-color: #fff;
+	.detail-pic {
+		width: 100%;
+		height: auto;
+		aspect-ratio: 1.25/1;
+		.detail-img {
+			width: 100%;
+			height: 100%;
+		}
+	}
+	.detail-content {
+		width: 100%;
+		background-color: #fff;
+		padding: 20rpx;
+		box-sizing: border-box;
+		.detail-info {
+			width: 100%;
+			.detail-info-title {
+				width: 100%;
+				font-weight: bold;
+				font-size: 16px;
+				color: #000000;
+				line-height: 40rpx;
+				margin: 22rpx 0;
+			}
+			.detail-info-text {
+				width: 100%;
+				font-weight: 400;
+				font-size: 26rpx;
+				color: #9699a1;
+				line-height: 30rpx;
+			}
+			.middle {
+				margin: 30rpx 0;
+				margin-top: 0;
+				line-height: 26px;
+			}
+		}
+		.detail-date {
+			width: 100%;
+			box-sizing: border-box;
+			.detail-date-title {
+				width: 100%;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				font-weight: bold;
+				font-size: 16px;
+				color: #000000;
+				line-height: 40rpx;
+				margin: 22rpx 0;
+				margin-top: 40rpx;
+			}
+			.detail-date-day {
+				width: 100%;
+				display: flex;
+				align-items: stretch;
+				justify-content: space-between;
+				.detail-date-day-item {
+					width: 19%;
+					padding: 28rpx 16rpx;
+					box-sizing: border-box;
+					background: #f0f2f7;
+					border-radius: 8rpx;
+					.detail-date-day-item-num {
+						width: 100%;
+						font-weight: 500;
+						font-size: 30rpx;
+						color: #4b4b4e;
+						line-height: 36rpx;
+						text-align: center;
+					}
+					.detail-date-day-item-text {
+						width: 100%;
+						font-weight: 400;
+						font-size: 26rpx;
+						color: #4b4b4e;
+						line-height: 30rpx;
+						text-align: center;
+						margin-top: 20rpx;
+					}
+				}
+				.detail-date-day-item-curr {
+					width: 19%;
+					padding: 28rpx 16rpx;
+					box-sizing: border-box;
+					background: #0d70f3;
+					border-radius: 4px 4px 4px 4px;
+					.detail-date-day-item-num {
+						width: 100%;
+						font-weight: 500;
+						font-size: 30rpx;
+						color: #ffffff;
+						line-height: 36rpx;
+						text-align: center;
+					}
+					.detail-date-day-item-text {
+						width: 100%;
+						font-weight: 400;
+						font-size: 26rpx;
+						color: #ffffff;
+						line-height: 30rpx;
+						text-align: center;
+						margin-top: 20rpx;
+					}
+				}
+				.detail-date-day-item-more {
+					width: 19%;
+					padding: 28rpx 16rpx;
+					box-sizing: border-box;
+					background: #0d70f3;
+					border-radius: 8rpx;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					.detail-date-day-item-more-text {
+						font-weight: 500;
+						font-size: 30rpx;
+						color: #ffffff;
+						line-height: 36rpx;
+						text-align: center;
+					}
+				}
+				.detail-date-day-item-more-curr {
+					width: 19%;
+					padding: 28rpx 16rpx;
+					box-sizing: border-box;
+					background: #f0f2f7;
+					border-radius: 8rpx;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					.detail-date-day-item-more-text {
+						font-weight: 500;
+						font-size: 30rpx;
+						color: #4b4b4e;
+						line-height: 36rpx;
+						text-align: center;
+					}
+				}
+			}
+			.detail-date-has-list {
+				width: 100%;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				flex-wrap: wrap;
+				box-sizing: border-box;
+				.detail-date-has-item {
+					box-sizing: border-box;
+					width: calc(50% - 10rpx);
+					margin-bottom: 20rpx;
+					background: #f0f2f7;
+					border-radius: 8rpx;
+					font-weight: 400;
+					font-size: 30rpx;
+					color: #4b4b4e;
+					line-height: 36rpx;
+					text-align: center;
+					padding: 20rpx;
+				}
+			}
+			.detail-date-more-list {
+				width: 100%;
+				font-weight: 400;
+				font-size: 26rpx;
+				color: #9699a1;
+				line-height: 30rpx;
+				text-align: center;
+				margin-bottom: 40rpx;
+			}
+			.detail-date-has-box {
+				width: 100%;
+				padding: 40rpx;
+				border: 1px solid #cecece;
+				border-radius: 4px;
+				margin-bottom: 40rpx;
+				box-sizing: border-box;
+			}
+			.detail-date-choose {
+				width: 100%;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				.detail-date-choose-item {
+					width: 48%;
+					.detail-date-choose-item-title {
+						width: 100%;
+						text-align: center;
+						font-weight: 400;
+						font-size: 28rpx;
+						color: #000000;
+						line-height: 32rpx;
+						text-align: center;
+						margin: 22rpx auto;
+					}
+					.detail-date-choose-item-button {
+						width: 100%;
+						border-radius: 60rpx 60rpx 60rpx 60rpx;
+						border: 1px solid rgba(3, 171, 110, 0.5);
+						font-weight: 400;
+						font-size: 28rpx;
+						color: #03ab6e;
+						line-height: 32rpx;
+						text-align: center;
+						padding: 20rpx 0;
+					}
+				}
+			}
+		}
+		.detail-form {
+			width: 100%;
+			margin-top: 50rpx;
+			.detail-form-item {
+				position: relative;
+				width: 100%;
+				margin-top: 30rpx;
+				.detail-form-item-title {
+					width: 100%;
+					margin-bottom: 10rpx;
+					font-weight: 400;
+					font-size: 28rpx;
+					color: #4b4b4e;
+					line-height: 16px;
+					padding-left: 10rpx;
+				}
+				.detail-form-item-input {
+					position: relative;
+					width: 100%;
+					.detail-form-item-arr {
+						position: absolute;
+						margin: auto;
+						top: 11px;
+						right: 20rpx;
+					}
+				}
+			}
+			.submit-button {
+				width: 100%;
+				margin-top: 30rpx;
+				margin-bottom: constant(safe-area-inset-bottom);
+				margin-bottom: env(safe-area-inset-bottom);
+			}
+		}
+	}
+}
+
+    
+/*共用底部按钮*/
+.pubBotBtn {
+	background: #fff;
+    padding: 16rpx;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+	.wrap {
+        padding: 0;
+        width: 100%;
+	}
+}

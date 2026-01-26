@@ -5,8 +5,7 @@
 				<block v-for="(item, index) in chatLogs" :key="index">
 					<view class="item topic animate__animated animate__fadeInRight" v-if="item.role == 'user'">
 						<view class="conBox">
-							<view class="txtCon" v-html="renderUserContent(item)" />
-							<!-- <view class="txtCon">{{ item.content }}</view> -->
+							<view class="txtCon" v-html="renderUserContent(item)" /> <!-- <view class="txtCon">{{ item.content }}</view> -->
 							<view class="imgCon" v-if="item.sendAttachment != null && item.sendAttachment !== ''">
 								<u--image :src="item.sendAttachment" width="60%" mode="widthFix" border-radius="20" @click="showPreviewImage(item.sendAttachment)" />
 							</view>
@@ -16,11 +15,11 @@
 						<view class="aBox">
 							<view class="renderBox">
 								<template v-if="item.content == null || item.content === ''">
-									<u--image width="50" src="https://gw.alicdn.com/imgextra/i1/O1CN01aiGewQ28s6JoKtLAn_!!6000000007987-54-tps-660-660.apng" mode="widthFix" />
+									<u--image width="50" :src="`${$staticPath}imgs/ai-chat-loading.apng`" mode="widthFix" />
 									<text class="txt textBlink">正在思考中...</text>
 								</template>
 								<template v-else>
-									<u--image width="50" src="https://img.alicdn.com/imgextra/i4/O1CN01tNP5BR1x1T1oGNlat_!!6000000006383-54-tps-660-660.apng" mode="widthFix" />
+									<u--image width="50" :src="`${$staticPath}imgs/ai-chat-loaded.apng`" mode="widthFix" />
 									<text class="txt">根据您的问题生成的内容总结如下</text>
 								</template>
 							</view>
@@ -38,15 +37,9 @@
 							</view>
 							<view class="botHandle pubTopLine">
 								<view class="lBtn">
-									<u-button class="btn" @click="$emit('again', item)">
-										<u-icon name="reload" size="36" />
-									</u-button>
-									<u-button class="btn" @click="onCopy(item.content)">
-										<u-icon name="file-text" size="36" />
-									</u-button>
-									<u-button class="btn" @click="$emit('del', item)">
-										<u-icon name="trash" size="36" />
-									</u-button>
+									<u-button class="btn" @click="$emit('again', item)"><u-icon name="reload" size="36" /></u-button>
+									<u-button class="btn" @click="onCopy(item.content)"><u-icon name="file-text" size="36" /></u-button>
+									<u-button class="btn" @click="$emit('del', item)"><u-icon name="trash" size="36" /></u-button>
 								</view>
 							</view>
 						</view>

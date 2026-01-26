@@ -5,12 +5,9 @@
 		:loading-more-enabled="false" :show-refresher-when-reload="false" hide-empty-view
 	>
         <view slot="top"><u-navbar title="详情" :fixed="false" background="transparent" color="#000" left-icon-color="#000" @leftClick="handleGoHome" /></view>
-        <!-- <ut-nav title="详情" @onBack="handleGoHome" border></ut-nav> -->
 		<ut-components ref="utComponents" />
         <view class="detail">
-            <view class="detail-pic">
-                <image class="detail-img" :src="deviceInfo.deviceImg ? deviceInfo.deviceImg : `${$staticPath}imgs/devcieCover.png`" />
-            </view>
+            <view class="detail-pic"><image class="detail-img" :src="deviceInfo.deviceImg ? deviceInfo.deviceImg : `${$staticPath}imgs/devcieCover.png`" /></view>
             <view class="detail-content">
                 <view class="detail-info">
                     <view class="detail-info-title">{{ deviceInfo.name }}</view>
@@ -23,14 +20,12 @@
                 </view>
 
                 <view class="detail-date">
-                    <view class="detail-date-title">
-                        <view>选择日期</view>
-                        <view v-if="choose.isMore">{{ choose.moreDate }}</view>
-                    </view>
+                    <view class="detail-date-title"><view>选择日期</view><view v-if="choose.isMore">{{ choose.moreDate }}</view></view>
                     <view class="detail-date-day">
                         <view
                             :class="index == choose.currIndex && !choose.isMore ? 'detail-date-day-item-curr' : 'detail-date-day-item'"
-                            v-for="(item, index) in choose.list" :key="index" @click="handleDateClick(index, item.date)" >
+                            v-for="(item, index) in choose.list" :key="index" @click="handleDateClick(index, item.date)"
+                        >
                             <view class="detail-date-day-item-num">{{ item.date }}</view>
                             <view class="detail-date-day-item-text">{{ item.day }}</view>
                         </view>
@@ -65,16 +60,12 @@
                 <view class="detail-form">
                     <view class="detail-form-item">
                         <view class="detail-form-item-title">预约人姓名</view>
-                        <view class="detail-form-item-input">
-                            <u--input placeholder="预约人姓名" border="surround" v-model="form.name" />
-                        </view>
+                        <view class="detail-form-item-input"><u--input placeholder="预约人姓名" border="surround" v-model="form.name" /></view>
                     </view>
 
                     <view class="detail-form-item">
                         <view class="detail-form-item-title">预约人电话</view>
-                        <view class="detail-form-item-input">
-                            <u--input placeholder="请输入预约人电话" border="surround" v-model="form.phone" />
-                        </view>
+                        <view class="detail-form-item-input"><u--input placeholder="请输入预约人电话" border="surround" v-model="form.phone" /></view>
                     </view>
 
                     <view class="detail-form-item">
@@ -95,23 +86,17 @@
 
                     <view class="detail-form-item" v-if="schoolInput.visible">
                         <view class="detail-form-item-title">所在学院</view>
-                        <view class="detail-form-item-input">
-                            <u--input placeholder="请输入所在学院" border="surround" v-model="form.school" />
-                        </view>
+                        <view class="detail-form-item-input"><u--input placeholder="请输入所在学院" border="surround" v-model="form.school" /></view>
                     </view>
 
                     <view class="detail-form-item" v-if="schoolInput.visible">
                         <view class="detail-form-item-title">备注信息</view>
-                        <view class="detail-form-item-input">
-                            <u--textarea v-model="form.info" placeholder="请输入备注信息" :autoHeight="false" />
-                        </view>
+                        <view class="detail-form-item-input"><u--textarea v-model="form.info" placeholder="请输入备注信息" :autoHeight="false" /></view>
                     </view>
 
                     <view class="detail-form-item">
                         <view class="detail-form-item-title">用途说明</view>
-                        <view class="detail-form-item-input">
-                            <u--textarea v-model="form.description" placeholder="请输入用途说明" :autoHeight="false" />
-                        </view>
+                        <view class="detail-form-item-input"><u--textarea v-model="form.description" placeholder="请输入用途说明" :autoHeight="false" /></view>
                     </view>
                 </view>
             </view>
@@ -122,15 +107,11 @@
         <u-picker :show="teacher.visible" :columns="teacher.list" keyName="label" @confirm="handleCurrTeacher" @cancel="teacher.visible = false" />
         <u-calendar :show="choose.moreVisible" :defaultDate="choose.minDate" :minDate="choose.minDate" :maxDate="choose.maxDate" @confirm="handleConfirmDate" @close="choose.moreVisible = false"></u-calendar>
 
-        <view slot="bottom" class="pubBotBtn pubTopLine">
-            <view class="wrap">
-                <view class="btn" @click="handleSubmit"><u-button type="primary" text="提交预约" /></view>
-            </view>
-        </view>
+        <view slot="bottom" class="pubBotBtn pubTopLine"><view class="wrap"><view class="btn" @click="handleSubmit"><u-button type="primary" text="提交预约" /></view></view></view>
     </z-paging>
 </template>
 <script>
-import { deviceSubmit, deviceDetail, getAllDayReserve, getGroup, getTeacher } from '@/app/api/device/index.js'
+import { deviceSubmit, deviceDetail, getAllDayReserve, getGroup, getTeacher } from '@/app/api/device/index'
 export default {
     data() {
         return {

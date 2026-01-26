@@ -9,7 +9,7 @@
                 <u-icon :name="`${$staticPath}imgs/img-ocr.png`" size="140rpx" />
             </view>
         </view>
-        <view class="cardWarp f2" @click="onJump('chat-history-stream/chat-history-stream')">
+        <view class="cardWarp f2" @click="onJump('chat-stream/chat-stream')">
             <view class="cardInfo">
                 <view class="cardTitle">报告分析</view>
                 <view class="cardSubTitle">医疗报告智能分析助手</view>

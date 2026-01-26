@@ -224,6 +224,270 @@ text {
 	}
 }
 
+// 共用页面底部操作
+.pubBotHandleFooter{
+	// position:fixed;
+	// left: 0;
+	// bottom: 60px;
+	width: 100%;
+	height: auto;
+	@include x-padding-bottom();
+	background: #F9FAFB;
+	z-index: 99;
+	.wrap{
+		padding-top: 20rpx;
+		.write{
+			position: relative;
+			padding:0 20rpx 0 20rpx;
+			// min-height: 100rpx;
+			.lWrite{
+				position: relative;
+				// padding-left: 100rpx;
+				.uploadBtn{
+					position: absolute;
+					left: 0;
+					bottom: 10rpx;
+					.btn{
+						width: 80rpx !important;
+						height: 80rpx !important;
+						background: #fff !important;
+						padding: 0 !important;
+						&::after{
+							border: 0 !important;
+						}
+						.u-icon{
+							transition: all 0.5s;
+						}
+						&.on{
+							.u-icon{
+								transform:rotate(45deg);
+							}
+						}
+					}
+				
+				}
+				.fileList{
+					padding: 10rpx 0;
+					padding-bottom: 6rpx;
+					.file{
+						position: relative;
+						padding:10rpx 80rpx 10rpx 90rpx;
+						height:80rpx;
+						background:#ECEDF0;
+						border-radius: 10rpx;
+						overflow: hidden;
+						margin-bottom: 10rpx;
+						.cover{
+							position: absolute;
+							left: 0;
+							top: 0;
+							width: 80rpx;
+							height: 80rpx;
+							border-radius: 10rpx;
+							overflow: hidden;
+						}
+						.name{
+							height: 40rpx;
+							color:#0F0F0F;
+							font-size: 24rpx;
+							line-height: 40rpx;
+							overflow: hidden;
+							white-space:nowrap;
+							text-overflow: ellipsis;
+						}
+						.size{
+							height: 20rpx;
+							color: #84878A;
+							font-size: 18rpx;
+							line-height: 20rpx;
+						}
+						.rDel{
+							position: absolute;
+							right: 0;
+							top: 0;
+							::v-deep .u-btn{
+								background: transparent !important;
+								width: 80rpx !important;
+								height: 80rpx !important;
+								padding: 0 !important;
+								&::after{
+									border: 0 !important;
+								}
+							}
+						}
+						&:last-child{
+							margin-bottom: 0;
+						}
+					}
+				}
+				.writeArea{
+					position: relative;
+					padding:0 20rpx 0 20rpx ;
+					.writeBox{
+						.u-input__textarea {
+							.textarea-placeholder {
+								display: flex;
+								align-items: center;
+							}
+							.uni-textarea-textarea {
+								padding-top: 21rpx;
+							}
+						}
+						.voiceBox {
+							height: 98rpx;
+							color: #c0c4cc;
+							display: flex;
+							align-items: center;
+							justify-content: center;
+							.fTip {
+								font-weight: bold;
+								color:#000000;
+							}
+						}
+					}
+					.rToggleBtn{
+						position: absolute;
+						right: 0;
+						top: 50%;
+						transform: translateY(-50%);
+						.btn{
+							width: 80rpx !important;
+							height: 80rpx !important;
+							background: #fff !important;
+							padding: 0 !important;
+							&::after{
+								border: 0 !important;
+							}
+						}
+					}
+					&.active{
+						padding-right: 20rpx;
+						.rToggleBtn{
+							display: none;
+						}
+					}
+				}
+			}
+			.rCall{
+				position: absolute;
+				right: 20rpx;
+				bottom: 10rpx;
+				.btn{
+					width: 80rpx !important;
+					height: 80rpx !important;
+					background: #fff !important;
+					padding: 0 !important;
+					&::after{
+						border: 0 !important;
+					}
+				}
+			}
+			&.speak{
+				.lWrite{
+					padding-left: 20rpx;
+					.uploadBtn{
+						display: none;
+					}
+				}
+			}
+		}
+		.uploadArea{
+			display: flex;
+			padding: 30rpx;
+			.inBox{
+				width: 144rpx;
+				margin-right:30rpx;
+				.upload{
+					background: #EFF0F4;
+					width: 144rpx;
+					height: 144rpx;
+					border-radius: 20rpx;
+					overflow: hidden;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					.uBtn{
+						width: 144rpx;
+						height: 144rpx;
+						display: flex;
+						align-items: center;
+						justify-content: center;
+					}
+				}
+				.txt{
+					height: 60rpx;
+					color:#65666A;
+					font-size: 28rpx;
+					line-height: 60rpx;
+					text-align: center;
+				}
+				&:last-child{
+					margin-right: 0;
+				}
+			}
+		}
+		.botTip{
+			height:50rpx;
+			color: #84878A;
+			font-size: 20rpx;
+			line-height: 50rpx;
+			text-align: center;
+		}
+	}
+}
+
+.writeArea{
+	position: relative;
+	// padding:0 100rpx 0 20rpx ;
+	.writeBox{
+		.u-input__textarea {
+			.textarea-placeholder {
+				display: flex;
+				align-items: center;
+			}
+			.uni-textarea-textarea {
+				padding-top: 21rpx;
+			}
+		}
+		.voiceBox {
+			height: 98rpx;
+			color: #c0c4cc;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			.fTip {
+				font-weight: bold;
+				color:#000000;
+			}
+		}
+	}
+	.rToggleBtn{
+		position: absolute;
+		right: 0;
+		top: 50%;
+		transform: translateY(-50%);
+		.btn{
+			width: 80rpx !important;
+			height: 80rpx !important;
+			background: #fff !important;
+			padding: 0 !important;
+			&::after{
+				border: 0 !important;
+			}
+		}
+	}
+	&.active{
+		padding-right: 20rpx;
+		.rToggleBtn{
+			display: none;
+		}
+	}
+}
+.pubBoxAI{
+	background: #fff;
+	border-radius: 20rpx;
+	overflow: hidden;
+}
 
 // .luBox {
 //     .liItem {

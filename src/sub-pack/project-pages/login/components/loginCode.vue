@@ -54,7 +54,7 @@
 	}
 </script>
 
-<style lang="less">
+<style lang="scss">
 	.login {
 		margin-top: -140rpx !important;
 		position: relative;

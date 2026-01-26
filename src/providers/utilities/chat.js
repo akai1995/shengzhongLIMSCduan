@@ -14,8 +14,8 @@
 // import MarkdownItAttrs from '@/static/temp/js/markdown-it-attrs.min.js';
 // import MarkdownItCheckbox from '@/static/temp/js/markdown-it-checkbox.min.js';
 
-// import constant from '@/app/app.constant'
-// const $staticPath = constant.staticPath
+// import AppConfig from '@/app/app.constant'
+// const $staticPath = AppConfig.staticPath
 
 import hljs from 'highlight.js'; // https://highlightjs.org/
 import MarkdownIt from 'markdown-it';
@@ -33,15 +33,7 @@ import MarkdownItToc from 'markdown-it-toc';
 import MarkdownItAttrs from 'markdown-it-attrs';
 import MarkdownItCheckbox from 'markdown-it-checkbox';
 
-/**
- * guid
- */
-const guid = () => {
-	return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-		var r = (Math.random() * 16) | 0, v = c == 'x' ? r : (r & 0x3) | 0x8;
-		return v.toString(16);
-	});
-}
+import { guid } from '@/providers/index'
 
 /**
  *

@@ -3,65 +3,76 @@ import { getToken, setToken, removeToken, setStorageOrgId } from '@/providers/au
 import { login, wxLogin, logout, getInfo, getWxInfo } from '@/app/api/login';
 import { getInfoByToken } from '@/app/api/personalCenter/personalCenter';
 import storage from '@/providers/utilities/storage';
-import constant from '@/app/app.constant';
+import AppConfig from '@/app/app.constant';
 import config from '@/app/app.config';
 
 const baseUrl = config.baseUrl;
 
 const user = {
 	state: {
-		orgId: storage.get(constant.vuex.orgid),
-		token: getToken(),
-		sex: storage.get(constant.vuex.sex),
-		name: storage.get(constant.vuex.name),
-		avatar: storage.get(constant.vuex.avatar),
-		roles: storage.get(constant.vuex.roles),
-		permissions: storage.get(constant.vuex.permissions),
-		userid: storage.get(constant.vuex.userId),
-		idcard: storage.get(constant.vuex.idcard),
-		userType: storage.get(constant.vuex.type),
-		// orgid:storage.get(constant.vuex.orgid)
+		orgId: storage.get(AppConfig.vuex.orgid),
+		token: getToken(), sex: storage.get(AppConfig.vuex.sex),
+		name: storage.get(AppConfig.vuex.name),
+		avatar: storage.get(AppConfig.vuex.avatar),
+		roles: storage.get(AppConfig.vuex.roles),
+		permissions: storage.get(AppConfig.vuex.permissions),
+		userid: storage.get(AppConfig.vuex.userId),
+		idcard: storage.get(AppConfig.vuex.idcard),
+		userType: storage.get(AppConfig.vuex.type),
+		socket: null,
 	},
-
+	getters: {
+		socket: (state) => {
+			return state.socket;
+		},
+	},
 	mutations: {
+		createSocket(state, uid) {
+			if (state.socket != null && state.socket.is_open_socket) return;
+			const url = `${AppConfig.webSocketBaseUrl}/aiws?uid=${uid}`;
+			state.socket = new wsUtil(url, 6);
+		},
+		sendSocketMessage(state, msg) {
+			state.socket?.send(msg);
+		},
 		SET_TOKEN: (state, token) => {
 			state.token = token;
 		},
 		SET_NAME: (state, name) => {
 			state.name = name;
-			storage.set(constant.vuex.name, name);
+			storage.set(AppConfig.vuex.name, name);
 		},
 		SET_SEX: (state, sex) => {
 			state.sex = sex;
-			storage.set(constant.vuex.sex, sex);
+			storage.set(AppConfig.vuex.sex, sex);
 		},
 		SET_AVATAR: (state, avatar) => {
 			state.avatar = avatar;
-			storage.set(constant.vuex.avatar, avatar);
+			storage.set(AppConfig.vuex.avatar, avatar);
 		},
 		SET_ROLES: (state, roles) => {
 			state.roles = roles;
-			storage.set(constant.vuex.roles, roles);
+			storage.set(AppConfig.vuex.roles, roles);
 		},
 		SET_PERMISSIONS: (state, permissions) => {
 			state.permissions = permissions;
-			storage.set(constant.vuex.permissions, permissions);
+			storage.set(AppConfig.vuex.permissions, permissions);
 		},
 		SET_USER_ID: (state, id) => {
 			state.userid = id;
-			storage.set(constant.vuex.userId, id);
+			storage.set(AppConfig.vuex.userId, id);
 		},
 		SET_IDCARD: (state, idcard) => {
 			state.idcard = idcard;
-			storage.set(constant.vuex.idcard, idcard);
+			storage.set(AppConfig.vuex.idcard, idcard);
 		},
 		SET_USER_TYPE: (state, type) => {
 			state.userType = type;
-			storage.set(constant.vuex.userType, type);
+			storage.set(AppConfig.vuex.userType, type);
 		},
 		SET_ORG_ID: (state, orgid) => {
 			state.orgid = orgid;
-			storage.set(constant.vuex.orgid, orgid);
+			storage.set(AppConfig.vuex.orgid, orgid);
 		},
 	},
 

@@ -1,8 +1,7 @@
 <template>
 	<view class="imgs-block d-flex wrap">
 		<view style="margin: 8rpx;" v-for="(src, index) in urls" :key="index">
-			<u--image :showLoading="true" @click="look(index)" radius="18rpx" :src="src" :width="width"
-				:height="height"></u--image>
+			<u--image :showLoading="true" @click="look(index)" radius="18rpx" :src="src" :width="width" :height="height" />
 		</view>
 		<view class="view-box" :style="{ width }"></view>
 		<view class="view-box" :style="{ width }"></view>

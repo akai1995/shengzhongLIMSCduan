@@ -4,80 +4,48 @@
 			<view class="h1 text-cneter pd-32">{{ title }}</view>
 			<view class="d-flex wrap name-box">
 				<template v-for="(item, index) in valueList">
-					<view v-if="item.code" :key="item.code" class="li" :class="{ active: index + 1 === zLevel, disabled: item.disabled }"
-						@click="selectTit(item)">{{ item.name }}<u-icon name="arrow-right"
-							v-if="index + 1 !== zLevel"></u-icon></view>
+					<view v-if="item.code" :key="item.code" class="li" :class="{ active: index + 1 === zLevel, disabled: item.disabled }" @click="selectTit(item)">
+						{{ item.name }}<u-icon name="arrow-right" v-if="index + 1 !== zLevel" />
+					</view>
 				</template>
 			</view>
 			<scroll-view scroll-y="true" class="mian" scroll-with-animation :scroll-into-view="intoview">
 				<view style="padding: 20rpx;">
-					<template v-for="(item, index) in options">
-						<view class="item d-flex js-b-c" @click="selectItem(item)" hover-class="item-hover"
-							:key="item.code" :id="'xxxx' + item.code">
-							<view class="">{{ item.name }}</view>
-							<u-icon v-if="item.code === curValue" name="checkmark" color="#3B7EFF"
-								size="36rpx"></u-icon>
+					<template>
+						<view class="item d-flex js-b-c" hover-class="item-hover" v-for="item in options" :key="item.code" :id="'xxxx_' + item.code" @click="selectItem(item)">
+							<view class="">{{ item.name }}</view><u-icon v-if="item.code === curValue" name="checkmark" color="#3B7EFF" ize="36rpx" />
 						</view>
 					</template>
 				</view>
 			</scroll-view>
 			<view class="d-flex js-b-c" style="padding: 20rpx">
-				<view @click="close" class="btn-btm btn-qs">取消</view>
-				<view @click="submit" class="btn-btm btn-ss">确定</view>
+				<view class="btn-btm btn-qs" @click="close">取消</view>
+				<view class="btn-btm btn-ss" @click="submit">确定</view>
 			</view>
 		</view>
 	</u-popup>
 </template>
 
 <script>
-	import {
-		areaList
-	} from '@/providers/area.js'
-	const {
-		street_list,
-		county_list,
-		city_list,
-		province_list
-	} = areaList
+	import { areaList } from '@/providers/area'
+	const { street_list, county_list, city_list, province_list } = areaList
 	const mapLevelDt = [province_list, city_list, county_list, street_list]
 	export default {
 		name: "ut-picker-data",
 		props: {
-			show: {
-				type: Boolean,
-				default: false
-			},
-			title: {
-				type: String,
-				default: '选择地区'
-			},
-			value: {
-				type: String,
-				default: '530000'
-			},
-			zLevel: {
-				type: Number,
-				default: 4
-			},
-			rangeCode: {
-				type: String,
-				default: ''
-			},
-			isRange: {
-				type: Boolean,
-				default: false
-			}
+			show: { type: Boolean, default: false },
+			title: { type: String, default: '选择地区' },
+			value: { type: String, default: '530000' },
+			zLevel: { type: Number, default: 4 },
+			rangeCode: { type: String, default: '' },
+			isRange: { type: Boolean, default: false }
 		},
 		watch: {
 			value: {
 				immediate: true,
 				handler(value) {
-					let code = value || '530000'
-					code = code + ''
-					if (code.length < 6) {
-						return
-					}
-					this.setCurValue(code)
+					let code = value || '530000'; code = code + ''
+					if (code.length < 6) { return }; this.setCurValue(code)
 				}
 			}
 		},
@@ -95,24 +63,15 @@
 
 			},
 			selectTit(item) {
-				const {
-					code,
-					name,
-					disabled
-				} = item
-				if (disabled) {
-					return
-				}
+				const { code, name, disabled } = item
+				if (disabled) { return }
 				this.curValue = code
 				const level = this.getLevel(code)
 				this.curLevel = level
 				this.setCurOptions(code, level)
 			},
 			selectItem(item) {
-				const {
-					code,
-					name
-				} = item
+				const { code, name } = item
 				this.setCurValue(code)
 			},
 			setCurValue(code) {
@@ -129,19 +88,10 @@
 				this.setCurValueList(code, level)
 				const strCode = [code.slice(0, 2) + '0000', code.slice(0, 4) + '00', code.slice(0, 6), code]
 				let arr = []
-				if (!mapLevelDt[level]) {
-					return []
-				}
+				if (!mapLevelDt[level]) { return [] }
 				Object.entries(mapLevelDt[level]).forEach(([value, label]) => {
-					const valueCode = [value.slice(0, 2) + '0000', value.slice(0, 4) + '00', value.slice(0, 6),
-						value
-					]
-					if (strCode[level - 1] === valueCode[level - 1]) {
-						arr.push({
-							code: value,
-							name: label
-						})
-					}
+					const valueCode = [value.slice(0, 2) + '0000', value.slice(0, 4) + '00', value.slice(0, 6), value]
+					if (strCode[level - 1] === valueCode[level - 1]) { arr.push({ code: value, name: label }) }
 				})
 				this.options = [...arr]
 			},
@@ -152,40 +102,25 @@
 				return province_list[pC] + (city_list[cC] ? splitStr + city_list[cC] : '') + (county_list[qC] ? splitStr +
 					county_list[qC] : '') + (code.length >= 9 ? splitStr + this.getCurName(code) : '')
 			},
-			close() {
-				this.$emit('update:show', false)
-			},
+			close() { this.$emit('update:show', false) },
 			submit() {
-                this.$emit('change', {
-					value: this.curValue,
-					label: this.getAreaByCode(this.curValue, '')
-				})
+                this.$emit('change', { value: this.curValue, label: this.getAreaByCode(this.curValue, '') })
 				this.close()
 			},
 			setCurOptions(code, level) {
 				this.setCurValueList(code, level)
 				this.options = [...this.getCurLevelArr(code, level)]
-				this.intoview = 'xxxx' + code
+				this.intoview = 'xxxx_' + code
 			},
 			setCurValueList(code, level) {
-				let {
-					zLevel
-				} = this
+				let { zLevel } = this
 				const strCode = [code.slice(0, 2) + '0000', code.slice(0, 4) + '00', code.slice(0, 6), code]
 				for (let i = 0; i < zLevel; i++) {
 					if (level <= zLevel) {
 						if (i < level) {
-							this.valueList[i] = {
-								name: this.getCurName(strCode[i]),
-								code: strCode[i],
-								disabled: false
-							}
+							this.valueList[i] = { name: this.getCurName(strCode[i]), code: strCode[i], disabled: false }
 						} else {
-							this.valueList[i] = {
-								name: '',
-								code: '',
-								disabled: false
-							}
+							this.valueList[i] = { name: '', code: '', disabled: false }
 						}
 						if (this.isRange && this.getLevel(this.rangeCode) > i) {
 							this.valueList[i].disabled = true

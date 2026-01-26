@@ -2,18 +2,13 @@
 	<view class="ut-view">
 		<view v-if="head" class="flex">
 			<view class="h1">医生推荐</view>
-			<view class="vice1 flex" @click="$ut.jump('/pagesC/expert/expert')">
-				<text class="m-r1">更多</text>
-				 <u-icon name="arrow-right" color="#999" size="24rpx"></u-icon>
-			</view>
+			<view class="vice1 flex" @click="$ut.jump('/pagesC/expert/expert')"><text class="m-r1">更多</text><u-icon name="arrow-right" color="#999" size="24rpx"></u-icon></view>
 		</view>
 		
 		<view class="list">
 			<block v-for="(item,index) in list" :key="index">
 				<view class="list-item" @click="$ut.jump('/pagesC/expert/expertDetails?id=' + item.id)">
-					<view class="avatar">
-						<u-avatar :src="item.headImg || img" size="100rpx"></u-avatar>
-					</view>
+					<view class="avatar"><u-avatar :src="item.headImg || img" size="100rpx" /></view>
 					<view class="text-box">
 						<view class="one">
 							<view class="name">{{ item.name }}</view>

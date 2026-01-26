@@ -4,7 +4,6 @@
 		:fixed="true" :auto="false" :refresher-enabled="false" :auto-show-back-to-top="true" :auto-scroll-to-top-when-reload="false"
 		:loading-more-enabled="false" :show-refresher-when-reload="false" hide-empty-view
 	>
-		<!-- <u-navbar title="基因派" bgColor="transparent"></u-navbar> -->
         <view slot="top"><u-navbar title="登录" :fixed="false" leftIcon="close" bgColor="transparent" @leftClick="onBack" /></view>
 		<!-- <view class="back" @click="onBack()" v-if="false"><u-icon name="arrow-left" color="#333" bold size="36rpx" /></view> -->
 		<view class="head"><image class="logo" :src="`${$staticPath}imgs/logo.png`" mode="" />

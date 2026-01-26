@@ -1,8 +1,8 @@
 // providers/utilities/router.js
 
-
 export default {  
   homePath: '/pages/tabs/tab1/tab1',
+  loginPath: '/sub-pack/project-pages/login/login',
   navTo(options = {}) {
     const { url, ...restOptions } = options;
     const pages = getCurrentPages();

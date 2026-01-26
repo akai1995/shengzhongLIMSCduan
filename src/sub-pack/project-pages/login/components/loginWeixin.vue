@@ -35,8 +35,8 @@
 </template>
 
 <script>
-	import { getExpert } from '@/app/api/system/user.js'
-	import { registerIm } from '@/app/api/imApi.js'
+	import { getExpert } from '@/app/api/system/user'
+	import { registerIm } from '@/app/api/imApi'
 	import { getToken } from '@/providers/auth'
 	export default {
 		data() { return { checked: [], wxLoginForm: {}, telCode: '' } },

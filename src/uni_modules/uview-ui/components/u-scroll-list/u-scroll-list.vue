@@ -54,14 +54,10 @@
 			</scroll-view>
 			<!-- #endif -->
 			<view
-				class="u-scroll-list__indicator"
-				v-if="indicator"
+				v-if="indicator" class="u-scroll-list__indicator"
 				:style="[$u.addStyle(indicatorStyle)]"
 			>
-				<view
-					class="u-scroll-list__indicator__line"
-					:style="[lineStyle]"
-				>
+				<view class="u-scroll-list__indicator__line" :style="[lineStyle]">
 					<view
 						class="u-scroll-list__indicator__line__bar"
 						:style="[barStyle]"

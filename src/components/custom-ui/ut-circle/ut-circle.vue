@@ -1,6 +1,6 @@
 <template>
 	<view class="ut-view">
-		<view @click="jump">
+		<view @click="onJump">
 			<view class="up">
 				<view class="up-left">
 					<image class="img" :src='(data && data.userAvatar) || ""'></image>
@@ -60,16 +60,9 @@
 </template>
 
 <script>
-	import {
-		collect,
-		like,
-		concern,
-		selectConcernIds,
-		deleteCircle,
-		shareCommunityNews
-	} from "@/app/api/community.js";
+	import { collect, like, concern, selectConcernIds, deleteCircle, shareCommunityNews } from '@/app/api/community';
 	export default {
-		name:"ut-circle",
+		name:'ut-circle',
 		props:['data', 'isSearch'],
 		data() {
 			return {
@@ -86,110 +79,51 @@
 				return this.data.userId === this.$store.getters.userId
 			},
 			imgClass() {
-				return this.data.imageList.length == 3 ? 'three' : this.data.imageList.length == 2 ? 'two' : 'one'
+				const { imageList } = this.data
+				return imageList.length == 3 ? 'three' : imageList.length == 2 ? 'two' : 'one'
 			},
 			createTime() {
-				return uni.$u.timeFormat(this.data.createTime, 'yyyy-mm-dd hh:ss')
+				const { createTime } = this.data
+				return uni.$u.timeFormat(createTime, 'yyyy-mm-dd hh:ss')
 			}
 		},
 		methods: {
-			jump() {
-				this.$eUni.navTo({
-					url:'/pagesB/community/details?id='+this.data.id
-				})
-			},
+			onJump() { const { id } = this.data; this.$eUni.navTo({ url: `/pagesB/community/details?id=${id}` }) },
 			onLike(type) {
-				var params = {
-					typeId: this.data.id,
-					type: type // 0-新闻点赞,1-评论点赞
-				}
-				like(params).then(res=>{
-					if (res.code==200) {
-						this.showLike = !this.showLike
-						this.likeNum = res.data.likeNum
-					}
-				})
+				const { id } = this.data; var params = { typeId: id, type: type /* 0-新闻点赞,1-评论点赞 */ }
+				like(params).then(res=>{ if (res.code==200) { this.showLike = !this.showLike; this.likeNum = res.data.likeNum } })
 			},
 			onCollect() {
-				var params = {
-					newsId: this.data.id
-				}
-				collect(params).then(res=>{
-					if (res.code==200) {
-						this.showCollect = !this.showCollect
-						this.collectNum = res.data.collectNum
-					}
-				})
+				var params = { newsId: this.data.id }; var _self = this;
+				collect(params).then(res=>{ if (res.code==200) { _self.showCollect = !_self.showCollect; _self.collectNum = res.data.collectNum } })
 			},
 			//分享
-			onShareAppMessage() {
-				shareCommunityNews(this.id).then(res=>{
-					if(res.code == 200){
-						this.shareNum ++
-					}
-				})
-				return {
-					title: this.newsData.title,
-					path: '/pagesB/community/details?id='+this.id
-				}
-
+			onShareAppMessage() { var _self = this;
+				shareCommunityNews(_self.id).then(res=>{ if(res.code == 200){ _self.shareNum++ } })
+				return { title: _self.newsData.title, path: `/pagesB/community/details?id=${_self.id}` }
 			},
 			onConcern(type) {
-				var params = {
-					concernId: this.data.userId
-				}
-				var that = this;
+				var params = { concernId: this.data.userId }; var _self = this;
 				if (type==1) {
 					uni.showModal({
-						title: '取消关注',
-						content: '您是否不再关注该用户？',
-						cancelText: '取消',
-						confirmText: '确认',
-						confirmColor: '#3B7EFFFF',
-						success: function(res) {
-							if (res.confirm) {
-								concern(params).then(res=>{
-									if (res.code==200) {
-										that.$emit('onConcern', that.data.userId)
-									}
-								})
-							}
-						}
+						title: '取消关注', content: '您是否不再关注该用户？', cancelText: '取消', confirmText: '确认', confirmColor: '#3B7EFFFF',
+						success: function(res) { if (res.confirm) { concern(params).then(res=>{ if (res.code==200) { _self.$emit('onConcern', _self.data.userId) } }) } }
 					})
 				} else {
-					concern(params).then(res=>{
-						if (res.code==200) {
-							that.$emit('onConcern', that.data.userId)
-						}
-					})
+					concern(params).then(res=>{ if (res.code==200) { _self.$emit('onConcern', _self.data.userId) } })
 				}
 			},
 			getConcernList() {
-				var params = {
-					userId: this.$store.getters.userId,
-					type: "user_concern:"
-				}
-				selectConcernIds(params).then(res=>{
-					if (res.code==200) {
-						this.concernList = res.data
-					}
-				})
+				var params = { userId: this.$store.getters.userId, type: 'user_concern:' }
+				selectConcernIds(params).then(res=>{ if (res.code==200) { this.concernList = res.data } })
 			},
-			deleteCircle(id) {
-				deleteCircle(id).then(res=>{
-					if (res.code==200) {
-						this.$emit('deleteCircle')
-					}
-				})
-			},
-			formattedData(txt){
-			    return txt.replace(/<(\/)?p>/g, '\n');
-			},
+			deleteCircle(id) { deleteCircle(id).then(res=>{ if (res.code==200) { this.$emit('deleteCircle') } }) },
+			formattedData(txt) { return txt.replace(/<(\/)?p>/g, '\n') },
 		}
 	}
 </script>
 
-<style lang="less">
+<style lang="scss">
 	.ut-view{
 		margin-top: 20rpx;
 		.up{

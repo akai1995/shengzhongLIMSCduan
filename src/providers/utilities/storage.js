@@ -1,10 +1,10 @@
-import constant from '@/app/app.constant'
+import AppConfig from '@/app/app.constant'
 
 // 存储变量名
 let storageKey = 'storage_data'
 
 // 存储节点变量名
-let storageNodeKeys = [...Object.values(constant.vuex)]
+let storageNodeKeys = [...Object.values(AppConfig.vuex)]
 // 存储的数据
 let storageData = uni.getStorageSync(storageKey) || {}
 

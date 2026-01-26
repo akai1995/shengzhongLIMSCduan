@@ -43,7 +43,7 @@ export default {
 		// 标题
 		title: {
 			type: [String, Number],
-			default: uni.$u.props.navbar.title
+			default: uni.$u.props.navbar.title||'基因派'
 		},
 		// 背景颜色
 		bgColor: {
