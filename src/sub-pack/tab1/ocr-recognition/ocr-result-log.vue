@@ -37,7 +37,7 @@
 
 <script>
 import { md, initMd, mdRenderHtml } from '@/providers/utilities/chat';
-import { getOcrInfoList, delOcrInfo } from '@/app/api/common'
+import { getOcrInfoList, delOcrInfo } from '@/app/api/index'
 export default {
 	data() {
 		return {

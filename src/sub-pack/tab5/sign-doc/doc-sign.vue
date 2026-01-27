@@ -24,7 +24,7 @@
 	</view>
 </template>
 <script>
-import { appSignDataSubmit } from '@/app/api/signPaper/index'
+import { appSignDataSubmit } from '@/app/api/index'
 export default {
 	props: {
 		/* 可用于修改的参数放在props里   也可单独放在外面做成组件调用  传值 */ action: { type: String, default: ''	},

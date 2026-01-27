@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { ocrUploadFile, parseDoc, saveOcrInfo } from '@/app/api/common'
+import { ocrUploadFile, parseDoc, saveOcrInfo } from '@/app/api/index'
 import { onChooseFile } from '@/providers/upload'
 import ocrResultLog from './ocr-result-log.vue'
 import ocrResult from './ocr-result.vue'
@@ -42,12 +42,16 @@ export default {
 	},
 	mounted() { setTimeout(() => { this.$refs.paging && this.$refs.paging.refresh(); }, 250); },
 	methods: {
-        onOcrResultLogShow() { this.showOcrResultLog = true },
+        onOcrResultLogShow() {
+			if (!this.checkUserInfo()) { return; }
+            this.showOcrResultLog = true
+        },
         onOcrResultLogClose() { this.showOcrResultLog = false },
 		queryList(pageNo, pageSize) {
 			this.$refs.paging.endRefresh()
 		},
         onChoose(sourceType){
+			if (!this.checkUserInfo()) { return; }
             const params = {
                 accept: 'media', multiple: false, capture: [sourceType],
                 compressed: true, maxDuration: 60, sizeType: uni.$u.props.upload.sizeType,

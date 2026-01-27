@@ -5,46 +5,58 @@
 			"^ut-(.*)": "@/components/custom-ui/ut-$1/ut-$1.vue",
 			"^project-(.*)": "@/components/project-ui/project-$1/project-$1.vue",
 			"^u-(.*)": "@/uni_modules/uview-ui/components/u-$1/u-$1.vue",
-			"^Recorder-(.*)": "@/uni_modules/Recorder-UniCore/components/Recorder-$1/Recorder-$1.vue",			
 	    	"^(?!z-paging-refresh|z-paging-load-more)z-paging(.*)": "@/uni_modules/z-paging/components/z-paging$1/z-paging$1.vue"
         }
     },
 	"pages": [
 		{
 			"path": "pages/tabs/tab1/tab1",
-			"style": {
-				"navigationBarTitleText": "设备预约",
-				"enablePullDownRefresh": false
-			}
+			"style": { "navigationBarTitleText": "设备预约", "enablePullDownRefresh": false	}
 		},
-		// {
-		// 	"path": "pages/tabs/tab1/sign-doc",
-		// 	"style": {
-		// 		"navigationBarTitleText": "待签署文件",
-		// 		"enablePullDownRefresh": false
-		// 	}
-		// },
 		{
 			"path": "pages/tabs/tab5/tab5",
-			"style": {
-				"navigationBarTitleText": "我的",
-				"enablePullDownRefresh": false
-			}
+			"style": { "navigationBarTitleText": "我的", "enablePullDownRefresh": false	}
 		},
-		// {
-		// 	"path": "pages/launch/launch",
-		// 	"style": {
-		// 		"navigationBarTitleText": "eAI",
-		// 		"enablePullDownRefresh": false
-		// 	}
-		// },
 		{
 			"path": "pages/404/404",
-			"style": {
-				"navigationStyle": "default",
-				"enablePullDownRefresh": false,
-				"navigationBarTitleText": "页面丢失了"
-			}
+			"style": { "navigationStyle": "default", "enablePullDownRefresh": false, "navigationBarTitleText": "页面丢失了"	}
+		},
+		
+		{
+			"path": "pages/recTest/page_index",
+			"style": { "navigationBarTitleText": "RecordApp录音测试 - uni-app","navigationStyle": "default" }
+		},
+		{
+			"path": "pages/recTest/page_index2",
+			"style": { "navigationBarTitleText": "RecordApp新开页面index - uni-app","navigationStyle": "default" }
+		},
+		{
+			"path": "pages/recTest/main_recTest",
+			"style": { "navigationBarTitleText": "RecordApp新开页面main - uni-app","navigationStyle": "default" }
+		},
+		{
+			"path": "pages/recTest/page_asr",
+			"style": { "navigationBarTitleText": "RecordApp语音识别ASR - uni-app","navigationStyle": "default" }
+		},
+		{
+			"path": "pages/recTest/page_i18n",
+			"style": { "navigationBarTitleText": "RecordApp国际化多语言 - uni-app","navigationStyle": "default" }
+		},
+		{
+			"path": "pages/recTest/page_nvue",
+			"style": { "navigationBarTitleText": "RecordApp nvue原生页面 - uni-app","navigationStyle": "default" }
+		},
+		{
+			"path": "pages/recTest/page_renderjsOnly",
+			"style": { "navigationBarTitleText": "RecordApp纯renderjs调用 - uni-app","navigationStyle": "default" }
+		},
+		{
+			"path": "pages/recTest/page_renderjsWithout",
+			"style": { "navigationBarTitleText": "逻辑层编码UniWithoutAppRenderjs - uni-app","navigationStyle": "default" }
+		},
+		{
+			"path": "pages/recTest/page_vue3____composition_api",
+			"style": { "navigationBarTitleText": "RecordApp vue3组合式api测试 - uni-app","navigationStyle": "default" }
 		}
 	],
 	"subPackages": [
@@ -53,20 +65,11 @@
 			"pages": [		
 				{
 					"path": "article-detail/article-detail",					
-					"style": {
-						"navigationBarTitleText": "",
-						"navigationStyle": "custom",
-						"enablePullDownRefresh": false,
-						"navigationBarBackgroundColor": "#ffffff00"
-					}
+					"style": { "navigationBarTitleText": "", "navigationStyle": "custom", "enablePullDownRefresh": false, "navigationBarBackgroundColor": "#ffffff00" }
 				},
 				{
 					"path": "login/login",					
-					"style": {
-						"navigationBarTitleText": "登录",
-						"enablePullDownRefresh": false,
-						"navigationBarBackgroundColor": "#ffffff00"
-					}
+					"style": { "navigationBarTitleText": "登录", "enablePullDownRefresh": false, "navigationBarBackgroundColor": "#ffffff00" }
 				}
 			]
 		},
@@ -75,31 +78,15 @@
 			"pages": [
 				{
 					"path": "chat-stream/chat-stream",
-					"style": {
-						"navigationBarTitleText": "报告分析",
-						"enablePullDownRefresh": false
-					}
-				},
-				// {
-				// 	"path": "chat-stream/preview",
-				// 	"style": {
-				// 		"navigationBarTitleText": "文档预览",
-				// 		"enablePullDownRefresh": false
-				// 	}
-				// },	
+					"style": { "navigationBarTitleText": "报告分析", "enablePullDownRefresh": false }
+				},	
 				{
 					"path": "device/detail",
-					"style": {
-						"navigationBarTitleText": "设备详情",
-						"enablePullDownRefresh": false
-					}
+					"style": { "navigationBarTitleText": "设备详情", "enablePullDownRefresh": false }
 				},
 				{
 					"path": "ocr-recognition/ocr-recognition",
-					"style": {
-						"navigationBarTitleText": "图文识别",
-						"enablePullDownRefresh": false
-					}
+					"style": { "navigationBarTitleText": "图文识别", "enablePullDownRefresh": false }
 				}
 			]
 		},
@@ -108,31 +95,19 @@
 			"pages": [
 				{
 					"path": "reserve/reserve",
-					"style": {
-						"navigationBarTitleText": "我的预约",
-						"enablePullDownRefresh": false
-					}
+					"style": { "navigationBarTitleText": "我的预约", "enablePullDownRefresh": false }
 				},
 				{
 					"path": "reserve/detail",
-					"style": {
-						"navigationBarTitleText": "预约详情",
-						"enablePullDownRefresh": false
-					}
+					"style": { "navigationBarTitleText": "预约详情", "enablePullDownRefresh": false }
 				},
 				{
 					"path": "sign-doc/sign-doc",
-					"style": {
-						"navigationBarTitleText": "我的待签署",
-						"enablePullDownRefresh": false
-					}
+					"style": { "navigationBarTitleText": "我的待签署", "enablePullDownRefresh": false }
 				},
 				{
 					"path": "sign-doc/doc-sign",
-					"style": {
-						"navigationBarTitleText": "文件签署",
-						"enablePullDownRefresh": false
-					}
+					"style": { "navigationBarTitleText": "文件签署", "enablePullDownRefresh": false }
 				}
 			]
 		}
@@ -147,11 +122,10 @@
 	"condition": {
 		"current": 0,
 		"list": [
-			{ "name": "报告分析", "path": "sub-pack/tab1/chat-stream/chat-stream", "query": "" },
-			{ "name": "图片识别", "path": "sub-pack/tab1/ocr-recognition/ocr-recognition", "query": "" },
-			// { "name": "文档预览", "path": "sub-pack/tab1/chat-stream/preview", "query": "ext=pdf&uri=http%253A%252F%252F192.168.0.151%253A9889%252Feai-lims%252Fsys%252Fcommon%252Fstatic%252Ftemp%252FWSkNYwOthG1zc4692bb1260e55c7d186be6ef46f8e3d_1769079056561.pdf" },				
-			{ "name": "文件签署", "path": "/sub-pack/tab5/sign-doc/doc-sign", "query": "id=${id}&showSign=true" },
-			{ "name": "我的预约", "path": "sub-pack/tab5/reserve/reserve", "query": "" }
+			{ "name": "RecordApp录音测试", "path": "pages/recTest/page_index", "query": "" }, 
+			{ "name": "报告分析", "path": "/sub-pack/tab1/chat-stream/chat-stream", "query": "" }, { "name": "图片识别", "path": "/sub-pack/tab1/ocr-recognition/ocr-recognition", "query": "" },
+			{ "name": "文档预览", "path": "/sub-pack/tab1/chat-stream/preview", "query": "ext=pdf&uri=http%253A%252F%252F192.168.0.151%253A9889%252Feai-lims%252Fsys%252Fcommon%252Fstatic%252Ftemp%252FWSkNYwOthG1zc4692bb1260e55c7d186be6ef46f8e3d_1769079056561.pdf" },				
+			{ "name": "文件签署", "path": "/sub-pack/tab5/sign-doc/doc-sign", "query": "id=${id}&showSign=true" }, { "name": "我的预约", "path": "/sub-pack/tab5/reserve/reserve", "query": "" }
 		]
 	}
 }

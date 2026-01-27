@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { reserveDetail, getRejectDes, openDevice, closeDevice, setCancelReserve } from '@/app/api/device/index'
+import { reserveDetail, getRejectDes, openDevice, closeDevice, setCancelReserve } from '@/app/api/index'
 export default {
     data() { return { reserveId: null, info: null, rejectDes: null, ancelReserve: { visible: false, description: '', button: false } } },
     onLoad(options) { this.reserveId = options.id; this.getDetail() },
@@ -72,7 +72,8 @@ export default {
     }
 }
 </script>
-<style lang="scss" scoped>.reserve-detail {
+<style lang="scss" scoped>
+.reserve-detail {
 	width: 100%;
 	height: 100vh;
 	box-sizing: border-box;

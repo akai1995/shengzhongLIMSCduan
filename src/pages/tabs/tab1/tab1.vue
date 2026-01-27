@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { getDeviceList } from '@/app/api/device/index'
+import { getDeviceList } from '@/app/api/index'
 export default {
 	data() {
 		return {

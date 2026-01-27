@@ -4,9 +4,9 @@
 <template>
 	<view>		
         <chat-log v-if="showChatLog" @close="onChatLogClose" />
-		<!-- use-chat-record-mode：开启聊天记录模式 -->
-		<!-- safe-area-inset-bottom：开启底部安全区域适配 -->
+		<!-- use-chat-record-mode：开启聊天记录模式 --><!-- safe-area-inset-bottom：开启底部安全区域适配 -->
 		<!-- bottom-bg-color：设置slot="bottom"容器的背景色，这里设置为和chat-input-bar的背景色一致 -->
+		<!-- use-chat-record-mode -->
 		<z-paging 
 			ref="paging" v-show="!showChatLog" v-model="dataList" use-chat-record-mode safe-area-inset-bottom bottom-bg-color="#f8f8f8" 
 			empty-view-text="有什么可以帮忙的？" @query="queryList" @keyboardHeightChange="keyboardHeightChange" @hidedKeyboard="hidedKeyboard"
@@ -14,9 +14,9 @@
 			<view slot="top" class="">
 				<u-navbar title="报告分析" :fixed="false" background="transparent" color="#000" left-icon-color="#000">					
 					<view class="u-nav-slot" slot="left" style="display: flex;">
-						<u-icon name="arrow-left" size="19" @click="onBack" />
-						<u-line direction="column" :hairline="false" length="16" margin="0 8px" />
-						<u-icon name="plus" size="20" />
+						<u-icon name="arrow-left" size="18" @click="onBack" />
+						<u-line direction="column" :hairline="false" length="15" margin="0 8px" />
+						<u-icon :name="`${$staticPath}imgs/icon-add-msg.png`" size="18" @click="newChat" />
 					</view>
 				</u-navbar>
 				<view class="cardWarp container" v-if="!showChatList">
@@ -49,30 +49,27 @@
 			<u-modal :show="showPrivacy" width="90%" :show-cancel-button="true" :title="privacyTitle" :title-style="{ color: '#000', fontWeight: 'bold' }" cancel-text="拒绝" @cancel="denyPrivacy()">
 				<view class="privacyContent">在您使用之前，请仔细阅读<u-button class="txtBtn" @click="handleOpenPrivacyContract()">{{ privacyTitle }}</u-button>。如您同意{{ privacyTitle }}，请点击“同意”开始使用。</view>
 				<button id="agree-btn" open-type="agreePrivacyAuthorization" class="u-reset-button" slot="confirm-button" @agreeprivacyauthorization="handleAgreePrivacyAuthorization">同意</button>
-			</u-modal>
-			
+			</u-modal>			
 
 			<!-- 语音输入对话弹层 -->
-			<u-popup class="voiceInputMark" v-model="showVoiceRecord" mode="bottom" :mask-close-able="false" :safe-area-inset-bottom="false">
+			<u-popup class="voiceInputMark" :show="showVoiceRecord" mode="bottom" :mask-close-able="false" :safe-area-inset-bottom="false">
 				<view class="voiceInputPopup">
 					<view class="pWrap">
 						<view class="recordBox">
 							<!-- 录音 -->
 							<view class="inBox recording" v-if="!cancelRecording">
-								<view class="tip">
-									<text class="dot"></text>
-									正在听...
-								</view>
+								<view class="tip"><text class="dot"></text>正在听...</view>
 								<view class="status">
-									<u-icon :name="`${ossBaseUrl}speak1.png`" size="440" />
+									<u-icon :name="`${$staticPath}imgs/speak1.png`" size="440" />
 									<!-- <canvas ref="recwave" style="margin-left: 120px"></canvas> -->
+									 <view class="recwave" :style="{display:recwaveChoiceKey!='WaveView'?'none':''}"><canvas type="2d" class="recwave-WaveView"></canvas></view>
 								</view>
 							</view>
 							<!-- 取消 -->
 							<view class="inBox cancelRecord" v-else>
 								<view class="tip">松手取消发送</view>
 								<view class="status">
-									<u-icon :name="`${ossBaseUrl}speak2.png`" size="440" />
+									<u-icon :name="`${$staticPath}imgs/speak2.png`" size="440" />
 								</view>
 							</view>
 						</view>
@@ -90,36 +87,32 @@
 			<!-- 底部聊天输入框 -->
 			<view slot="bottom" class="pubBotHandleFooter">
 				<view class="wrap">
-					<!-- <chat-input
-						:disabled="isAnswering" ref="chatInputBar"
-						@send-fail="showTips($event, 'warning')"
-						@show-log="onChatLogShow" @send="doSend"
-					/> -->					
+					<!-- <chat-input :disabled="isAnswering" ref="chatInputBar" @send-fail="showTips($event, 'warning')" @show-log="onChatLogShow" @send="doSend" /> -->					
 					<view class="write chat-input-bar-container" :class="{ speak: showVoice }" @touchmove.stop.prevent>
 						<view class="lWrite chat-input-bar">
 							<u-scroll-list :indicator="false" v-if="fileList.length>0">
-								<view class="fileWarp">
-									<project-file-card v-for="file,idx in fileList" :key="idx" border mode="small" closable :file="file" @del="onDelFile(idx)" />
-								</view>
+								<view class="fileWarp"><project-file-card v-for="file,idx in fileList" :key="idx" border mode="small" closable :file="file" @del="onDelFile(idx)" /></view>
 							</u-scroll-list>
 							<view class="writeArea pubBoxAI">
 								<!-- :adjust-position="false"必须设置，防止键盘弹窗自动上顶，交由z-paging内部处理 -->
-								<u--textarea
-									v-if="!showVoice" 
-									border="none" :focus="focus" class="chat-input" 
-									v-model="chatCentent" 
-									:adjust-position="false" 
-									confirm-type="send" :placeholder="isGenChat ? '正在回答中...' : '请输入您的问题'"
-									@confirm="onSendClick"
-								/>
-								<view class="voiceBox" v-else @touchstart="startRecording" @touchmove="moveRecording" @touchend="endRecording">
-									<text class="fTip" v-if="!isRecording">按住 说话</text>
-									<template v-else><text class="fTip">{{ cancelRecording ? '松开手指，取消发送' : '向上滑动，取消发送' }}</text></template>
+								<view class="writeBox">
+									<u--textarea
+										v-if="!showVoice" 
+										border="none" :focus="focus" class="chat-input"  v-model="chatCentent"  :adjust-position="false" 
+										confirm-type="send" :placeholder="isGenChat ? '正在回答中...' : '请输入您的问题'" @confirm="onSendClick()"
+									/>
+									<view class="voiceBox" v-else @touchstart="startRecording" @touchmove="moveRecording" @touchend="endRecording">
+										<text class="fTip" v-if="!isRecording">按住 说话</text>
+										<template v-else><text class="fTip">{{ cancelRecording ? '松开手指，取消发送' : '向上滑动，取消发送' }}</text></template>
+									</view>
 								</view>
 							</view>
 							<view class="chat-input-history" @click="onChatLogShow()"><u-icon :name="`${$staticPath}imgs/icon-history.png`" size="45rpx" /></view>
 							<view class="chat-input-plus" :class="{ 'rotate-45': showMenu }" @click="onTogglePlus()"><u-icon :name="`${$staticPath}imgs/icon-plus.png`" size="45rpx" /></view>
-							<view class="chat-input-send" :class="{'chat-input-send-disabled': !sendEnabled }" @click="onSendClick"><u-icon :name="`${$staticPath}imgs/icon-send${sendEnabled?'2':''}.png`" size="46rpx" /></view>
+							<view class="chat-input-send" :class="{'chat-input-send-disabled': !sendEnabled }" @click="onSendClick()">
+								<u-icon v-if="showVoice" :name="`${$staticPath}imgs/icon-voice.png`" size="46rpx" />
+								<u-icon v-else :name="`${$staticPath}imgs/icon-${sendEnabled?'send2':'voice'}.png`" size="46rpx" />
+							</view>
 						</view>
 						<!-- <view class="menuBox" v-show="showMenu">
 							<u-grid :border="false" :col="4" @click="onMenuClick">
@@ -138,43 +131,83 @@
 </template>
 
 <script>
-import { ocrUploadFile, parseDoc } from '@/app/api/common'
+import { ocrUploadFile, parseDoc } from '@/app/api/index'
 import { md, initMd } from '@/providers/utilities/chat';
-import chatInput from './components/chat-input.vue'
+// import chatInput from './components/chat-input.vue'
 import chatItem from './components/chat-item.vue'
 import { onChooseFile } from '@/providers/upload'
 import AppConfig from '@/app/app.constant'
 import { guid } from '@/providers/index';
 import chatLog from './chat-log.vue'
-import store from '@/store/index'
-/**这里是逻辑层**/
-//必须引入的Recorder核心（文件路径是 /src/recorder-core.js 下同），使用import、require都行
-import Recorder from 'recorder-core' //注意如果未引用Recorder变量，可能编译时会被优化删除（如vue3 tree-shaking），请改成 import 'recorder-core'，或随便调用一下 Recorder.a=1 保证强引用
+import store from '@/store/index' //测试renderjs功能调用
 
-//必须引入的RecordApp核心文件（文件路径是 /src/app-support/app.js）
-import RecordApp from 'recorder-core/src/app-support/app'
 
-//所有平台必须引入的uni-app支持文件（如果编译出现路径错误，请把@换成 ../../ 这种）
-import '@/uni_modules/Recorder-UniCore/app-uni-support.js'
-
-/** 需要编译成微信小程序时，引入微信小程序支持文件 **/
-// #ifdef MP-WEIXIN
-import 'recorder-core/src/app-support/app-miniProgram-wx-support.js'
-// #endif
+/** 先引入Recorder （ 需先 npm install recorder-core ）**/
+import Recorder from 'recorder-core'; //注意如果未引用Recorder变量，可能编译时会被优化删除（如vue3 tree-shaking），请改成 import 'recorder-core'，或随便调用一下 Recorder.a=1 保证强引用
 
 /** H5、小程序环境中：引入需要的格式编码器、可视化插件，App环境中在renderjs中引入 **/
 // 注意：如果App中需要在逻辑层中调用Recorder的编码/转码功能，需要去掉此条件编译，否则会报未加载编码器的错误
 // #ifdef H5 || MP-WEIXIN
-//按需引入你需要的录音格式支持文件，如果需要多个格式支持，把这些格式的编码引擎js文件统统引入进来即可
-import 'recorder-core/src/engine/mp3'
-import 'recorder-core/src/engine/mp3-engine' //如果此格式有额外的编码引擎（*-engine.js）的话，必须要加上
+	//按需引入需要的录音格式编码器，用不到的不需要引入，减少程序体积；H5、renderjs中可以把编码器放到static文件夹里面用动态创建script来引入，免得这些文件太大
+	import 'recorder-core/src/engine/mp3.js'
+	import 'recorder-core/src/engine/mp3-engine.js'
+	import 'recorder-core/src/engine/wav.js'
+	import 'recorder-core/src/engine/pcm.js'
+	import 'recorder-core/src/engine/g711x'
 
-//可选的插件支持项，把需要的插件按需引入进来即可
-import 'recorder-core/src/extensions/waveview'
+	//可选引入可视化插件
+	import 'recorder-core/src/extensions/waveview.js'
+	import 'recorder-core/src/extensions/wavesurfer.view.js'
+
+	import 'recorder-core/src/extensions/frequency.histogram.view.js'
+	import 'recorder-core/src/extensions/lib.fft.js'
+	
+	//实时播放语音，仅支持h5
+	import 'recorder-core/src/extensions/buffer_stream.player.js'
+	//测试用根据简谱生成一段音乐
+	import 'recorder-core/src/extensions/create-audio.nmn2pcm.js'
 // #endif
 
+/** 引入RecordApp **/
+import RecordApp from 'recorder-core/src/app-support/app.js'
+//【所有平台必须引入】uni-app支持文件
+import '@/uni_modules/Recorder-UniCore/app-uni-support.js'
+
+var disableOgg=false;
+// #ifdef MP-WEIXIN
+	//可选引入微信小程序支持文件
+	import 'recorder-core/src/app-support/app-miniProgram-wx-support.js'
+	disableOgg=true; //小程序不测试ogg js文件太大
+// #endif
+
+
+// #ifdef H5 || MP-WEIXIN
+	//H5、renderjs中可以把编码器放到static文件夹里面用动态创建script来引入，免得这些文件太大
+	import 'recorder-core/src/engine/beta-amr'
+	import 'recorder-core/src/engine/beta-amr-engine'
+// #endif
+// #ifdef H5
+	//app、h5测试ogg，小程序不测试ogg js文件太大
+	import 'recorder-core/src/engine/beta-ogg'
+	import 'recorder-core/src/engine/beta-ogg-engine'
+// #endif
+
+/** 可选：App中引入原生录音插件来进行录音，兼容性和体验更好，原生插件市场地址: https://ext.dcloud.net.cn/plugin?name=Recorder-NativePlugin （试用无任何限制）
+	在调用RecordApp.RequestPermission之前进行配置，建议放到import后面直接配置（全局生效）
+	也可以判断一下只在iOS上或Android上启用，不判断就都启用，比如判断iOS：RecordApp.UniIsApp()==2 */
+RecordApp.UniNativeUtsPlugin={nativePlugin:true}; //目前仅支持原生插件，uts插件不可用
+
+//App中提升后台录音的稳定性：配置了原生插件后，可配置 `RecordApp.UniWithoutAppRenderjs=true` 禁用renderjs层音频编码（WebWorker加速），变成逻辑层中直接编码（但会降低逻辑层性能），后台运行时可避免部分手机WebView运行受限的影响
+
+//App中提升后台录音的稳定性：需要启用后台录音保活服务（iOS不需要），Android 9开始，锁屏或进入后台一段时间后App可能会被禁止访问麦克风导致录音静音、无法录音（renderjs中H5录音也受影响），请调用配套原生插件的`androidNotifyService`接口，或使用第三方保活插件
+
+
 export default {
-	components: { 'chat-input': chatInput, 'chat-item': chatItem, 'chat-log': chatLog },
+	components: { 
+		// 'chat-input': chatInput, 
+		'chat-item': chatItem, 
+		'chat-log': chatLog 
+	},
 	data() {
 		return {
 			showChatLog: false,
@@ -246,6 +279,8 @@ export default {
 			 * 长按聊天记录的项目
 			 */
 			longPressHisChatItem: null,
+			showVoiceRecord: false,
+			cancelRecording: false,
 			/**
 			 * 是否显示语音输入
 			 */
@@ -301,6 +336,27 @@ export default {
 			 * 发送聊天的类型
 			 */
 			chatType: 'text',
+			useAEC:false,
+			useANotifySrv:true,
+			appUseH5Rec:false,
+			showUpload:false,
+			reqOkCall: null,
+
+			recwaveChoiceKey:'WaveView',
+			recpowerx:0,
+			recpowert:'',
+			pageDeep:0,
+			pageNewPath:'main_recTest',
+			disableOgg:disableOgg,
+			evalExecCode:'',
+			recStart_setSpeaker:false,
+			recStart_speakerOff:false,
+			recStart_speakerHds:true,
+			testNP_PcmPlayerShow:false,
+			testMsgs:[],
+			reclogs:[],
+			reclogLast:'',
+
 			audioQueue: [], // 音频队列
 			bufferThreshold: 1, // 设置缓冲阈值，比如 2 个音频片段
 			isPlayingAudioQueue: false,
@@ -362,10 +418,22 @@ export default {
 		}
 	},
 	mounted() {
-		setTimeout(() => { this.useMarkdown = initMd(md);this.onToggleVoice() }, 250);
+		setTimeout(() => { this.useMarkdown = initMd(md); }, 250);
+		//可选，立即显示出环境信息
+		console.log("正在执行Install，请勿操作...","#f60");
+		RecordApp.Install(()=>{
+			console.log("Install成功，环境："+this.currentKeyTag(),2);
+			console.log("请先请求录音权限，然后再开始录音");
+		},(err)=>{
+			console.log("RecordApp.Install出错："+err,1);
+		});
+	},
+	destroyed() {
+		RecordApp.Stop(); //清理资源，如果打开了录音没有关闭，这里将会进行关闭
 	},
 	methods: {
 		onChatLogShow() {
+			if (!this.checkUserInfo()) { return; }
 			console.log('onChatLogShow')
 			this.showChatLog = true
 		},
@@ -398,6 +466,17 @@ export default {
 		// 用户尝试隐藏键盘，此时如果表情面板在展示中，应当通知chatInputBar隐藏表情面板（如果不需要切换表情面板则不用写）
 		hidedKeyboard() {
 			// this.$refs.chatInputBar.hidedKeyboard();
+		},
+		currentKeyTag(){
+			if(!RecordApp.Current) return "[?]";
+			// #ifdef APP
+			var tag2="Renderjs+H5";
+			if(RecordApp.UniNativeUtsPlugin){
+				tag2=RecordApp.UniNativeUtsPlugin.nativePlugin?"NativePlugin":"UtsPlugin";
+			}
+			return RecordApp.Current.Key+"("+tag2+")";
+			// #endif
+			return RecordApp.Current.Key;
 		},
 		/**
 		 * 播放音频
@@ -462,30 +541,11 @@ export default {
 		},
 
 		/**
-		 * 开始录音
-		 */
-		startRecording(e) {
-			if (this.isGenChat) {
-				this.showTips('正在生成结果中，请稍后再进行操作!', 'info');
-				return;
-			}
-			if (this.isProcessingSSEData) {
-				this.showTips('正在输出结果中，请稍后再进行操作!', 'info');
-				return;
-			}
-			this.startY = e.touches[0].clientY;
-			this.showVoiceRecord = true;
-			this.isRecording = true;
-			this.cancelRecording = false;
-			console.log('开始录音');
-			this.startH5Recording();
-		},
-
-		/**
 		 * 按住时移动
 		 */
-		moveRecording(e) {
-			const moveY = e.touches[0].clientY;
+		moveRecording(event) {
+			console.log(event)
+			const moveY = event.touches[0].clientY;
 			if (this.startY - moveY > 55) {
 				this.cancelRecording = true;
 			} else {
@@ -501,17 +561,15 @@ export default {
 			this.showVoiceRecord = false;
 			if (this.cancelRecording) {
 				console.log('取消录音');
-				if (this.rec) {
-					this.rec.close();
-					this.isHoldRecording = false;
-					if (AppConfig.useRealTimeSend) this.realTimeSendTry([], 0, true); //最后一次发送
-				}
+				this.stopRecording();
+				this.isHoldRecording = false;
+				if (AppConfig.useRealTimeSend) this.realTimeSendTry([], 0, true); //最后一次发送
 			} else {
 				console.log('结束录音并发送');
 				if (!AppConfig.useRealTimeSend) this.stopRecording();
 				else {
 					this.isHoldRecording = false;
-					this.rec.close(); //直接close掉即可，不需要获得最终的音频文件
+					this.stopRecording(); //直接close掉即可，不需要获得最终的音频文件
 					this.realTimeSendTry([], 0, true); //最后一次发送
 				}
 			}
@@ -521,83 +579,55 @@ export default {
 		 * 录音权限
 		 * @param success
 		 * *************************************************/
-		openPermission(success, fail = null) {
-			if (this.rec) this.rec.close();
-			let silenceStartTime = null; // 静音开始时间
-			let isPaused = false; // 用于记录是否已经暂停录音
-			this.rec = Recorder({
-				type: AppConfig.audioType, // 输出类型
-				sampleRate: AppConfig.audioSampleRate, // 采样率
-				bitRate: AppConfig.audioBitRate, // 比特率
-				logLevel: 0, // 关闭日志
-				onProcess: (buffers, powerLevel, bufferDuration, bufferSampleRate, newBufferIdx, asyncEnd) => {
-					// 接收到录音数据时的回调函数
-					// - buffers: 缓冲的PCM数据块(16位小端LE)
-					// - bufferSampleRate: buffers数据采样率,它和sampleRate不一定相同
-					// - powerLevel: s当前缓冲的音量级别0-100
-					// - bufferDuration: 已缓冲时长
-					// - bufferSampleRate: buffers缓存数据的采样率 (当type支持边录边转码(Worker)时，此采样率和设置的采样率相同，否则不一定相同)
-					// - newBufferIdx: 本次回调新增的buffer起始索引
-					// - asyncEnd: fn()如果onProcess是异步的(返回值为true时)，处理完成时需要调用此回调，如果不是异步的请忽略此参数，此方法回调时必须是真异步(不能真异步时需用setTimeout包裹)
-					// console.log(buffers[buffers.length - 1], powerLevel, bufferSampleRate)
-
-					if (this.wave) {
-						this.wave.input(buffers[buffers.length - 1], powerLevel, bufferSampleRate);
+		openPermission(success, fail = null) {			
+			if(this.appUseH5Rec){ /* 测试时指定使用h5录音 */
+				RecordApp.UniNativeUtsPlugin=null;
+			} else {
+				RecordApp.UniNativeUtsPlugin={nativePlugin:true}; /* 恢复原生插件配置值 */
+				RecordApp.UniCheckNativeUtsPluginConfig(); /* 可以检查一下原生插件配置是否有效 */
+				RecordApp.UniNativeUtsPlugin_JsCall=(data)=>{ /* 可以绑定原生插件的jsCall回调 */
+					if(data.action=='onLog'){ /* 显示原生插件日志信息 */
+						console.log('[Native.onLog]['+data.tag+']'+data.message, data.isError?1:"#bbb", {noLog:1});
 					}
-					console.log('powerLevel', powerLevel);
-					if (AppConfig.useRealTimeSend) {
-						this.realTimeSendTry(buffers, bufferSampleRate, false);
-						// if (powerLevel > AppConfig.VOICE_THRESHOLD) {
-						// 	silenceStartTime = null;
-						// 	isPaused = false; //重置暂停状态
-						// 	if (!this.isVoiceDetected) {
-						// 		this.realTimeSendTry(buffers, bufferSampleRate, false);
-						// 	}
-						// } else {
-						// 	if (this.isVoiceDetected && silenceStartTime == null) {
-						// 		silenceStartTime = Date.now();
-						// 	}
-						// 	if (this.isVoiceDetected && silenceStartTime != null) {
-						// 		const silenceDuration = Date.now() - silenceStartTime;
-						// 		if (silenceDuration > AppConfig.minSpeechDurationThreshold && !isPaused) {
-						// 			console.log('检测到静音');
-						// 			this.isVoiceDetected = false;
-						// 			isPaused = true;
-						// 			silenceStartTime = null;
-						// 		}
-						// 	}
-						// }
-					}
-				},
-				// RealTimeWorker: true, // 是否启用实时转码
-				audioTrackSet: {
-					noiseSuppression: true, // 降噪（ANS）开关(不设置时由浏览器控制[一般为默认打开],设为true明确打开,设为false明确关闭)
-					echoCancellation: true, // 回声消除（AEC）开关，取值和降噪开关一样
-					autoGainControl: true // 自动增益（AGC）开关，取值和降噪开关一样
-				},
-				ConnectEnableWorklet: false
-			});
-
-			this.rec.open(
-				() => {
-					//开启录音权限
-					if (this.$refs.recwave) {
-						// this.wave = Recorder.WaveView({ elem: this.recwave });
-						this.wave = Recorder.WaveView({ compatibleCanvas: this.$refs.recwave.$refs.canvas, width: 90, height: 90, lineWidth: 1 });
-					}
-					this.realTimeSendTryTime = 0;
-					success && success();
-				},
-				(msg, isUserNotAllow) => {
-					//用户拒绝未授权或不支持
-					console.error(`权限请求失败: ${msg}`, `用户拒绝: ${isUserNotAllow}`);
-					this.showAlert('录音权限未开启，请开启录音权限后再试', () => {
-						this.isRecording = false;
-						this.showVoiceRecord = false;
-					});
-					fail && fail();
 				}
-			);
+			}
+			
+			/****【在App内使用app-uni-support.js的授权许可】编译到App平台时仅供测试用（App平台包括：Android App、iOS App），不可用于正式发布或商用，正式发布或商用需先联系作者获得授权许可（编译到其他平台时无此授权限制，比如：H5、小程序，均为免费授权）
+			获得授权许可后，请解开下面这行注释，并且将**部分改成你的uniapp项目的appid，即可解除所有限制；使用配套的原生录音插件或uts插件时可不进行此配置
+			****/
+			/* RecordApp.UniAppUseLicense='我已获得UniAppID=*****的商用授权'; */
+			
+			/* 使用renderjs时提示一下iOS有弹框 */
+			if(RecordApp.UniIsApp() && !RecordApp.UniNativeUtsPlugin) {
+				console.log("当前是在App的renderjs中使用H5进行录音，iOS上只支持14.3以上版本，且iOS上每次进入页面后第一次请求录音权限时、或长时间无操作再请求录音权限时WebView均会弹出录音权限对话框，不同旧iOS版本（低于iOS17）下H5录音可能存在的问题在App中同样会存在；使用配套的原生录音插件或uts插件时无以上问题和版本限制，Android也无以上问题","#f60");
+			}
+			
+			if(this.useAEC){ /* 这个是Start中的audioTrackSet配置，在h5（H5、App+renderjs）中必须提前配置，因为h5中RequestPermission会直接打开录音 */
+				RecordApp.RequestPermission_H5OpenSet={ audioTrackSet:{ noiseSuppression:true,echoCancellation:true,autoGainControl:true } };
+			}
+			
+			console.log("正在请求录音权限...");
+			RecordApp.UniWebViewActivate(this); /* App环境下必须先切换成当前页面WebView */
+			RecordApp.RequestPermission(()=>{
+				console.log(" 已获得录音权限，可以开始录音了",2);
+				/* 开启录音权限 */
+				if (this.$refs.recwave) {
+					/* this.wave = Recorder.WaveView({ elem: this.recwave }); */
+					this.wave = Recorder.WaveView({ compatibleCanvas: this.$refs.recwave.$refs.canvas, width: 90, height: 90, lineWidth: 1 });
+				}
+				this.realTimeSendTryTime = 0; success && success();
+				if(this.reqOkCall) this.reqOkCall(); this.reqOkCall=null; /*留别的组件内调用的回调 */
+			},
+			(msg,isUserNotAllow) => {
+				if(isUserNotAllow) { /* 用户拒绝了录音权限 */ /* 这里你应当编写代码进行引导用户给录音权限，不同平台分别进行编写 */ }
+				console.error(`权限请求失败: ${msg}`, `用户拒绝: ${isUserNotAllow}`);
+				this.showTips('录音权限未开启，请开启录音权限后再试', 'error');					
+				this.isRecording = false; this.showVoiceRecord = false;
+				const addMsg = " " +(isUserNotAllow?"isUserNotAllow,":"")+"请求录音权限失败："+msg
+				console.log(addMsg,1);
+				fail && fail(addMsg);
+			});
+			// RecordApp.Stop();
 		},
 
 		/**
@@ -761,17 +791,127 @@ export default {
 		/****************************************************
 		 * 开始
 		 * *************************************************/
-		startH5Recording() {
-			if (this.rec && !this.isHoldRecording) {
+		startRecording(event=null) {
+			if (this.isGenChat) {
+				this.showTips('正在生成结果中，请稍后再进行操作!', 'info');
+				return;
+			}
+			if (this.isProcessingSSEData) {
+				this.showTips('正在输出结果中，请稍后再进行操作!', 'info');
+				return;
+			}
+			if (event) this.startY = event.touches[0].clientY;
+			this.showVoiceRecord = true;
+			this.isRecording = true;
+			this.cancelRecording = false;
+			console.log('开始录音');
+			if (!this.isHoldRecording) {
 				this.audioChunks = []; /* 清空录音数据 */
 				this.isHoldRecording = true;
 				this.openPermission(() => {
-					if (AppConfig.useRealTimeSend) {
-						this.realTimeAudioRequiredId = `${Date.now()}-${Math.random().toString(32)}`;
-						this.currentConversationTaskId = MathUnitl.guid;
-					}
-					this.rec.start();
-				});
+					if (AppConfig.useRealTimeSend) { this.realTimeAudioRequiredId = `${Date.now()}-${Math.random().toString(32)}`; this.currentConversationTaskId = guid(); }
+					RecordApp.UniWebViewActivate(this); //App环境下必须先切换成当前页面WebView
+					RecordApp.Start({
+						type: AppConfig.audioType, sampleRate: AppConfig.audioSampleRate, bitRate: AppConfig.audioBitRate,
+						audioTrackSet: !this.useAEC?null:{ //配置回声消除，H5、App、小程序均可用，但并不一定会生效；注意：H5、App+renderjs中需要在请求录音权限前进行相同配置RecordApp.RequestPermission_H5OpenSet后此配置才会生效
+							noiseSuppression:true,echoCancellation:true,autoGainControl:true
+						},
+						setSpeakerOff:!this.recStart_setSpeaker? null : { //使用原生录音插件时，可以提供一个扬声器外放和听筒播放的切换默认配置
+							off:this.recStart_speakerOff, headset:this.recStart_speakerHds
+						},
+						onProcess:(buffers,powerLevel,duration,sampleRate,newBufferIdx,asyncEnd)=>{
+							//全平台通用：可实时上传（发送）数据，配合Recorder.SampleData方法，将buffers中的新数据连续的转换成pcm上传，或使用mock方法将新数据连续的转码成其他格式上传，可以参考Recorder文档里面的：Demo片段列表 -> 实时转码并上传-通用版；基于本功能可以做到：实时转发数据、实时保存数据、实时语音识别（ASR）等
+							
+							//注意：App里面是在renderjs中进行实际的音频格式编码操作，此处的buffers数据是renderjs实时转发过来的，修改此处的buffers数据不会改变renderjs中buffers，所以不会改变生成的音频文件，可在onProcess_renderjs中进行修改操作就没有此问题了；如需清理buffers内存，此处和onProcess_renderjs中均需要进行清理，H5、小程序中无此限制
+							//注意：如果你要用只支持在浏览器中使用的Recorder扩展插件，App里面请在renderjs中引入此扩展插件，然后在onProcess_renderjs中调用这个插件；H5可直接在这里进行调用，小程序不支持这类插件；如果调用插件的逻辑比较复杂，建议封装成js文件，这样逻辑层、renderjs中直接import，不需要重复编写
+							
+							console.log('buffers', buffers);
+							console.log('powerLevel', powerLevel);
+							console.log('duration', duration);
+							console.log('sampleRate', sampleRate);
+							console.log('newBufferIdx', newBufferIdx);
+							console.log('asyncEnd', asyncEnd);
+							if (AppConfig.useRealTimeSend) {
+								this.realTimeSendTry(buffers, sampleRate, false);
+							}
+
+							this.recpowerx=powerLevel;
+							this.recpowert=this.formatTime(duration,1)+' / '+powerLevel;
+							processTime=Date.now();
+							
+							/* H5、小程序等可视化图形绘制，直接运行在逻辑层；App里面需要在onProcess_renderjs中进行这些操作 */
+							// #ifdef H5 || MP-WEIXIN
+							this.wave = this.waveStore && this.waveStore[this.recwaveChoiceKey];
+							if (this.wave) { this.wave.input(buffers[buffers.length - 1], powerLevel, sampleRate); }
+							// #endif
+							/* 实时语音通话对讲，实时处理录音数据 */
+							if (this.wsVoiceProcess) this.wsVoiceProcess(buffers, powerLevel, duration, sampleRate, newBufferIdx);
+							
+							/* 实时释放清理内存，用于支持长时间录音；在指定了有效的type时，编码器内部可能还会有其他缓冲，必须同时提供takeoffEncodeChunk才能清理内存，否则type需要提供unknown格式来阻止编码器内部缓冲，App的onProcess_renderjs中需要进行相同操作 */
+							if (this.takeEcChunks) {
+								if(this.clearBufferIdx>newBufferIdx){ this.clearBufferIdx=0 } /* 重新录音了就重置 */
+								for(var i = this.clearBufferIdx || 0; i < newBufferIdx; i++) buffers[i] = null;
+								this.clearBufferIdx = newBufferIdx;
+							}
+						},
+						onProcess_renderjs:`function(buffers,powerLevel,duration,sampleRate,newBufferIdx,asyncEnd){
+							//App中在这里修改buffers才会改变生成的音频文件
+							//App中是在renderjs中进行的可视化图形绘制，因此需要写在这里，this是renderjs模块的this（也可以用This变量）；如果代码比较复杂，请直接在renderjs的methods里面放个方法xxxFunc，这里直接使用this.xxxFunc(args)进行调用
+							var wave=this.waveStore&&this.waveStore[this.recwaveChoiceKey];
+							if(wave) wave.input(buffers[buffers.length-1],powerLevel,sampleRate);
+							
+							//和onProcess中一样进行释放清理内存，用于支持长时间录音
+							if(${this.takeEcChunks?1:0}){
+								if(this.clearBufferIdx>newBufferIdx){ this.clearBufferIdx=0 } //重新录音了就重置
+								for(var i=this.clearBufferIdx||0;i<newBufferIdx;i++) buffers[i]=null;
+								this.clearBufferIdx=newBufferIdx;
+							}
+						}`,
+						takeoffEncodeChunk:!this.takeoffEncodeChunkSet?null:(chunkBytes)=>{
+							/* 全平台通用：实时接收到编码器编码出来的音频片段数据，chunkBytes是Uint8Array二进制数据，可以实时上传（发送）出去 */
+							/* App中如果未配置RecordApp.UniWithoutAppRenderjs时，建议提供此回调，因为录音结束后会将整个录音文件从renderjs传回逻辑层，由于uni-app的逻辑层和renderjs层数据交互性能实在太拉跨了，大点的文件传输会比较慢，提供此回调后可避免Stop时产生超大数据回传 */
+							takeEcCount++; takeEcSize+=chunkBytes.byteLength;
+							this.takeoffEncodeChunkMsg="已接收到"+takeEcCount+"块，共"+takeEcSize+"字节";
+							this.takeEcChunks.push(chunkBytes);
+							
+							/* App中使用原生插件时，可方便的将数据实时保存到同一文件，第一帧时append:false新建文件，后面的append:true追加到文件 */
+							/* RecordApp.UniNativeUtsPluginCallAsync("writeFile",{path:"xxx.mp3",append:回调次数!=1, dataBase64:RecordApp.UniBtoa(chunkBytes.buffer)}).then(...).catch(...) */
+						},
+						takeoffEncodeChunk_renderjs:!this.takeoffEncodeChunkSet?null:`function(chunkBytes){
+							//App中这里可以做一些仅在renderjs中才生效的事情，不提供也行，this是renderjs模块的this（也可以用This变量）
+						}`,
+						start_renderjs:`function(){
+							//App中可以放一个函数，在Start成功时renderjs中会先调用这里的代码，this是renderjs模块的this（也可以用This变量）
+							//放一些仅在renderjs中才生效的事情，比如初始化，不提供也行
+						}`,
+						stop_renderjs:`function(aBuf,duration,mime){
+							//App中可以放一个函数，在Stop成功时renderjs中会先调用这里的代码，this是renderjs模块的this（也可以用This变量）
+							this.audioData=aBuf; //留着给Stop时进行转码成wav播放
+						}`
+					},
+					()=>{
+						console.log(this.currentKeyTag()+' 录制中：'+this.recType+' '+this.recSampleRate+' '+this.recBitRate+'kbps'+(this.takeoffEncodeChunkSet?' takeoffEncodeChunk':'')+(this.useAEC?' useAEC':'')+(this.appUseH5Rec?' appUseH5Rec':''),2);
+						/*创建音频可视化图形绘制 */
+						this.initWaveStore();
+						
+						/*【稳如老狗WDT】可选的，监控是否在正常录音有onProcess回调，如果长时间没有回调就代表录音不正常 */
+						if(RecordApp.Current.CanProcess()){
+							var wdt=this.watchDogTimer=setInterval(()=>{
+								if(wdt!=this.watchDogTimer){ clearInterval(wdt); return } /*sync */
+								if(Date.now()<this.wdtPauseT) return; /*如果暂停录音了就不检测：puase时赋值this.wdtPauseT=Date.now()*2（永不监控），resume时赋值this.wdtPauseT=Date.now()+1000（1秒后再监控） */
+								if(Date.now()-(processTime||startTime)>1500){ clearInterval(wdt);
+									console.log(processTime?"录音被中断":"录音未能正常开始",1);
+									/* ... 错误处理，关闭录音，提醒用户 */
+								}
+							},1000);
+						}else{
+							console.log("当前环境不支持onProcess回调，不启用watchDogTimer","#aaa"); /* 目前都支持回调 */
+						}
+						var startTime=Date.now();
+					},(msg)=>{
+						console.log(this.currentKeyTag()+" 开始录音失败："+msg,1);
+					})
+				})
 			}
 		},
 
@@ -784,8 +924,28 @@ export default {
 		stopRecording() {
 			if (!this.isHoldRecording) return;
 			this.isHoldRecording = false;
-			this.rec.stop(
-				(blob, duration) => {
+			RecordApp.Stop((aBuf,duration,mime)=>{
+				//全平台通用：aBuf是ArrayBuffer音频文件二进制数据，可以保存成文件或者发送给服务器
+				//App中如果在Start参数中提供了stop_renderjs，renderjs中的函数会比这个函数先执行
+				
+				var recSet=(RecordApp.GetCurrentRecOrNull()||{set:{type:this.recType}}).set;
+				var testPlay_aBuf_renderjs="this.audioData";
+				console.log("已录制["+mime+"]："+this.formatTime(duration,1)+" "+aBuf.byteLength+"字节 "
+						+recSet.sampleRate+"hz "+recSet.bitRate+"kbps",2);
+				
+				//如果使用了takeoffEncodeChunk，Stop的aBuf长度是0，数据早已存到了takeEcChunks数组里面，直接合并成完整音频文件
+				if(this.takeEcChunks){
+					testPlay_aBuf_renderjs=""; //renderjs的数据是空的
+					console.log("启用takeoffEncodeChunk后Stop返回的blob长度为0不提供音频数据");
+					var len=0; for(var i=0;i<this.takeEcChunks.length;i++)len+=this.takeEcChunks[i].length;
+					var chunkData=new Uint8Array(len);
+					for(var i=0,idx=0;i<this.takeEcChunks.length;i++){
+						var itm=this.takeEcChunks[i]; chunkData.set(itm,idx); idx+=itm.length;
+					}
+					aBuf=chunkData.buffer;
+					console.log("takeoffEncodeChunk接收到的音频片段，已合并成一个音频文件 "+aBuf.byteLength+"字节");
+				}
+				
 					console.log(`录音结束，时长：${duration}ms`);
 					if (duration < AppConfig.minSpeechDurationThreshold) {
 						console.log('录音时长过短，已取消发送');
@@ -794,15 +954,39 @@ export default {
 					}
 
 					/* 1. 存储录音数据 */
-					this.audioChunks.push(blob);
+					this.audioChunks.push(aBuf);
 
 					/* 2. 处理录音数据 */
 					this.processAudioData();
-				},
-				(msg) => {
-					console.error('停止录音失败:', msg);
-				}
-			);
+				
+				/**【保存文件】【上传】示例，详细请参考 test_upload_saveFile.vue 文件
+				//如果是H5环境，也可以直接构造成Blob/File文件对象，和Recorder使用一致
+				// #ifdef H5
+					var blob=new Blob([arrayBuffer],{type:mime});
+					console.log(blob, (window.URL||webkitURL).createObjectURL(blob));
+					var file=new File([arrayBuffer],"recorder.mp3");
+					//uni.uploadFile({file:file, ...}) //直接上传
+				// #endif
+				
+				//如果是App、小程序环境，可以直接保存到本地文件，然后调用相关网络接口上传
+				// #ifdef APP || MP-WEIXIN
+					RecordApp.UniSaveLocalFile("recorder.mp3",arrayBuffer,(savePath)=>{
+						console.log(savePath); //app保存的文件夹为`plus.io.PUBLIC_DOWNLOADS`，小程序为 `wx.env.USER_DATA_PATH` 路径
+						//uni.uploadFile({filePath:savePath, ...}) //直接上传
+					},(errMsg)=>{ console.error(errMsg) });
+				// #endif
+				**/
+				
+				
+				//【测试】用变量保存起来，别的地方调用
+				this.lastRecType=recSet.type;
+				this.lastRecBuffer=aBuf;
+				
+				//【测试】播放，部分格式会转码成wav播放
+				this.$refs.player.setPlayBytes(aBuf,testPlay_aBuf_renderjs,duration,mime,recSet,Recorder);
+			},(msg)=>{
+				console.error('停止录音失败:', msg);
+			})
 		},
 
 		/****************************************************
@@ -823,7 +1007,7 @@ export default {
 			let chunkIndex = 0;
 
 			const requiredId = `${Date.now()}-${Math.random().toString(32)}`;
-			this.currentConversationTaskId = MathUnitl.guid;
+			this.currentConversationTaskId = guid();
 
 			/* 2. 音频分片传输 */
 			const sendChunk = (offset) => {
@@ -879,6 +1063,116 @@ export default {
 			};
 			sendChunk(0);
 		},
+		appUseH5RecClick(){
+			this.appUseH5Rec=!this.appUseH5Rec;
+			RecordApp.Current=null;
+			this.reclog('切换了appUseH5Rec='+this.appUseH5Rec+'，重新请求录音权限后生效',"#f60");
+		},
+		// 可视化波形，这里是一次性创建多个波形，可以参考page_i18n.vue只创建一个波形会简单一点
+		initWaveStore(){
+			//if(isWx && this.waveStore)return;//可以限制初始化一次；如果你的canvas所在的view存在v-if之类的会重新创建了对应的view，必须将波形重新进行初始化才能使用；如果使用的是同一个view，重新初始化后如果上次的动画没有完成时，小程序中开头部分新的波形会和老的波形相互干扰，老动画完成后恢复正常，App、H5无此问题
+			var store=this.waveStore=this.waveStore||{};//这个测试demo会创建多个可视化，所以用个对象存起来，只有一个的时候请直接用个变量存一下即可 不用搞这么复杂
+			var webStore=`var store=this.waveStore=this.waveStore||{};`;//在renderjs中执行，this是renderjs模块的this
+			webStore+=`this.recwaveChoiceKey="${this.recwaveChoiceKey}";`;//把当前选中的波形也传过去
+			
+			//App环境下是在renderjs中绘制，H5、小程序等是在逻辑层中绘制，因此需要提供两段相同的代码（宽高值需要和canvas style的宽高一致）
+			RecordApp.UniFindCanvas(this,[".recwave-WaveView"],`${webStore}
+				store.WaveView=Recorder.WaveView({compatibleCanvas:canvas1, width:300, height:100});
+			`,(canvas1)=>{
+				store.WaveView=Recorder.WaveView({compatibleCanvas:canvas1, width:300, height:100});
+			});
+			
+			RecordApp.UniFindCanvas(this,[".recwave-SurferView",".recwave-SurferView-2x"],`${webStore}
+				store.SurferView=Recorder.WaveSurferView({compatibleCanvas:canvas1,compatibleCanvas_2x:canvas2, width:300, height:100});
+			`,(canvas1,canvas2)=>{
+				store.SurferView=Recorder.WaveSurferView({compatibleCanvas:canvas1,compatibleCanvas_2x:canvas2, width:300, height:100});
+				//注意：iOS上微信小程序基础库存在bug，canvas.drawImage(canvas)可能无法绘制，可能会导致WaveSurferView在iOS小程序上不能正确显示，其他环境下无此兼容性问题
+			});
+			
+			RecordApp.UniFindCanvas(this,[".recwave-Histogram1"],`${webStore}
+				store.Histogram1=Recorder.FrequencyHistogramView({compatibleCanvas:canvas1, width:300, height:100});
+			`,(canvas1)=>{
+				store.Histogram1=Recorder.FrequencyHistogramView({compatibleCanvas:canvas1, width:300, height:100});
+			});
+			RecordApp.UniFindCanvas(this,[".recwave-Histogram2"],`${webStore}
+				store.Histogram2=Recorder.FrequencyHistogramView({compatibleCanvas:canvas1, width:300, height:100
+					,lineCount:200,widthRatio:1,position:0,minHeight:1
+					,fallDuration:600,stripeEnable:false,mirrorEnable:true});
+			`,(canvas1)=>{
+				store.Histogram2=Recorder.FrequencyHistogramView({compatibleCanvas:canvas1, width:300, height:100
+					,lineCount:200,widthRatio:1,position:0,minHeight:1
+					,fallDuration:600,stripeEnable:false,mirrorEnable:true});
+			});
+			RecordApp.UniFindCanvas(this,[".recwave-Histogram3"],`${webStore}
+				store.Histogram3=Recorder.FrequencyHistogramView({compatibleCanvas:canvas1, width:300, height:100
+					,lineCount:20,position:0,minHeight:1,fallDuration:400,stripeEnable:false,mirrorEnable:true
+					,linear:[0,"#0ac",1,"#0ac"]});
+			`,(canvas1)=>{
+				store.Histogram3=Recorder.FrequencyHistogramView({compatibleCanvas:canvas1, width:300, height:100
+					,lineCount:20,position:0,minHeight:1,fallDuration:400,stripeEnable:false,mirrorEnable:true
+					,linear:[0,"#0ac",1,"#0ac"]});
+			});
+		},
+		recwaveChoice(e){
+			var key=e.target.dataset.key;
+			if(key){
+				if(key!=this.recwaveChoiceKey){
+					this.reclog("已切换波形显示为："+key);
+					if(key=="SurferView"){
+						// #ifdef MP-WEIXIN
+						this.reclog("注意：iOS上微信小程序基础库存在bug，canvas.drawImage(canvas)可能无法绘制，可能会导致WaveSurferView在iOS小程序上不能正确显示，其它可视化插件无此兼容性问题","#fa0");
+						// #endif
+					}
+				}
+				this.recwaveChoiceKey=key;
+				//App中传送给renderjs里面，同样赋值
+				if(RecordApp.UniIsApp()){
+					RecordApp.UniWebViewVueCall(this,'this.recwaveChoiceKey="'+key+'"');
+				}
+			}
+		},
+		//注入60秒数据，方便测试
+		recEnvIn60(){
+			var rec=RecordApp.GetCurrentRecOrNull();
+			if(!rec){
+				this.reclog("未开始录音，无法注入",1);
+				return;
+			}
+			if(RecordApp.UniIsApp()){
+				//App中到renderjs里面里面注入
+				RecordApp.UniWebViewVueCall(this,`
+					var rec=RecordApp.GetCurrentRecOrNull();
+					var sampleRate=rec.srcSampleRate,t1=Date.now();
+					var canon=Recorder.NMN2PCM.GetExamples().Canon.get(sampleRate).pcm;
+					var len=sampleRate*60,offset=0;
+					while(offset<len){
+						rec.envIn(canon.subarray(0,Math.min(canon.length,len-offset)),0);
+						offset+=canon.length;
+					}
+					this.$ownerInstance.callMethod("reclog","已注入60秒Canon简谱生成的音乐，耗时"+(Date.now()-t1)+"ms");
+				`);
+				return;
+			}
+			var sampleRate=rec.srcSampleRate,t1=Date.now();
+			var canon=Recorder.NMN2PCM.GetExamples().Canon.get(sampleRate).pcm;
+			var len=sampleRate*60,offset=0;
+			while(offset<len){
+				rec.envIn(canon.subarray(0,Math.min(canon.length,len-offset)),0);
+				offset+=canon.length;
+			}
+			this.reclog("已注入60秒Canon简谱生成的音乐，耗时"+(Date.now()-t1)+"ms");
+		},
+		formatTime(ms,showSS){
+			var ss=ms%1000;ms=(ms-ss)/1000;
+			var s=ms%60;ms=(ms-s)/60;
+			var m=ms%60;ms=(ms-m)/60;
+			var h=ms, v="";
+			if(h>0) v+=(h<10?"0":"")+h+":";
+			v+=(m<10?"0":"")+m+":";
+			v+=(s<10?"0":"")+s;
+			if(showSS)v+="″"+("00"+ss).substr(-3);;
+			return v;
+		},
 		/**
 		 * 切换语音输入
 		 */
@@ -888,32 +1182,28 @@ export default {
 			if (this.isProcessingSSEData) { this.showTips('正在输出结果中，请稍后再进行操作!', 'info'); return; }
 			this.showUpload = false;
 			if (!this.showVoice) {
-				const ws = store.getters.socket;
-				if (ws == null || !ws.is_open_socket) {
-					this.showTips('底层音频链路还未准备好，请稍后再试', 'info');
-					return;
-				}
-				if (this.rec == null) {
-					this.showLoading('初始化...', true);
-					/**
-					 * 获取录音权限
-					 */
-					this.openPermission(
-						() => {
-							uni.hideLoading(); this.chatType = 'voice';
-							this.showVoice = true; console.log('open permission');
-						},
-						() => {
-							uni.hideLoading(); this.showVoice = false; this.rec = null;
-							this.showTips('录音权限未开启，请开启录音权限后再试', 'info');
-						}
-					);
-				} else {
-					this.chatType = 'voice'; this.showVoice = true; console.log('rec实例存在');
-				}
+				// const ws = store.getters.socket;
+				// console.log('ws', ws);
+				// if (ws == null || !ws.is_open_socket) {
+				// 	this.showTips('底层音频链路还未准备好，请稍后再试', 'info');
+				// 	return;
+				// }
+				uni.showLoading({title:'初始化...',mask: true})
+				/**
+				 * 获取录音权限
+				 */
+				this.openPermission(
+					() => {
+						uni.hideLoading(); this.chatType = 'voice';
+						this.showVoice = true; console.log('open permission');
+					},
+					() => {
+						uni.hideLoading(); this.showVoice = false;
+						this.showTips('录音权限未开启，请开启录音权限后再试', 'error')
+					}
+				)
 			} else {
-				if (this.rec) this.rec.close();
-				this.showVoice = false;
+				this.stopRecording(); this.showVoice = false;
 				this.chatType = this.chatImageUrl === '' ? 'text' : 'image';
 			}
 		},
@@ -931,6 +1221,7 @@ export default {
 				case 'file': fileParams = Object.assign(fileParams, { accept: 'file', maxCount: 9 }); break;
 				case 'message-image': case 'message-file': fileParams = Object.assign(fileParams, { accept: menu.type, maxCount: 9 }); break;
 			}
+			console.log('menu', idx, menu);
             onChooseFile(fileParams).then((res) => {
 				_self.fileList = _self.fileList == 0 ? res.map((row)=>({ ...row, status: 'waiting', uiid: guid() })) : [ ...res.map((row)=>({ ...row, status: 'waiting', uiid: guid() })), ..._self.fileList ];				
 				console.log('onChooseFile ocrUploadFile _self.fileList', _self.fileList);
@@ -961,8 +1252,10 @@ export default {
 		},
 		// 点击了选择文件
 		onTogglePlus() {
-			// if (this.showMenu) return;
-			this.showMenu = !this.showMenu
+			const _self = this
+			if (!_self.checkUserInfo()) { return; }
+			// if (_self.showMenu) return;
+			_self.showMenu = !_self.showMenu
 			uni.showActionSheet({ 
 				itemList: [
 					'选择相机拍照的图片',
@@ -979,12 +1272,12 @@ export default {
 							1: 1,
 							2: 2,
 						}
-						this.onMenuClick(idxMap[tapIndex])
+						_self.onMenuClick(idxMap[tapIndex])
 					}
-					this.showMenu = false
+					_self.showMenu = false
 				},
 				fail: () => {
-					this.showMenu = false
+					_self.showMenu = false
 				}
 			})
 		},
@@ -994,19 +1287,44 @@ export default {
 		},
 		// 点击了发送按钮
 		onSendClick() {
-			if (this.fileList.length>0) {
-				const i = this.fileList.findIndex((row)=>['uploading'].includes(row.status))
-				if (i>-1) { this.showTips('图片/文件还在上传中...', 'warning'); return;	}
-				const index = this.fileList.findIndex((row)=>['analysis'].includes(row.status))
-				if (index>-1) { this.showTips('图片/文件还在解析中...', 'warning'); return;	}
-				const idx = this.fileList.findIndex((row)=>['upload-fail','fail'].includes(row.status))
-				if (idx>-1) { this.showTips('请删除上传失败/异常文件', 'warning'); return;	}
+			const _self = this
+			console.log('this.showVoice', _self.showVoice)
+			/* 文字对话 */
+			if (!_self.showVoice) {
+				if (!_self.sendEnabled) {
+					_self.onToggleVoice()
+				} else {
+					if (_self.fileList.length>0) {
+						const i = _self.fileList.findIndex((row)=>['uploading'].includes(row.status))
+						if (i>-1) { _self.showTips('图片/文件还在上传中...', 'warning'); return;	}
+						const index = _self.fileList.findIndex((row)=>['analysis'].includes(row.status))
+						if (index>-1) { _self.showTips('图片/文件还在解析中...', 'warning'); return;	}
+						const idx = _self.fileList.findIndex((row)=>['upload-fail','fail'].includes(row.status))
+						if (idx>-1) { _self.showTips('请删除上传失败/异常文件', 'warning'); return;	}
+					}
+					if (!_self.sendEnabled) return;
+					_self.doSend({ msg: _self.chatCentent, files: _self.fileList, });
+					setTimeout(()=>{ _self.chatCentent = ''; _self.fileList = []; }, 350)
+				}
+			} else { /* 语音对话 */
+				_self.onToggleVoice()
+				// if (!_self.sendEnabled) {
+				// 	if (_self.fileList.length>0) {
+				// 		const i = _self.fileList.findIndex((row)=>['uploading'].includes(row.status))
+				// 		if (i>-1) { _self.showTips('图片/文件还在上传中...', 'warning'); return;	}
+				// 		const index = _self.fileList.findIndex((row)=>['analysis'].includes(row.status))
+				// 		if (index>-1) { _self.showTips('图片/文件还在解析中...', 'warning'); return;	}
+				// 		const idx = _self.fileList.findIndex((row)=>['upload-fail','fail'].includes(row.status))
+				// 		if (idx>-1) { _self.showTips('请删除上传失败/异常文件', 'warning'); return;	}
+				// 	}
+				// 	if (!_self.sendEnabled) return;
+				// 	_self.doSend({ msg: _self.chatCentent, files: _self.fileList, });
+				// 	setTimeout(()=>{ _self.chatCentent = ''; _self.fileList = []; }, 350)
+				// } else {
+				// 	_self.showVoice = !_self.showVoice
+				// }
 			}
-			if (!this.sendEnabled) return;
-			this.doSend({ msg: this.chatCentent, files: this.fileList, });
-			setTimeout(()=>{ this.chatCentent = ''; this.fileList = []; }, 350)
 		},
-		
 
 		/**
 		 * 查看微信隐私保护指引
@@ -1039,7 +1357,7 @@ export default {
 			this.showConfirm(
 				`是否确定删除此条聊天记录？`,
 				() => {
-					this.showLoading('正在删除...', true); uni.hideLoading(); let cleanCatIdx = -1;
+					uni.showLoading('正在删除...', true); uni.hideLoading(); let cleanCatIdx = -1;
 					for (let i = 0; i < this.dataList.length; i++) {
 						const idx = this.dataList[i].datas.findIndex((x) => x.id === this.longPressHisChatItem.id);
 						if (idx !== -1) { this.dataList[i].datas.splice(idx, 1); if (this.dataList[i].datas.length === 0) {cleanCatIdx = i; break;} }
@@ -1057,7 +1375,7 @@ export default {
 			if (this.isDenyPrivacy) { this.showConfirm('您拒绝了微信隐私保护指引，是否重新同意隐私保护？', () => { this.showPrivacy = true; }); return; }
 			if (this.isGenChat) { this.showTips('正在生成结果中，请稍后再进行操作!', 'info'); return; }
 			if (this.isProcessingSSEData) { this.showTips('正在输出结果中，请稍后再进行操作!', 'info'); return; }
-			this.showConfirm(`是否确定删除所有会话记录？`, () => { this.showLoading('正在删除...', true); uni.hideLoading(); this.dataList.splice(0); this.newChat(); });
+			this.showConfirm(`是否确定删除所有会话记录？`, () => { uni.showLoading('正在删除...', true); uni.hideLoading(); this.dataList.splice(0); this.newChat(); });
 		},
 
 		/**
@@ -1085,7 +1403,6 @@ export default {
 		 * 底部发送聊天
 		 */
 		async onAgentChat() {
-			if (!this.checkAppHubAuth()) return;
 			if (this.isDenyPrivacy) { this.showConfirm('您拒绝了微信隐私保护指引，是否重新同意隐私保护？', () => { this.showPrivacy = true; }); return; }
 			if (Ruler.empty(this.chatContent)) { this.showTips('请输入您的问题', 'error'); return; }
 			if (this.isGenChat) { this.showTips('正在生成结果中，请稍后再进行操作!', 'info'); return; }
@@ -1338,6 +1655,7 @@ export default {
 		 * 新建聊天
 		 */
 		newChat(showTip = true, hideMenu = true, clearSelect = true) {
+			if (!this.checkUserInfo()) { return; }
 			if (this.isDenyPrivacy) { this.showConfirm('您拒绝了微信隐私保护指引，是否重新同意隐私保护？', () => { this.showPrivacy = true; }); return; }
 			if (this.isGenChat) { this.showTips('正在生成结果中，请稍后再进行操作!', 'info'); return; }
 			if (this.isProcessingSSEData) { this.showTips('正在输出结果中，请稍后再进行操作!', 'info'); return; }
@@ -1398,7 +1716,7 @@ export default {
 			}
 			console.log(item);
 			this.showConfirm('是否确定删除此条记录', () => {
-				this.showLoading('删除中...', true);
+				uni.showLoading('删除中...', true);
 				let idx = this.dataList.findIndex((x) => x.id === item.id && x.role === 'assistant');
 				this.dataList.splice(idx - 1, 1);
 				idx = this.dataList.findIndex((x) => x.id === item.id && x.role === 'assistant');

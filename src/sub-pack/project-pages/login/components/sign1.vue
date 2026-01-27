@@ -27,14 +27,12 @@
 				<u-checkbox name="ok" shape="circle" activeColor="#3B7EFFFF"></u-checkbox>
 			</u-checkbox-group>
 			<text class="grey">已仔细阅读并同意</text>
-			<text class="blue" @click="$ut.jump('/sub-pack/project-pages/article-detail/article-detail?type=1&name=基因派平台服务协议')">《基因派平台服务协议》</text>
+			<text class="blue" @click="$ut.jump('/sub-pack/project-pages/article-detail/article-detail?type=1&name=E-AI平台服务协议')">《E-AI平台服务协议》</text>
 			<text class="blue" @click="$ut.jump('/sub-pack/project-pages/article-detail/article-detail?type=2&name=知情同意')">《知情同意》</text>
 		</view>
-
 		<view class="btn" @click="onSwitch('4')">下一步</view>
-
 		<view class="other grey">
-			<text @click="onSwitch('0')">已有账号</text>
+			<text @click="onSwitch('1')">已有账号</text>
 		</view>
 	</view>
 </template>
@@ -68,7 +66,7 @@
 		background: #fff;
 		border-radius: 20rpx;
 		margin: auto;
-		margin-top: -140rpx;
+		margin-top: -120rpx;
 		position: relative;
 		z-index: 1;
 		padding: 40rpx 40rpx 20rpx 40rpx;
@@ -83,7 +81,7 @@
 	}
 
 	.clause {
-		margin-top: 20rpx;
+		margin: 24rpx 0 32rpx;
 		display: flex;
 		align-items: center;
 		justify-content: center;

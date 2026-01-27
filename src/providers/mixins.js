@@ -3,37 +3,31 @@ const accountInfo = uni.getAccountInfoSync();
 let envWx = accountInfo.miniProgram.envVersion;
 // #endif
 import AppConfig from '@/app/app.constant'
-export default{
+import router from '@/providers/utilities/router'
+const { onlineFilePath, staticPath } = AppConfig
+export default {
 	filters: { toFixdNum (value, num) { if (+value) { return +(+value.toFixed(num)) } return 0; } },
     data(){
         return {
 			// #ifdef MP-WEIXIN
-			envWx,
-			$onlineFilePath: AppConfig.onlineFilePath,
-			$staticPath: AppConfig.staticPath,
-			// #endif
-			default_img: `${AppConfig.staticPath}imgs/default_doctor.png`,
+			envWx, $onlineFilePath: onlineFilePath, $staticPath: staticPath,
             shareParams: {
-                title: 'eAI', path: '/pages/launch/launch',
-                imageUrl: `${AppConfig.staticPath}imgs/logo.png`,
+                title: 'eAI', path: router.homePath,
+                imageUrl: `${staticPath}imgs/logo.png`,
                 desc: '', content: '', success: (res) => {
                     console.log(res, '发生过是');
                     if (res.errMsg == 'shareAppMessage:ok') {
                         console.log('成功', res)
-                        uni.showToast({
-                            title: '分享成功',
-                            icon: 'success'
-                        });
+                        uni.showToast({ title: '分享成功', icon: 'success' });
                     }
                 },
                 fail: (err) => {
                 	console.error('失败', err)
-                    uni.showToast({
-                        title: '分享失败',
-                        icon: 'error'
-                    });
+                    uni.showToast({ title: '分享失败', icon: 'error' });
                 }
-            }
+            },
+			// #endif
+			default_img: `${staticPath}imgs/default_doctor.png`,
         }
     },
     computed: {
@@ -42,13 +36,15 @@ export default{
          */
         utComponentsRef() { return this.$refs.utComponents; }
     },
-	mounted() {	
-		// #ifdef MP-WEIXIN
-		this.$onlineFilePath = AppConfig.onlineFilePath,
-		this.$staticPath = AppConfig.staticPath,
-		// #endif
-		this.default_img = `${AppConfig.staticPath}imgs/default_doctor.png`,
-		this.shareParams.imageUrl = `${AppConfig.staticPath}imgs/logo.png`
+	mounted() {
+		const _self = this
+		setTimeout(()=>{
+			// #ifdef MP-WEIXIN
+			_self.$onlineFilePath = onlineFilePath; _self.$staticPath = staticPath
+			_self.$set(_self.shareParams, 'imageUrl', `${staticPath}imgs/logo.png`)
+			// #endif
+			_self.default_img = `${staticPath}imgs/default_doctor.png`
+		}, 350)
 	},
 	methods: {
 		hidePhone(phone) { if (phone){ return phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2') } else { return phone } },
@@ -86,7 +82,7 @@ export default{
 			};
 		},
 		showAlert(msg, success = () => {}, title = '信息提示', confirmText = '确定', confirmColor = '#2979ff') {
-			const cd = this.cusComponentsRef.confirmDialog;
+			const cd = this.utComponentsRef.confirmDialog;
 			cd.show = true; cd.title = title;
 			cd.content = msg; cd.confirmText = confirmText;
 			cd.confirmColor = confirmColor; cd.showCancelBtn = false;
@@ -101,6 +97,7 @@ export default{
 		},
 		showPreviewImage (url) { uni.previewImage({ urls: [url], current: 0 }) },
 	},
+	// #ifdef MP-WEIXIN
     // 监听用户点击右上角菜单的「转发」按钮时触发的事件
     onShareAppMessage() {
         // 设置转发的参数
@@ -114,4 +111,5 @@ export default{
     onAddToFavorites:function(res) {
         return this.shareParams
     }
+	// #endif
 }

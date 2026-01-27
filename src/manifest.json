@@ -97,6 +97,24 @@
             }
         }
     },
+    "h5" : {
+        "title" : "",
+        "template" : "index.html",
+        "router" : {
+            "base" : "/"
+        },
+        "devServer" : {
+            "port" : "8080"
+        },
+        "sdkConfigs" : {
+            "maps" : {}
+        },
+        "optimization" : {
+            "treeShaking" : {
+                "enable" : true
+            }
+        }
+    },
 	"mp-alipay" : {
         "usingComponents" : true
     },
@@ -109,23 +127,5 @@
     "mp-qq" : {
         "usingComponents" : true
     },
-    "vueVersion" : "2",
-    "h5" : {
-        "sdkConfigs" : {
-            "maps" : {}
-        },
-        "template" : "index.html",
-        "title" : "",
-        "router" : {
-            "base" : "/"
-        },
-        "devServer" : {
-            "port" : "8080"
-        },
-        "optimization" : {
-            "treeShaking" : {
-                "enable" : true
-            }
-        }
-    }
+    "vueVersion" : "2"
 }

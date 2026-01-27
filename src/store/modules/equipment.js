@@ -1,7 +1,6 @@
 const equipment = {
 	state:{
-		platform: '',
-		deviceId:'',
+		platform: '', deviceId: '',
 		writeCharaterId: '',    
 		writeServiceId: '',
 		notifyCharaterId: '',

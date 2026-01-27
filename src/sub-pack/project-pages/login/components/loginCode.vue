@@ -21,16 +21,15 @@
 				<u-checkbox name="ok" shape="circle" activeColor="#3B7EFFFF"></u-checkbox>
 			</u-checkbox-group>
 			<text class="grey">已仔细阅读并同意</text>
-			<text class="blue" @click="$ut.jump('/sub-pack/project-pages/article-detail/article-detail?type=1&name=基因派平台服务协议')">《基因派平台服务协议》</text>
+			<text class="blue" @click="$ut.jump('/sub-pack/project-pages/article-detail/article-detail?type=1&name=E-AI平台服务协议')">《E-AI平台服务协议》</text>
 			<text class="blue" @click="$ut.jump('/sub-pack/project-pages/article-detail/article-detail?type=2&name=知情同意')">《知情同意》</text>
 		</view>
-
 		<view class="btn">登录</view>
 
 		<view class="other grey">
-			<text @click="onSwitch('0')">微信登录</text>
-			<text class="silod" @click="onSwitch('3')">注册新账号</text>
-			<text @click="onSwitch('1')">账号登录</text>
+			<!-- <text @click="onSwitch('0')">微信登录</text> -->
+			<text @click="onSwitch('3')">注册新账号</text>
+			<text class="silod_left" @click="onSwitch('1')">账号登录</text>
 		</view>
 	</view>
 </template>
@@ -56,7 +55,7 @@
 
 <style lang="scss">
 	.login {
-		margin-top: -140rpx !important;
+		margin-top: -120rpx !important;
 		position: relative;
 		border-radius: 20rpx;
 		min-height: 160rpx;
@@ -74,7 +73,7 @@
 	}
 
 	.clause {
-		margin-top: 20rpx;
+		margin: 24rpx 0 32rpx;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -97,6 +96,11 @@
 			box-sizing: border-box;
 			border-left: 1rpx solid #D9D9D9FF;
 			border-right: 1rpx solid #D9D9D9FF;
+		}
+		.silod_left {
+			padding: 0 39rpx; margin: 0;
+			box-sizing: border-box;
+			border-left: 1rpx solid #D9D9D9FF;
 		}
 	}
 

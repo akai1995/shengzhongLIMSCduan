@@ -48,7 +48,7 @@
 		background: #fff;
 		border-radius: 20rpx;
 		margin: auto;
-		margin-top: -140rpx;
+		margin-top: -120rpx;
 		position: relative;
 		z-index: 1;
 		padding: 40rpx 40rpx 20rpx 40rpx;
@@ -63,7 +63,7 @@
 	}
 
 	.clause {
-		margin-top: 20rpx;
+		margin: 24rpx 0 32rpx;
 		display: flex;
 		align-items: center;
 		justify-content: center;

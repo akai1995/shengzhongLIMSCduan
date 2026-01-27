@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { getReserveList } from '@/app/api/device/index'
+import { getReserveList } from '@/app/api/index'
 export default {
     data() { return { queryParams: { pageNo: 1, pageSize: 10 }, dataList:[], totalCount:0, firstLoaded: false } },
     onLoad() { this.getReserveList() },

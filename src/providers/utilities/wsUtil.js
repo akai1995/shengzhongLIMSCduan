@@ -32,7 +32,6 @@ class wsUtil {
 	// 进入这个页面的时候创建websocket连接【整个页面随时使用】
 	connectSocketInit() {
 		console.log(this.url, 'this.url');
-
 		this.socketTask = uni.connectSocket({
 			url: this.url,
 			success: () => {
@@ -41,6 +40,7 @@ class wsUtil {
 				return this.socketTask;
 			}
 		});
+		console.log('this.socketTask:',this.socketTask);
 		this.socketTask.onOpen((res) => {
 			console.log('WebSocket连接正常！');
 			clearTimeout(this.reconnectTimeOut);
@@ -60,10 +60,10 @@ class wsUtil {
 					console.log('websocket JSON.parse回来的数据异常，推送原始数据');
 					data = res.data;
 				}
-				uni.$emit('app:socketMessage', data);
+				uni.$emit('socketMessage', data);
 				this.data = data;
 			});
-			uni.$emit('app:socketConnectSuccess', 'WebSocket连接正常！');
+			uni.$emit('socketConnectSuccess', 'WebSocket连接正常！');
 		});
 		// 监听连接失败，这里代码我注释掉的原因是因为如果服务器关闭后，和下面的onclose方法一起发起重连操作，这样会导致重复连接
 		// uni.onSocketError((res) => {

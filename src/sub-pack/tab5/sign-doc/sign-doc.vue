@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { getSignFileList } from '@/app/api/signPaper/index'
+import { getSignFileList } from '@/app/api/index'
 export default {
 	data() {
 		return {

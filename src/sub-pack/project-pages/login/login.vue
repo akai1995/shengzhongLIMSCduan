@@ -6,15 +6,21 @@
 	>
         <view slot="top"><u-navbar title="登录" :fixed="false" leftIcon="close" bgColor="transparent" @leftClick="onBack" /></view>
 		<!-- <view class="back" @click="onBack()" v-if="false"><u-icon name="arrow-left" color="#333" bold size="36rpx" /></view> -->
-		<view class="head"><image class="logo" :src="`${$staticPath}imgs/logo.png`" mode="" />
+		<!-- #ifdef MP-WEIXIN -->
+		<view class="head">
+			<image class="logo" :src="`${$staticPath}imgs/logo.png`" mode="" />
 		</view>
-		<template>
-			<loginWeixin v-if="type == 0" @onSwitch="onSwitch"></loginWeixin>
-			<loginAccount v-if="type == 1" @onSwitch="onSwitch"></loginAccount>
-			<loginCode v-if="type == 2" @onSwitch="onSwitch"></loginCode>
-			<loginSign1 v-if="type == 3" @onSwitch="onSwitch"></loginSign1>
-			<loginSign2 v-if="type == 4" @onSwitch="onSwitch"></loginSign2>
-		</template>
+		<loginWeixin @onSwitch="onSwitch"></loginWeixin>
+		<!-- #endif -->
+		<!-- #ifdef H5 -->
+		<view class="head" style="height: 36vh;">
+			<image class="logo" :src="`${$staticPath}imgs/logo.png`" mode="" />
+		</view>
+		<loginAccount v-if="type == 1" @onSwitch="onSwitch"></loginAccount>
+		<loginCode v-if="type == 2" @onSwitch="onSwitch"></loginCode>
+		<loginSign1 v-if="type == 3" @onSwitch="onSwitch"></loginSign1>
+		<loginSign2 v-if="type == 4" @onSwitch="onSwitch"></loginSign2>
+		<!-- #endif -->
 	</z-paging>
 </template>
 
@@ -30,10 +36,15 @@
 			loginSign1, loginSign2
 		},
 		data() { return { dataList: [], firstLoaded: false,type: '', checked: '' } },
+		mounted() {
+			// #ifdef H5
+			this.type = 1
+			// #endif
+		},
 		methods: {
 			queryList(pageNo, pageSize) { this.$refs.paging.endRefresh(); uni.hideLoading(); },
 			onSwitch(val) { this.type = val },
-			onBack() { /* this.$eUni.reLaunch({ url: '/pages/launch/launch' }) */ this.$eUni.navBack() }
+			onBack() {this.$eUni.navBack() }
 		}
 	}
 </script>

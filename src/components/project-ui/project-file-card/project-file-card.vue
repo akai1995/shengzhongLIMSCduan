@@ -6,7 +6,7 @@
                 color="#3c9cff" :size="mode=='large'?'56rpx':mode=='samll'?'48rpx':'50rpx'"
             />
             <u-image 
-                v-else :src="imageUrl" webp
+                v-else :src="imgPath" webp
                 :showLoading="['waiting','uploading','analysis'].includes(file.status)"
                 :width="mode=='large'?'56rpx':mode=='samll'?'48rpx':'50rpx'"
                 :height="mode=='large'?'56rpx':mode=='samll'?'48rpx':'50rpx'"
@@ -32,9 +32,8 @@ export default {
         closable: { type: Boolean, default: false },
         file: { type: Object, default: () => {
                 return {
-                    time: '', title: '',filePath: '',content: '',
-                    type: '', uiid: '', name: '', size: 0, thumb: '',
-                    status: 'waiting'
+                    uiid: '', type: '', time: '', size: 0, thumb: '',
+                    name: '', title: '', filePath: '',content: '', status: 'waiting'
                 }
             }
         }
@@ -51,7 +50,7 @@ export default {
             this.$forceUpdate()
             return name
         },
-        imageUrl() {
+        imgPath() {
             const _self = this; const { name, status, filePath } = _self.file;
             const ext = getFileExt(name, false); let icon = `${_self.$staticPath}imgs/`
             switch(status) {
@@ -64,7 +63,7 @@ export default {
                         case 'jxl': case 'jpeg': case 'svgz': case 'jpg':
                         case 'webp': case 'png': case 'bmp': case 'pjpeg':
                         case 'avif':
-                            console.log('imageUrl', filePath);
+                            console.log('imgPath', filePath);
                             if (filePath) {
                                 icon = `${_self.$onlineFilePath}${filePath.replace('/opt/upFiles/', '')}`;
                             } else {
@@ -73,13 +72,14 @@ export default {
                             break;
                         case 'doc': case 'docx': case 'txt': icon += 'icon-doc.png'; break;
                         case 'pdf': icon += 'icon-pdf.png'; break;
-                        case 'csv': case 'xls': case 'xlsx': case 'xlsm': icon += 'icon-xlsx.png'; break;
+                        case 'csv': case 'tsv': case 'xls': case 'xlsx': case 'xlsm': icon += 'icon-xlsx.png'; break;
                         case 'ppt': case 'pptx': icon += 'ai-chat-loaded.apng'; break;
                         default: icon += 'ai-chat-loaded.apng'; break;
                     }
                     break;
             }
             this.$forceUpdate()
+            console.log('imgPath', `icon：${icon}`);
             return icon
         },
         summaryName() {
@@ -112,7 +112,7 @@ export default {
                     _self.showPreviewImage(`${_self.$onlineFilePath}${filePath.replace('/opt/upFiles/', '')}`)
                     break;
                 case 'doc': case 'docx': case 'txt': case 'pdf':
-                case 'csv': case 'xls': case 'xlsx': case 'xlsm':
+                case 'csv': case 'tsv': case 'xls': case 'xlsx': case 'xlsm':
                 case 'ppt': case 'pptx':                    
                     uni.showLoading({ title: '正在加载中...', mask: true })
                     uni.downloadFile({

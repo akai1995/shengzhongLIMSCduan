@@ -9,7 +9,8 @@
         <view class="pubArticleDetail">
             <view class="detail br10">
                 <u-skeleton v-if="!firstLoaded" rows="18" loading animation bgColor="transparent" />
-                <u-parse :html="param.content||param.name" :selectable="true" :show-with-animation="true" />
+                <u-empty v-if="firstLoaded&&!param.content" text="暂无内容"></u-empty>
+                <u-parse v-if="firstLoaded&&param.content" :html="param.content" :selectable="true" :show-with-animation="true" />
             </view>
         </view>
     </z-paging>

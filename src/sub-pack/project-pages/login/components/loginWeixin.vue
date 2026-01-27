@@ -25,53 +25,32 @@
 			<text class="blue" @click="$ut.jump('/sub-pack/project-pages/article-detail/article-detail?type=1&name=服务条款')">《服务条款》</text>
 			<text class="blue" @click="$ut.jump('/sub-pack/project-pages/article-detail/article-detail?type=2&name=隐私协议')">《隐私协议》</text>
 		</view>
-
-		<view class="other grey" v-if="false">
-			<text @click="onSwitch('2')">短信登录</text>
-			<text class="silod" @click="onSwitch('3')">注册新账号</text>
-			<text @click="onSwitch('1')">账号登录</text>
-		</view>
 	</view>
 </template>
 
 <script>
-	import { getExpert } from '@/app/api/system/user'
-	import { registerIm } from '@/app/api/imApi'
 	import { getToken } from '@/providers/auth'
 	export default {
 		data() { return { checked: [], wxLoginForm: {}, telCode: '' } },
 		methods: {
-			onSwitch(val) { this.$emit('onSwitch', val) },
 			onSubmit() {
-				if (this.checked.length === 0) {
-					this.wxHandleLogin()
-				} else {
+				if (this.checked.length === 0) { this.wxHandleLogin() }
+				else {
 					uni.showModal({
-						title: '提示',
-						content: '阅读并同意《服务条款》和《隐私协议》',
-						showCancel: true,
-						success: ({ confirm, cancel }) => {
-							if (confirm) {
-								this.checked = ['ok'];
-								this.wxHandleLogin()
-							}
-						}
+						title: '提示', content: '阅读并同意《服务条款》和《隐私协议》', showCancel: true,
+						success: ({ confirm, cancel }) => { if (confirm) { this.checked = ['ok']; this.wxHandleLogin() } }
 					})
 				}
 			},
 			getPhoneNumber(e) { if (e.detail.errMsg == "getPhoneNumber:ok") { this.telCode = e.detail.code; this.wxHandleLogin() } },
-			async wxHandleLogin() {
+			wxHandleLogin() {
 				uni.getProvider({ service: 'oauth',
 					success: (res) => {
-						console.log(res);
 						if (~res.provider.indexOf("weixin")) {
 							//登录
-							uni.login({ provider: 'weixin',
-								success: (loginRes) => {
+							uni.login({ provider: 'weixin', success: (loginRes) => {
 									console.log("获取登录信息", loginRes);
-									//设置凭证
 									this.wxLoginForm.code = loginRes.code;
-									//向后端发起请求
 									this.sendWxLoginFormToLocalService()
 								}
 							})
@@ -79,20 +58,14 @@
 					}
 				})
 			},
-
 			sendWxLoginFormToLocalService() {
-				// console.log("向后端发起请求" + this.wxLoginForm);
-				let params = { code: this.wxLoginForm.code, phoneCode: this.telCode }
-				uni.showLoading({})
-				this.$store.dispatch('WxLogin', params).then(() => {
-					uni.hideLoading(); console.log("登录成功")
-					// this.$modal.closeLoading(); this.distingUser()
-					// return
+				uni.showLoading({ title:'登录中...', mask: true })
+				this.$store.dispatch('WxLogin', { code: this.wxLoginForm.code, phoneCode: this.telCode }).then(() => {
+					uni.hideLoading(); console.log("登录成功");
+					// this.$modal.closeLoading(); this.distingUser(); return
 					this.loginSuccess()
-
 				}).catch(() => {
-					uni.hideLoading()
-					console.log("微信登录失败，请重新登录！")
+					uni.hideLoading(); console.log("微信登录失败，请重新登录！")
 					// this.$modal.msgError("微信登录失败，请重新登录！");
 				})
 			},
@@ -106,8 +79,7 @@
 				this.$store.dispatch('GetWxInfo').then(res => {
 					//TODO
 					let id = this.$store.getters.userId; let token = getToken();
-					// registerIm().then(res=>{
-					// 	if(res.code==200){
+					// registerIm().then(res=>{ if(res.code==200) {
 					// 		// 单机模式可以直接设置地址
 					// 		WKSDK.shared().config.addr = 'ws://43.228.79.53:5200'; // 默认端口为5200
 					// 		// 认证信息
@@ -117,36 +89,18 @@
 					// 	}
 					// })
 
-					uni.showToast({ title: '授权登录成功', icon: 'none' })
-					let pages = getCurrentPages()
-					const pagesNum = pages.filter(({ route }) => route === 'project-pages/login/login').length
+					uni.showToast({ title: '授权登录成功', icon: 'none' }); const pages = getCurrentPages()
+					const pagesNum = pages.filter(({ route }) => route == '/sub-pack/project-pages/login/login').length
 					this.$eUni.navBack({ delta: pagesNum }); uni.removeStorageSync('orderReceive')
-					uni.removeStorageSync('signin'); uni.removeStorageSync('report')
-					// console.log(this.$store.getters.userType);
-					// if (this.$store.getters.userType == 1) {
-					// 	if (orderReceive) { this.$eUni.reLaunch({ url: '/pagesB/order/orderReceive' }) } 
-					//  else { this.$eUni.reLaunch({ url: '/pagesC/doctor-index/doctor-index' }) }
-					// } else {
-					// 	// if (signin) { this.$eUni.reLaunch({ url: '/pagesA/signin/signin' }) }
-					// 	// else if (report) { this.$eUni.reLaunch({ url: '/pages/report/report' }) } 
-					//  // else { this.$eUni.reLaunch({ url: '/pages/launch/launch' }) }
-					// 	uni.removeStorageSync('signin'); uni.removeStorageSync('report')
-					// }
-					uni.$emit('refresh')
+					uni.removeStorageSync('signin'); uni.removeStorageSync('report'); uni.$emit('refresh')
 				})
 			},
 
 			//区分用户
-			// distingUser(){
+			// distingUser() {
 			// 	let userId = this.$store.getters.userId
-			// 	getExpert(userId).then(res=>{
-			// 		if(res.data){
-			// 			this.$store.commit('SET_USER_TYPE',res.data.expertState)
-			// 			console.log('userType',this.$store.getters.userType)
-			// 		}
-			// 	})
+			// 	getExpert(userId).then(res=>{ if(res.data){ this.$store.commit('SET_USER_TYPE',res.data.expertState); console.log('userType',this.$store.getters.userType) } })
 			// }
-
 		}
 	}
 </script>

@@ -1,8 +1,9 @@
 // providers/utilities/router.js
 
+const homePath = '/pages/tabs/tab1/tab1'
+const loginPath = '/sub-pack/project-pages/login/login'
 export default {  
-  homePath: '/pages/tabs/tab1/tab1',
-  loginPath: '/sub-pack/project-pages/login/login',
+  homePath, loginPath,
   navTo(options = {}) {
     const { url, ...restOptions } = options;
     const pages = getCurrentPages();
@@ -70,9 +71,7 @@ export default {
         fail: options.fail,
         complete: options.complete
       });
-    } else {
-      uni.reLaunch({ url: homePath });
-    }
+    } else { uni.reLaunch({ url: homePath }) }
   },
 
   buildUrlWithQueryAndParams(basePath, query, params) {

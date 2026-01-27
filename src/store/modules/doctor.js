@@ -6,13 +6,8 @@ const doctor = {
 		doctorInfo: (state) => state.doctorInfo,
 	},
 	mutations: {
-		SET_DOCTOR_INFO: (state, info) => {
-			console.log(info);
-			state.doctorInfo = info
-		}
+		SET_DOCTOR_INFO: (state, info) => { state.doctorInfo = info }
 	},
-	actions: {
-
-	}
+	actions: { }
 }
 export default doctor

@@ -1,4 +1,4 @@
-import { getDictByType } from '@/app/api/system/dict/data'
+import { getDictByType } from '@/app/api/dict'
 import store from '@/store'
 import Vue from 'vue'
 

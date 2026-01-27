@@ -1,4 +1,4 @@
-import service from '@/app/app.http';
+import service from '@/app/app.api';
 
 /* 查询家庭成员数量 */
 export function getRelationCount() { return service.get({ url: '/personalcenter/userRelationship/getRelationCount' }) }

@@ -68,8 +68,7 @@ export default {
 		getHeadInfo() {
 			// #ifdef MP-WEIXIN
 			const popInfo = uni.getMenuButtonBoundingClientRect()
-			this.headInfo.headHeight = `${popInfo.height}px`
-			this.headInfo.titleTop = `${popInfo.top}px`
+			this.headInfo.headHeight = `${popInfo.height}px`; this.headInfo.titleTop = `${popInfo.top}px`
 			this.headInfo.listHeight = `calc(100vh - ${popInfo.top + popInfo.height + 155}px)`
 			// #endif
 		},

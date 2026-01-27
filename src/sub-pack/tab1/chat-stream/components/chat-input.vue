@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { ocrUploadFile, parseDoc } from '@/app/api/common'
+import { ocrUploadFile, parseDoc } from '@/app/api/index'
 import { onChooseFile } from '@/providers/upload'
 import AppConfig from '@/app/app.constant'
 import { guid } from '@/providers/index'

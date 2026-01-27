@@ -1,77 +1,50 @@
-import store from '@/store'; import config from '@/app/app.config'
-import { toast, showConfirm, tansParams } from '@/providers/index'
+import config from '@/app/app.config'; import store from '@/store';
+import { onToast, onShowConfirm, tansParams } from '@/providers/index'
 import errorCode from '@/providers/utilities/errorCode'
 import { getToken } from '@/providers/auth'
 
 let timeout = 10000
 const baseUrl = config.baseUrl
-const upload = config => {
+
+export default upload = config => {
   /* 是否需要设置 token */
-  const isToken = (config.headers || {}).isToken === false
-  config.header = config.header || { }
-  if (getToken() && !isToken) { config.header['X-Access-Token'] = getToken() }
+  const isToken = (config.headers || {}).isToken === false; config.header = config.header || { }
+  if ((store.getters.token || getToken()) && !isToken) { config.header['X-Access-Token'] = store.getters.token || getToken() }
   config.header['accept-language'] = 'zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6'
   /* config.header['content-type'] = 'application/x-www-form-urlencoded; charset=UTF-8' */
 
   /* get请求映射params参数 */
-  if (config.params) {
-    let url = config.url + '?' + tansParams(config.params)
-    url = url.slice(0, -1); config.url = url
-  }
+  if (config.params) { let url = config.url + '?' + tansParams(config.params); url = url.slice(0, -1); config.url = url }
   return new Promise((resolve, reject) => {
       uni.uploadFile({
         timeout: config.timeout || timeout,
         url: `${baseUrl}${config.url||'/sys/common/upload'}`,
         files: config.files?config.files:[{uri:config.filePath}],
-        filePath: config.filePath,
-        name: config.name || 'file',
+        filePath: config.filePath, name: config.name || 'file',
         formData: config.formData||{ biz: 'temp' },
         header: config.header,
         success: (res) => {
-          const result = JSON.parse(res.data); const code = result.success || 200;
-          const msg = errorCode[code] || result.message || errorCode['default']
-          if (result.success || code === 200) {
-            resolve(result)
-          } else if (code == 401) {
-            showConfirm("登录状态已过期，您可以继续留在该页面，或者重新登录?").then(res => {
-                if (res.confirm) { 
-                    store.dispatch('LogOut').then(res => { 
-                        uni.reLaunch({ url: '/sub-pack/project-pages/login/login' }) 
-                    }) 
-                }
-            })
-            reject('无效的会话，或者会话已过期，请重新登录。')
-          } else if (code === 500) {
-            toast(msg); reject('500')
-          } else {
-            toast(msg); reject(code)
-          }
+            const result = JSON.parse(res.data); const code = result.code || 200;
+            const msg = errorCode[code] || result.message || errorCode['default']
+            if (code === 200) { resolve(result) }
+            else if (code == 401) {
+                onShowConfirm("登录状态已过期，您可以继续留在该页面，或者重新登录?").then(res => { if (res.confirm) {  store.dispatch('LogOut').then(res => { uni.reLaunch({ url: '/sub-pack/project-pages/login/login' }) }) } })
+                reject('无效的会话，或者会话已过期，请重新登录。')
+            } 
+            else if (code === 500) { onToast(msg); reject('500') } else { onToast(msg); reject(code) }
         },
         fail: (error) => {
-            console.error('error', error)
-            const { message, errMsg } = error
+            console.error('error', error); const { message, errMsg } = error
             if (typeof message=='string') {
-                if (message === 'Network Error') {
-                    message = '后端接口连接异常'
-                } else if (message.includes('timeout')) {
-                    message = '系统接口请求超时'
-                } else if (message.includes('Request failed with status code')) {
-                    message = '系统接口' + message.substr(message.length - 3) + '异常'
-                }
-                toast(message); reject(message)
-            } else if (typeof errMsg=='string') {
-                console.log('errMsg', errMsg)
-                toast(errMsg); reject(errMsg)
-            } else {
-                toast('异常')
-                reject(error)
-            }
+                if (message === 'Network Error') { message = '后端接口连接异常' } else if (message.includes('timeout')) { message = '系统接口请求超时' }
+                else if (message.includes('Request failed with status code')) { message = '系统接口' + message.substr(message.length - 3) + '异常' }
+                onToast(message); reject(message)
+            } else if (typeof errMsg=='string') { console.log('errMsg', errMsg); onToast(errMsg); reject(errMsg) } 
+            else { onToast('异常'); reject(error) }
         }
       })
   })
 }
-
-export default upload
 
 /**
  * 获取文件扩展名，可控制大小写
@@ -208,7 +181,8 @@ function formatFile(res) {
 	}))
 }
 
-const imgDocExt = ['.tif','.pjp','.jfif','.ico','.tiff','.gif','.svg','.xbm','.jxl','.jpeg','.svgz','.jpg','.webp','.png','.bmp','.pjpeg','.avif', '.doc','.docx','.txt','.pdf','.csv','.xls','.xlsx','xlsm','ppt','pptx']
+const imgDocExt = ['.tif','.pjp','.jfif','.ico','.tiff','.gif','.svg','.xbm','.jxl','.jpeg','.svgz','.jpg','.webp','.png','.bmp','.pjpeg','.avif','.doc','.docx','.txt','.pdf','.csv','.tsv','.xls','.xlsx','xlsm','ppt','pptx']
+
 /**
  * 
  * @param {string} accept  image media video file message-image message-file

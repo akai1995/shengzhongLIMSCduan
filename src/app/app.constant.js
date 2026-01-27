@@ -1,13 +1,13 @@
 // #ifdef H5
 var envWx = 'release';
 // #endif
-var baseUrl = 'http://eai.natapp1.cc/eai-lims'; var wsUrl = ''; var filePath = '192.168.0.151:9889';
+var baseUrl = 'http://eai.natapp1.cc/eai-lims'; var wsUrl = 'wss://api.ypzlfx.com/prod-api'; var filePath = '192.168.0.151:9889';
 // #ifdef MP-WEIXIN
 const accountInfo = wx.getAccountInfoSync(); var envWx = accountInfo.miniProgram.envVersion;
 console.log(envWx)
 if (envWx === 'develop') { /* 开发 */
-	baseUrl = 'http://192.168.112.29:9083/eai-lims';
-	wsUrl = 'ws://192.168.0.154:5200';
+	// baseUrl = 'http://192.168.112.29:9083/eai-lims';
+	// wsUrl = 'ws://192.168.0.154:5200';
 	/* filePath = '192.168.112.29:9083' */
 } 
 else if (envWx === 'release') { /* 生产 */
@@ -33,11 +33,12 @@ export default {
 	GAODE_KEY: '48e30049122fc8432b1c5bf43e86d398',
 	/* 发送语音时探测录音的音量阈值 0-100 */ VOICE_THRESHOLD: 6,
 	/* 最小录音时长阈值 */ minSpeechDurationThreshold: 1500,
-	/* 录音文件类型 */ audioType: 'mp3',
+	/* 录音文件类型 */ audioType: 'wav',
 	/* 录音采样率 */ audioSampleRate: 48000,
 	/* 录音比特率 */ audioBitRate: 16,
 	/* 音频流发送时间间隔 */ audioSendServerInterval: 300,
 	/* 语音实时发送 */ useRealTimeSend: true,
+	/* wss:// */ webSocketBaseUrl: wsUrl,
 	/* 应用信息 */
 	appInfo: {
 		/* 应用名称 */ name: 'eAI',
@@ -51,18 +52,13 @@ export default {
 		]
 	},
    vuex: {
-      sex: 'vuex_sex',
-      avatar: 'vuex_avatar',
-      name: 'vuex_name',
-      roles: 'vuex_roles',
-      permissions: 'vuex_permissions',
-      userId: 'vuex_userid',
-      user: 'vuex_user',
-      idcard: 'vuex_idcard',
-      userType: 'vuex_type',
-      orgid: 'vuex_orgid',
-      tips: 'isTips',
-      cancerUser: 'cancerUser',
-      pickerLabel: 'pickerLabel',
+		token: 'vuex_token',
+		avatar: 'vuex_avatar', name: 'vuex_name',
+		sex: 'vuex_sex', roles: 'vuex_roles',
+		permissions: 'vuex_permissions',
+		userId: 'vuex_userid', user: 'vuex_user',
+		idcard: 'vuex_idcard', userType: 'vuex_type',
+		orgid: 'vuex_orgid', tips: 'isTips',
+		cancerUser: 'cancerUser', pickerLabel: 'pickerLabel',
    },
  }

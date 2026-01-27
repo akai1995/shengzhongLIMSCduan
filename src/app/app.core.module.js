@@ -1,23 +1,21 @@
-import { mapActions, mapGetters } from 'vuex';
-
+import store from '@/store/index';
 const AppCoreModule = {
 	mpType: 'app',
 	beforeCreate() { console.log('App beforeCreate'); },
 	created() { console.log('App created'); },
-	computed: { ...mapGetters(['token']) },
-	onLaunch: function() {
+	onLaunch: () => {
 		console.log('App Launch', process.env.VUE_APP_PLATFORM);
-		if (this.token) { this.GetWxInfo() }
         // #ifdef MP-WEIXIN
         updateMpWeixin()
         // #endif
 
 		requestInterceptor()
+        // 从缓存中获取用户信息，如果用户token过期，重新认证，然后保存到Vuex中
+        store.dispatch('GetWxInfo');
 	},
 	beforeMount() { console.log('App beforeMount'); },
-	onShow: function() { console.log('App Show') },
-	methods: { ...mapActions(['GetWxInfo']) },
-	onHide: function() { console.log('App Hide') }
+	onShow: () => { console.log('App Show') },
+	onHide: () => { console.log('App Hide') }
 }
 
 /**

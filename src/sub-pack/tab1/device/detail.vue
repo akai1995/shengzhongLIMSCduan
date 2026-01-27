@@ -4,10 +4,14 @@
 		:fixed="true" :auto="false" :refresher-enabled="false" :auto-show-back-to-top="true" :auto-scroll-to-top-when-reload="false"
 		:loading-more-enabled="false" :show-refresher-when-reload="false" hide-empty-view
 	>
-        <view slot="top"><u-navbar title="详情" :fixed="false" background="transparent" color="#000" left-icon-color="#000" @leftClick="handleGoHome" /></view>
+        <view slot="top">
+            <u-navbar title="详情" :fixed="false" background="transparent" color="#000" left-icon-color="#000" @leftClick="onBack" />
+        </view>
 		<ut-components ref="utComponents" />
         <view class="detail">
-            <view class="detail-pic"><image class="detail-img" :src="deviceInfo.deviceImg ? deviceInfo.deviceImg : `${$staticPath}imgs/devcieCover.png`" /></view>
+            <view class="detail-pic">
+                <image class="detail-img" :src="deviceInfo.deviceImg ? deviceInfo.deviceImg : `${$staticPath}imgs/devcieCover.png`" />
+            </view>
             <view class="detail-content">
                 <view class="detail-info">
                     <view class="detail-info-title">{{ deviceInfo.name }}</view>
@@ -16,12 +20,17 @@
                 </view>
                 <view class="detail-date">
                     <view class="detail-date-title">收费标准</view>
-                    <view class="detail-info"><view class="detail-info-text middle" v-html="deviceInfo.price"></view></view>
+                    <view class="detail-info">
+                        <view class="detail-info-text middle" v-html="deviceInfo.price">0.00元</view>
+                    </view>
                 </view>
 
                 <view class="detail-date">
-                    <view class="detail-date-title"><view>选择日期</view><view v-if="choose.isMore">{{ choose.moreDate }}</view></view>
-                    <view class="detail-date-day">
+                    <view class="detail-date-title" v-if="choose.list.length > 0">
+                        <view>选择日期</view>
+                        <view v-if="choose.list.length > 0 && choose.isMore">{{ choose.moreDate }}</view>
+                    </view>
+                    <view class="detail-date-day" v-if="choose.list.length > 0">
                         <view
                             :class="index == choose.currIndex && !choose.isMore ? 'detail-date-day-item-curr' : 'detail-date-day-item'"
                             v-for="(item, index) in choose.list" :key="index" @click="handleDateClick(index, item.date)"
@@ -34,25 +43,31 @@
                         </view>
                     </view>
 
-                    <bolck v-if="deviceInfo && deviceInfo.reserveTime">
+                    <template v-if="deviceInfo && deviceInfo.reserveTime">
                         <view class="detail-date-title">已预约时间</view>
                         <view class="detail-date-has-list" v-if="deviceInfo.reserveTime.length > 0">
                             <view class="detail-date-has-item" v-for="item,idx in deviceInfo.reserveTime" :key="idx">{{ `${item.reserveStartTime} - ${item.reserveEndTime}` }}</view>
                         </view>
-                        <view v-if="choose.moreText" class="detail-date-more-list" @click="handleClickMoreText()">查看更多</view>
+                        <view v-if="deviceInfo.reserveTime.length > 0&&choose.moreText" class="detail-date-more-list" @click="onMoreTextClick()">查看更多</view>
                         <view class="detail-date-has-box" v-if="deviceInfo.reserveTime.length == 0">
                             <u-empty mode="data" text="当日暂无预约" />
                         </view>
-                    </bolck>
+                    </template>
 
                     <view class="detail-date-choose">
                         <view class="detail-date-choose-item">
                             <view class="detail-date-choose-item-title">开始时间</view>
-                            <u-button type="success" plain :text="time.start ? time.start : '请选择'" shape="circle" @click="handleTimeClick('start')" />
+                            <u-button 
+                                type="success" plain :text="time.start ? time.start : '请选择'"
+                                shape="circle" @click="onTimeClick('start')"
+                            />
                         </view>
                         <view class="detail-date-choose-item">
                             <view class="detail-date-choose-item-title">结束时间</view>
-                            <u-button type="success" plain :text="time.end ? time.end : '请选择'" shape="circle" @click="handleTimeClick('end')" />
+                            <u-button 
+                                type="success" plain :text="time.end ? time.end : '请选择'"
+                                shape="circle" @click="onTimeClick('end')"
+                            />
                         </view>
                     </view>
                 </view>
@@ -60,18 +75,22 @@
                 <view class="detail-form">
                     <view class="detail-form-item">
                         <view class="detail-form-item-title">预约人姓名</view>
-                        <view class="detail-form-item-input"><u--input placeholder="预约人姓名" border="surround" v-model="form.name" /></view>
+                        <view class="detail-form-item-input">
+                            <u--input v-model="form.name" placeholder="预约人姓名" border="surround" />
+                        </view>
                     </view>
 
                     <view class="detail-form-item">
                         <view class="detail-form-item-title">预约人电话</view>
-                        <view class="detail-form-item-input"><u--input placeholder="请输入预约人电话" border="surround" v-model="form.phone" /></view>
+                        <view class="detail-form-item-input">
+                            <u--input v-model="form.phone" placeholder="请输入预约人电话" border="surround" />
+                        </view>
                     </view>
 
                     <view class="detail-form-item">
                         <view class="detail-form-item-title">团队选择</view>
                         <view class="detail-form-item-input" @click="group.visible = true">
-                            <u--input v-model="group.currName" disabled disabledColor="#ffffff" placeholder="请选择团队" border="surround" />
+                            <u--input v-model="group.currName" disabled disabledColor="#ffffff" border="surround" placeholder="请选择团队" />
                             <view class="detail-form-item-arr"><u-icon name="arrow-right" /></view>
                         </view>
                     </view>
@@ -79,39 +98,59 @@
                     <view class="detail-form-item" v-if="teacher.inputVisible">
                         <view class="detail-form-item-title">导师选择</view>
                         <view class="detail-form-item-input" @click="teacher.visible = true">
-                            <u--input v-model="teacher.currName" disabled disabledColor="#ffffff" placeholder="请选择团队" border="surround" />
+                            <u--input v-model="teacher.currName" disabled disabledColor="#ffffff" border="surround" placeholder="请选择团队" />
                             <view class="detail-form-item-arr"><u-icon name="arrow-right" /></view>
                         </view>
                     </view>
 
                     <view class="detail-form-item" v-if="schoolInput.visible">
                         <view class="detail-form-item-title">所在学院</view>
-                        <view class="detail-form-item-input"><u--input placeholder="请输入所在学院" border="surround" v-model="form.school" /></view>
+                        <view class="detail-form-item-input">
+                            <u--input placeholder="请输入所在学院" border="surround" v-model="form.school" />
+                        </view>
                     </view>
 
                     <view class="detail-form-item" v-if="schoolInput.visible">
                         <view class="detail-form-item-title">备注信息</view>
-                        <view class="detail-form-item-input"><u--textarea v-model="form.info" placeholder="请输入备注信息" :autoHeight="false" /></view>
+                        <view class="detail-form-item-input">
+                            <u--textarea v-model="form.info" placeholder="请输入备注信息" :autoHeight="false" />
+                        </view>
                     </view>
 
                     <view class="detail-form-item">
                         <view class="detail-form-item-title">用途说明</view>
-                        <view class="detail-form-item-input"><u--textarea v-model="form.description" placeholder="请输入用途说明" :autoHeight="false" /></view>
+                        <view class="detail-form-item-input">
+                            <u--textarea v-model="form.description" placeholder="请输入用途说明" :autoHeight="false" />
+                        </view>
                     </view>
                 </view>
             </view>
         </view>
+        
+        <u-datetime-picker :show="time.selectVisible" mode="datetime" @close="onTimeClose" @confirm="onTimeSubmit" />
+        <!-- <u-picker :show="time.selectVisible" ref="uPicker" :columns="time.select" @cancel="onTimeClose" @confirm="onTimeSubmit" /> -->
+        <u-picker :show="group.visible" :columns="group.list" keyName="label" @cancel="onVisibleFalse(1)" @confirm="onCurrGroup" />
+        <u-picker :show="teacher.visible" :columns="teacher.list" keyName="label" @cancel="onVisibleFalse(2)" @confirm="onCurrTeacher" />
+        <!-- <u-calendar 
+            :show="choose.moreVisible" :defaultDate="choose.minDate"
+            :minDate="choose.minDate" :maxDate="choose.maxDate"
+            @close="onVisibleFalse(3)" @confirm="onConfirmDate"
+        /> -->
 
-        <u-picker :show="time.selectVisible" ref="uPicker" :columns="time.select" @confirm="currTimeSubmit" @cancel="currTimeCancel" />
-        <u-picker :show="group.visible" :columns="group.list" keyName="label" @confirm="handleCurrGroup" @cancel="group.visible = false" />
-        <u-picker :show="teacher.visible" :columns="teacher.list" keyName="label" @confirm="handleCurrTeacher" @cancel="teacher.visible = false" />
-        <u-calendar :show="choose.moreVisible" :defaultDate="choose.minDate" :minDate="choose.minDate" :maxDate="choose.maxDate" @confirm="handleConfirmDate" @close="choose.moreVisible = false"></u-calendar>
-
-        <view slot="bottom" class="pubBotBtn pubTopLine"><view class="wrap"><view class="btn" @click="handleSubmit"><u-button type="primary" text="提交预约" /></view></view></view>
+        <view slot="bottom" class="pubBotBtn pubTopLine">
+            <view class="wrap">
+                <view class="btn" @click="handleSubmit"><u-button type="primary" text="提交预约" />
+                </view>
+            </view>
+        </view>
     </z-paging>
 </template>
 <script>
-import { deviceSubmit, deviceDetail, getAllDayReserve, getGroup, getTeacher } from '@/app/api/device/index'
+import { 
+    deviceSubmit, deviceDetail,
+    getAllDayReserve,
+    getGroup as _getGroup, getTeacher as _getTeacher
+} from '@/app/api/index'
 export default {
     data() {
         return {
@@ -121,8 +160,7 @@ export default {
             form: { name: '', phone: '', description: '', group: '', teacher: '', school: '', info: '' },
             deviceInfo: { name: "", code: "", address: "", price: "", reserveTime: [], canReserveWeek: [], canReserveTime: '' },
             group: { visible: false, list: [[]], currName: '', currCode: '' },
-            teacher: { visible: false, list: [[]], currName: '', inputVisible: false },
-            schoolInput: { visible: false }
+            teacher: { visible: false, list: [[]], currName: '', inputVisible: false }, schoolInput: { visible: false }
         };
     },
     onLoad(options) {
@@ -135,7 +173,7 @@ export default {
 			this.$refs.paging.endRefresh()
             uni.hideLoading();
 		},
-        generateDateArray() {
+        genDateArray() {
             const result = [];
             const today = new Date();
 
@@ -175,13 +213,13 @@ export default {
             const dateStr = `${monthStr}-${dayStr}`;
             return `${year}-${dateStr}`
         },
-        getSelectPicker() {
+        getSelPicker() {
             const timeArray = [];
             const range = this.deviceInfo.canReserveTime;
-            const [startTime, endTime] = range.split(" - ");
+            const [startTime, endTime] = range.split(' - ');
 
-            const startHour = parseInt(startTime.split(":")[0], 10);
-            const endHour = parseInt(endTime.split(":")[0], 10);
+            const startHour = parseInt(startTime.split(':')[0], 10);
+            const endHour = parseInt(endTime.split(':')[0], 10);
 
             for (let i = startHour; i <= endHour; i++) {
                 for (let j = 0; j < 60; j += 10) {
@@ -209,7 +247,7 @@ export default {
         getWeekNumber(date) {
             const currDate = new Date(date);
             const dayOfWeek = currDate.getDay();
-            const daysOfWeek = ["7", "1", "2", "3", "4", "5", "6"];
+            const daysOfWeek = ['7', '1', '2', '3', '4', '5', '6'];
             return daysOfWeek[dayOfWeek];
         },
         timeIsNotGreaterThan(a, b) {
@@ -245,16 +283,17 @@ export default {
         getDeviceDetail() {
             deviceDetail(this.instrumentId).then((resp) => {
                 if (resp.code == 200) {
-                    this.deviceInfo.name = resp.result.deviceName
-                    this.deviceInfo.code = resp.result.deviceCode
-                    this.deviceInfo.price = this.addLineBreakBeforeText(resp.result.priceDesc, ["校内","校外", "不足"]) || "暂无价格"
-                    this.deviceInfo.address = resp.result.deviceAddress || "暂无设备地址"
-                    this.deviceInfo.reserveTime = resp.result.reserveTimeList
-                    this.deviceInfo.canReserveWeek = resp.result.openList
-                    this.deviceInfo.canReserveTime = resp.result.openTime
-                    this.deviceInfo.deviceImg = resp.result.deviceImg || null
+                    const result = resp.result
+                    this.deviceInfo.name = result.deviceName
+                    this.deviceInfo.code = result.deviceCode
+                    this.deviceInfo.price = this.addLineBreakBeforeText(result.priceDesc, ["校内","校外", "不足"]) || "暂无价格"
+                    this.deviceInfo.address = result.deviceAddress || "暂无设备地址"
+                    this.deviceInfo.reserveTime = result.reserveTimeList
+                    this.deviceInfo.canReserveWeek = result.openList
+                    this.deviceInfo.canReserveTime = result.openTime
+                    this.deviceInfo.deviceImg = result.deviceImg || null
 
-                    this.generateDateArray(); this.getSelectPicker(); this.getAllDayReserve()
+                    this.genDateArray(); this.getSelPicker(); this.getAllDayReserve()
                 }
             }).finally(()=>{
                 setTimeout(() => {
@@ -263,10 +302,9 @@ export default {
             })
         },
         getGroup() {
-            getGroup().then((resp) => {
+            _getGroup().then((resp) => {
                 if (resp.code == 200) {
-                    let arr = []
-                    for (let item of resp.result) {
+                    let arr = []; for (let item of resp.result) {
                         arr.push({ label: item.name, id: item.id, code: item.code })
                     }
                     this.group.list[0] = arr;
@@ -274,10 +312,9 @@ export default {
             });
         },
         getTeacher(id) {
-            getTeacher(id).then((resp) => {
+            _getTeacher(id).then((resp) => {
                 if (resp.code == 200) {
-                    let arr = []
-                    for (let item of resp.result) {
+                    let arr = []; for (let item of resp.result) {
                         arr.push({ label: item.name, id: item.id })
                     }
                     this.teacher.list[0] = arr;
@@ -285,16 +322,14 @@ export default {
             });
 
         },
-        handleCurrGroup(e) {
+        onCurrGroup(e) {
             this.group.currName = e.value[0].label
             this.group.currCode = e.value[0].code
             this.form.group = e.value[0].id
             this.getTeacher(e.value[0].id)
             this.group.visible = false
-            this.teacher.currName = ''
-            this.form.teacher = ''
-            this.form.school = ''
-            this.form.info = ''
+            this.teacher.currName = ''; this.form.teacher = ''
+            this.form.school = ''; this.form.info = ''
             if (e.value[0].code != 'xn' && e.value[0].code != 'xw') {
                 this.teacher.inputVisible = true
                 this.schoolInput.visible = false
@@ -303,32 +338,25 @@ export default {
                 this.schoolInput.visible = true
             }
         },
-        handleCurrTeacher(e) {
+        onCurrTeacher(e) {
             this.teacher.currName = e.value[0].label
             this.form.teacher = e.value[0].id
             this.teacher.visible = false
         },
         getAllDayReserve() {
             const currentDate = this.choose.isMore ? this.choose.moreDate : `${this.choose.list[this.choose.currIndex].year}-${this.choose.list[this.choose.currIndex].date}`
-            const pushData = {
-                currentDate,
-                deviceId: this.deviceId
-            }
-
-            getAllDayReserve(pushData).then((resp) => {
+            getAllDayReserve({ currentDate, deviceId: this.deviceId }).then((resp) => {
                 if (resp.code == 200) {
-                    if (resp.result.length <= 4) {
-                        this.deviceInfo.reserveTime = resp.result
+                    const result = resp.result
+                    if (result.length <= 4) {
+                        this.deviceInfo.reserveTime = result
                         this.choose.moreText = false
                     } else {
                         if (this.choose.moreText == false) {
-                            this.deviceInfo.reserveTime = resp.result
+                            this.deviceInfo.reserveTime = result
                             this.choose.moreText = false
                         } else {
-                            const arr = []
-                            for (let i = 0; i < 4; i += 1) {
-                                arr.push(resp.result[i])
-                            }
+                            const arr = []; for (let i = 0; i < 4; i += 1) { arr.push(result[i]) }
                             this.choose.moreText = true
                             this.deviceInfo.reserveTime = arr
                         }
@@ -336,43 +364,50 @@ export default {
                     }
 
                 }
-            });
+            })
         },
-        handleClickMoreText() {
-            this.choose.moreText = false
-            this.getAllDayReserve()
-        },
+        onMoreTextClick() { this.choose.moreText = false; this.getAllDayReserve() },
         handleDateClick(index, currDate) {
             const currentYear = new Date().getFullYear();
             const currenWeek = this.getWeekNumber(`${currentYear}-${currDate}`)
             const openDate = this.deviceInfo.canReserveWeek
             if (openDate.includes(currenWeek)) {
-                this.choose.currIndex = index;
-                this.choose.moreDate = ""
-                this.choose.isMore = false
-                this.getAllDayReserve()
+                this.choose.currIndex = index; this.choose.moreDate = ''
+                this.choose.isMore = false; this.getAllDayReserve()
             } else {
                 this.showTips('该日设备不开放预约', 'error');
             }
         },
-        handleConfirmDate(e) {
-            this.choose.moreDate = e[0]
+        onConfirmDate(event) {
+            this.choose.moreDate = event[0]
             this.choose.isMore = true
             this.choose.moreVisible = false
             this.getAllDayReserve()
         },
-        handleTimeClick(type) {
+        onTimeClick(type) {
             this.time.type = type
             this.time.selectVisible = true
         },
-        currTimeSubmit(e) {
-            this.time[this.time.type] = e.value[0]
+        onTimeSubmit(event) {
+            console.log('onTimeSubmit',this.time.type, event)
+            const date = new Date(event.value); // 毫秒级时间戳
+            // 格式化为 YYYY-MM-DD HH:mm:ss
+            const dateTimeVal = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ` +
+            `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+            console.log(dateTimeVal); // 输出：2025-03-11 00:00:00
+            this.time[this.time.type] = dateTimeVal
             this.time.selectVisible = false
         },
-        currTimeCancel() {
+        onTimeClose() {
             this.time.selectVisible = false
+        },
+        onVisibleFalse(type) {
+            if (type==1) this.group.visible = false
+            if (type==2) this.teacher.visible = false
+            if (type==3) this.choose.moreVisible = false
         },
         handleSubmit() {
+			if (!this.checkUserInfo()) { return; }
             if (!this.time.start) {
                 this.showTips('请选择预约开始时间', 'error');
                 return
@@ -434,8 +469,7 @@ export default {
                 reserveEndTime: `${this.time.end}:00`,
                 reservePurpose: this.form.description,
                 reserveStartTime: `${this.time.start}:00`,
-                reserveName: this.form.name,
-                reservePhone: this.form.phone,
+                reserveName: this.form.name, reservePhone: this.form.phone,
             }
             deviceSubmit(pushData).then((resp) => {
                 if (resp.code == 200) {
@@ -445,12 +479,9 @@ export default {
                     }, 2000);
                 }
             });
-        },
-        handleGoHome() {
-            this.$ut.jump(`/pages/launch/launch`);
-        },
-    },
-};
+        }
+    }
+}
 </script>
 <style lang="scss" scoped>
 .detailPage{
@@ -461,6 +492,7 @@ export default {
 	width: 100%;
 	box-sizing: border-box;
 	background-color: #fff;
+    padding-bottom: 100rpx;
 	.detail-pic {
 		width: 100%;
 		height: auto;
