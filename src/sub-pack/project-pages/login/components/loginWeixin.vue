@@ -29,80 +29,53 @@
 </template>
 
 <script>
-	import { getToken } from '@/providers/auth'
-	export default {
-		data() { return { checked: [], wxLoginForm: {}, telCode: '' } },
-		methods: {
-			onSubmit() {
-				if (this.checked.length === 0) { this.wxHandleLogin() }
-				else {
-					uni.showModal({
-						title: '提示', content: '阅读并同意《服务条款》和《隐私协议》', showCancel: true,
-						success: ({ confirm, cancel }) => { if (confirm) { this.checked = ['ok']; this.wxHandleLogin() } }
-					})
-				}
-			},
-			getPhoneNumber(e) { if (e.detail.errMsg == "getPhoneNumber:ok") { this.telCode = e.detail.code; this.wxHandleLogin() } },
-			wxHandleLogin() {
-				uni.getProvider({ service: 'oauth',
-					success: (res) => {
-						if (~res.provider.indexOf("weixin")) {
-							//登录
-							uni.login({ provider: 'weixin', success: (loginRes) => {
-									console.log("获取登录信息", loginRes);
-									this.wxLoginForm.code = loginRes.code;
-									this.sendWxLoginFormToLocalService()
-								}
-							})
+import { wxRegisterLogin, getWxCode } from '@/providers'
+export default {
+	data() { return { checked: [], wxLoginForm: {}, phoneCode: '' } },
+	methods: {
+		onSubmit() {
+			if (this.checked.length === 0) { this.wxHandleLogin() }
+			else {
+				uni.showModal({
+					title: '提示', content: '阅读并同意《服务条款》和《隐私协议》', showCancel: true,
+					success: ({ confirm, cancel }) => { if (confirm) { this.checked = ['ok']; this.wxHandleLogin() } }
+				})
+			}
+		},
+		wxHandleLogin() {
+			const _self = this;
+			getWxCode().then((resp) => {
+				if (resp.code==200) { _self.wxLoginForm.code = resp.wxcode; uni.showLoading({ title:'登录中...', mask: true })
+					console.log({code:_self.wxLoginForm.code,phoneCode: _self.phoneCode});
+					wxRegisterLogin({code:_self.wxLoginForm.code,phoneCode: _self.phoneCode}).then((res) => {
+						uni.hideLoading(); console.log("获取登录用户信息", res);
+						if (res.type=='success') { _self.showTips(res.tip); const pages = getCurrentPages()
+							const pagesNum = pages.filter(({ route }) => route == '/sub-pack/project-pages/login/login').length
+							console.info("pagesNum", pagesNum)
+							_self.$eUni.navBack({ delta: pagesNum }); uni.$emit('refresh')
+							// uni.removeStorageSync('orderReceive'); uni.removeStorageSync('signin'); uni.removeStorageSync('report');
+						} else {
+							_self.showTips(res.tip, 'error')
 						}
-					}
-				})
-			},
-			sendWxLoginFormToLocalService() {
-				uni.showLoading({ title:'登录中...', mask: true })
-				this.$store.dispatch('WxLogin', { code: this.wxLoginForm.code, phoneCode: this.telCode }).then(() => {
-					uni.hideLoading(); console.log("登录成功");
-					// this.$modal.closeLoading(); this.distingUser(); return
-					this.loginSuccess()
-				}).catch(() => {
-					uni.hideLoading(); console.log("微信登录失败，请重新登录！")
-					// this.$modal.msgError("微信登录失败，请重新登录！");
-				})
-			},
-			// 登录成功后，处理函数
-			loginSuccess(result) {
-				// 公众号
-				const signin = uni.getStorageSync('signin')
-				const report = uni.getStorageSync('report')
-				const orderReceive = uni.getStorageSync('orderReceive')
-				// 设置用户信息
-				this.$store.dispatch('GetWxInfo').then(res => {
-					//TODO
-					let id = this.$store.getters.userId; let token = getToken();
-					// registerIm().then(res=>{ if(res.code==200) {
-					// 		// 单机模式可以直接设置地址
-					// 		WKSDK.shared().config.addr = 'ws://43.228.79.53:5200'; // 默认端口为5200
-					// 		// 认证信息
-					// 		WKSDK.shared().config.uid = id; // 用户uid（需要在悟空通讯端注册过）
-					// 		WKSDK.shared().config.token = token; // 用户token （需要在悟空通讯端注册过）
-					// 		WKSDK.shared().connectManager.connect();
-					// 	}
-					// })
-
-					uni.showToast({ title: '授权登录成功', icon: 'none' }); const pages = getCurrentPages()
-					const pagesNum = pages.filter(({ route }) => route == '/sub-pack/project-pages/login/login').length
-					this.$eUni.navBack({ delta: pagesNum }); uni.removeStorageSync('orderReceive')
-					uni.removeStorageSync('signin'); uni.removeStorageSync('report'); uni.$emit('refresh')
-				})
-			},
-
-			//区分用户
-			// distingUser() {
-			// 	let userId = this.$store.getters.userId
-			// 	getExpert(userId).then(res=>{ if(res.data){ this.$store.commit('SET_USER_TYPE',res.data.expertState); console.log('userType',this.$store.getters.userType) } })
-			// }
-		}
+					}).catch(() => {
+						uni.hideLoading(); console.log("wxRegisterLogin error 微信登录失败，请重新登录！")
+					})
+				} else {
+					console.log("resp.code != 200 微信登录失败，请重新登录！")
+				}
+			})
+		},
+		getPhoneNumber(event) { 
+			const _self = this		
+			if (event.detail) { console.log('event.detail:', event.detail); 
+				const { errMsg, code, iv, encryptedData } = event.detail
+				if (errMsg == "getPhoneNumber:ok") {
+					_self.phoneCode = code; _self.wxHandleLogin() 
+				} 
+			}
+		},
 	}
+}
 </script>
 
 <style lang="scss" scoped>

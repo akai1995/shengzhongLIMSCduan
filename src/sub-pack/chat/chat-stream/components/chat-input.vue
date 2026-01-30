@@ -38,29 +38,20 @@
 </template>
 
 <script>
-import { ocrUploadFile, parseDoc } from '@/app/api/index'
-import { onChooseFile } from '@/providers/upload'
-import AppConfig from '@/app/app.constant'
-import { guid } from '@/providers/index'
-import store from '@/store/index'
+import { ocrUploadFile, parseDoc } from '@/app/api/index';
+import { onChooseFile } from '@/providers/upload'; import AppConfig from '@/app/app.constant';
+import { guid } from '@/providers/index'; import store from '@/store/index';
 import Recorder from 'recorder-core';
 //引入相应格式支持文件；如果需要多个格式支持，把这些格式的编码引擎js文件放到后面统统引入进来即可
 import 'recorder-core/src/engine/wav';
 export default {
 	name: 'chat-input',
 	props: {
-		disabled: {
-			type: Boolean,
-			default: false
-		},
-		isGenChat: {
-			type: Boolean,
-			default: false
-		},
+		disabled: { type: Boolean, default: false },
+		isGenChat: { type: Boolean, default: false },
 	},
 	data() {
 		return {
-
 			/**
 			 * 是否显示语音输入
 			 */

@@ -5,7 +5,6 @@
 		:loading-more-enabled="false" :show-refresher-when-reload="false" hide-empty-view
 	>
         <view slot="top"><u-navbar title="登录" :fixed="false" leftIcon="close" bgColor="transparent" @leftClick="onBack" /></view>
-		<!-- <view class="back" @click="onBack()" v-if="false"><u-icon name="arrow-left" color="#333" bold size="36rpx" /></view> -->
 		<!-- #ifdef MP-WEIXIN -->
 		<view class="head">
 			<image class="logo" :src="`${$staticPath}imgs/logo.png`" mode="" />
@@ -52,7 +51,7 @@
 <style lang="scss" scoped>
 	.loginPage{
 		@include background-image('imgs/loginBg.png');
-		width: 100vw; height: 100vh;
+		width: 100vw !important; height: 100vh !important;
 	}
 	.head{
 		width: 100%; height: 50vh;
@@ -63,12 +62,6 @@
 			top: 50%; left: 50%;
 			transform: translate(-50%,-50%);
 			z-index: 9;
-		}
-		.bj{
-			position: absolute;
-			left: 0; top: 0;
-			width: 100%; height: 180%;
-			z-index: -1;
 		}
 	}
 	.back{

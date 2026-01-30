@@ -8,7 +8,7 @@
 		<view slot="top" style="position: relative; box-sizing: border-box;">
 			<image class="home-bg" :src="`${$staticPath}imgs/top_bg.png`" />
 			<!-- <view class="home-head" :style="{ height: headInfo.headHeight }"><view class="home-title" :style="{ marginTop: headInfo.titleTop }">待签署文件</view></view> -->
-			<u-navbar title="我的待签署" :fixed="false" bgColor="transparent" @leftClick="onBack" />
+			<u-navbar title="我的待签署" :fixed="false" bgColor="transparent" :leftIcon="$leftIcon" @leftClick="onBack" />
 			<view class="home-search">
 				<u--input border="surround" placeholder="请输入文件名称" suffixIcon="search" suffixIconStyle="color: #909399" customStyle="background-color: white;" @change="onSearch" />
 			</view>
@@ -54,8 +54,8 @@ export default {
 			this.queryParams.pageSize = pageSize
 			const type = pageNo>1 ? 'search': ''
 			getSignFileList(this.queryParams).then((resp) => {
-				this.totalCount = resp&&resp.result?resp.result.total : 0 
-				this.$refs.paging.complete(resp&&resp.result?resp.result.records:false)
+				this.totalCount = resp&&resp.data?resp.data.total : 0 
+				this.$refs.paging.complete(resp&&resp.data?resp.data.records:false)
 			}).catch(()=>{
 				this.$refs.paging.complete(false)
 			}).finally(()=>{

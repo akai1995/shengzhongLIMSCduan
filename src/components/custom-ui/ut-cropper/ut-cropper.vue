@@ -4,7 +4,7 @@
         :fixed="true" :auto="false" :refresher-enabled="false" :auto-show-back-to-top="true" :auto-scroll-to-top-when-reload="false"
         :loading-more-enabled="false" :show-refresher-when-reload="false" hide-empty-view
     >
-        <view slot="top" style="z-index: 999;"> <u-navbar title="图文识别" :fixed="false" background="transparent" color="#000" left-icon="close" left-icon-color="#000" @leftClick="onCloseCrop" /> </view>
+        <view slot="top" style="z-index: 999;"><u-navbar title="图文识别" :fixed="false" background="transparent" color="#000" left-icon="close" left-icon-color="#000" @leftClick="onCloseCrop" /> </view>
 		<view class="image-cropper" :style="{ zIndex }" @wheel="cropper.mousewheel">
 			<canvas v-if="use2d" type="2d" id="imgCanvas" class="img-canvas" :style="{ width: `${canvansWidth}px`, height: `${canvansHeight}px` }" />
 			<canvas v-else id="imgCanvas" canvas-id="imgCanvas" class="img-canvas" :style="{ width: `${canvansWidth}px`, height: `${canvansHeight}px` }" />

@@ -283,7 +283,7 @@ export default {
         getDeviceDetail() {
             deviceDetail(this.instrumentId).then((resp) => {
                 if (resp.code == 200) {
-                    const result = resp.result
+                    const result = resp.data
                     this.deviceInfo.name = result.deviceName
                     this.deviceInfo.code = result.deviceCode
                     this.deviceInfo.price = this.addLineBreakBeforeText(result.priceDesc, ["校内","校外", "不足"]) || "暂无价格"
@@ -304,7 +304,7 @@ export default {
         getGroup() {
             _getGroup().then((resp) => {
                 if (resp.code == 200) {
-                    let arr = []; for (let item of resp.result) {
+                    let arr = []; for (let item of resp.data) {
                         arr.push({ label: item.name, id: item.id, code: item.code })
                     }
                     this.group.list[0] = arr;
@@ -314,7 +314,7 @@ export default {
         getTeacher(id) {
             _getTeacher(id).then((resp) => {
                 if (resp.code == 200) {
-                    let arr = []; for (let item of resp.result) {
+                    let arr = []; for (let item of resp.data) {
                         arr.push({ label: item.name, id: item.id })
                     }
                     this.teacher.list[0] = arr;
@@ -347,7 +347,7 @@ export default {
             const currentDate = this.choose.isMore ? this.choose.moreDate : `${this.choose.list[this.choose.currIndex].year}-${this.choose.list[this.choose.currIndex].date}`
             getAllDayReserve({ currentDate, deviceId: this.deviceId }).then((resp) => {
                 if (resp.code == 200) {
-                    const result = resp.result
+                    const result = resp.data
                     if (result.length <= 4) {
                         this.deviceInfo.reserveTime = result
                         this.choose.moreText = false
@@ -475,7 +475,7 @@ export default {
                 if (resp.code == 200) {
                     this.showTips('预约成功，正在跳转', 'success');
                     setTimeout(() => {
-                        this.$ut.jump(`/sub-pack/tab5/reserve/detail?id=${resp.result.instrumentId}`);
+                        this.$ut.jump(`/sub-pack/tab5/reserve/detail?id=${resp.data.instrumentId}`);
                     }, 2000);
                 }
             });

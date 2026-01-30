@@ -26,17 +26,8 @@
 import { getFileExt, formatFileSize } from '@/providers/upload'
 export default {
     props: {
-        border: { type: Boolean, default: false },
-        /* large default small */
-        mode: { type: String, default: 'large' },
-        closable: { type: Boolean, default: false },
-        file: { type: Object, default: () => {
-                return {
-                    uiid: '', type: '', time: '', size: 0, thumb: '',
-                    name: '', title: '', filePath: '',content: '', status: 'waiting'
-                }
-            }
-        }
+        border: { type: Boolean, default: false }, /* large default small */ mode: { type: String, default: 'large' }, closable: { type: Boolean, default: false },
+        file: { type: Object, default: () => { return { uiid: '', type: '', time: '', size: 0, thumb: '', name: '', title: '', filePath: '',content: '', status: 'waiting' } } }
     },
     data() { return { }; },
     computed: {

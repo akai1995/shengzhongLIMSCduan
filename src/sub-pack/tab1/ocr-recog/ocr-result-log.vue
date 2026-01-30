@@ -63,8 +63,8 @@ export default {
 			this.queryParams.pageSize = pageSize
 			const type = pageNo>1 ? 'search': ''
 			getOcrInfoList(this.queryParams).then((resp) => {
-				this.totalCount = resp&&resp.result?resp.result.total : 0 
-				this.$refs.pagingLog.complete(resp&&resp.result?resp.result.records.map((row)=>({...row,checked:false})):false)
+				this.totalCount = resp&&resp.data?resp.data.total : 0 
+				this.$refs.pagingLog.complete(resp&&resp.data?resp.data.records.map((row)=>({...row,checked:false})):false)
 			}).catch(()=>{
 				this.$refs.pagingLog.complete(false)
 			}).finally(()=>{

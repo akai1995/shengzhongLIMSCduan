@@ -1,3 +1,7 @@
+//vue.config.js
+const TransformPages = require('uni-read-pages')
+const {webpack} = new TransformPages()
+
 module.exports = {
   css: { 
     loaderOptions: 
@@ -16,7 +20,13 @@ module.exports = {
     }
   },
   productionSourceMap: false,
-  transpileDependencies: ['uni-simple-router','z-paging','github-markdown-css','highlight.js','markdown-it','markdown-it-abbr','markdown-it-anchor','markdown-it-attrs','markdown-it-checkbox','markdown-it-container','markdown-it-deflist','markdown-it-footnote','markdown-it-ins','markdown-it-mark','markdown-it-sub','markdown-it-sup','markdown-it-toc','vconsole'],
+  transpileDependencies: [
+    'uni-simple-router','z-paging','github-markdown-css', 'highlight.js','markdown-it',
+    'markdown-it-abbr','markdown-it-anchor','markdown-it-attrs','markdown-it-checkbox',
+    'markdown-it-container','markdown-it-deflist','markdown-it-footnote',
+    'markdown-it-ins','markdown-it-mark','markdown-it-sub','markdown-it-sup','markdown-it-toc',
+    'vconsole'
+  ],
   chainWebpack: (config) => {
     // 发行或运行时启用了压缩时会生效
     config.optimization.minimizer('terser').tap((args) => {
@@ -26,8 +36,21 @@ module.exports = {
       compress.pure_funcs = [
         // '__f__', // App 平台 vue 移除日志代码
         // 'console.debug' // 可移除指定的 console 方法
+        'console.warn' // 可移除指定的 console 方法
       ]
       return args;
     });
-  }
+  },
+	configureWebpack: {
+		plugins: [
+			new webpack.DefinePlugin({
+				ROUTES: webpack.DefinePlugin.runtimeValue(() => {
+					const tfPages = new TransformPages({
+						includes: ['path', 'name', 'aliasPath']
+					});
+					return JSON.stringify(tfPages.routes)
+				}, true )
+			})
+		]
+	}
 }

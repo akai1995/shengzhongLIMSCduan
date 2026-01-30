@@ -44,23 +44,15 @@
 							</view>
 						</view>
 						<!-- 相关话题引导 -->
-						<view class="list pubGuidList" v-if="false">
-							<view class="item pubBoxAI" v-for="(item, index) in 1" :key="index" :id="`chat-${index}`">你能提供哪些资源？</view>
-						</view>
+						<view class="list pubGuidList" v-if="false"><view class="item pubBoxAI" v-for="(item, index) in 1" :key="index" :id="`chat-${index}`">你能提供哪些资源？</view></view>
 					</view>
 				</block>
 			</template>
-			<view class="pubEmptyData" v-else>
-				<u-empty icon-size="300" text="暂无会话记录，在下方输入问题向我提问吧" />
-			</view>
+			<view class="pubEmptyData" v-else><u-empty icon-size="300" text="暂无会话记录，在下方输入问题向我提问吧" /></view>
 		</scroll-view>
 
 		<!-- 聊天消息向上滚动时显示，此时点击回到最新信息处 -->
-		<view class="newMsg" v-if="showBotNew">
-			<u-button :throttle-time="0" @click="scrollBtn()">
-				<u-icon name="arrow-down" size="28" />
-			</u-button>
-		</view>
+		<view class="newMsg" v-if="showBotNew"><u-button :throttle-time="0" @click="scrollBtn()"><u-icon name="arrow-down" size="28" /></u-button></view>
 	</view>
 </template>
 

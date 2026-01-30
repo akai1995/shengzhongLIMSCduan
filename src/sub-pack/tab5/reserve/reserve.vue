@@ -5,7 +5,7 @@
         :auto-scroll-to-top-when-reload="false" :auto-clean-list-when-reload="true" :safe-area-inset-bottom="true"
         empty-view-text="暂无数据" :loading-more-no-more-text="`已加载完，共${totalCount}条记录`"
     >
-		<view slot="top" class=""><u-navbar title="我的预约" :fixed="false" background="transparent" color="#000" left-icon-color="#000"  @leftClick="onBack" /></view>
+		<view slot="top" class=""><u-navbar title="我的预约" :fixed="false" background="transparent" :leftIcon="$leftIcon" @leftClick="onBack" /></view>
 		<u-skeleton v-if="!firstLoaded&&dataList.length==0" rows="15" title loading />
         <view class="luBox" v-else>
             <project-reserve-item v-for="item,idx in dataList" :key="item.id" :item="item" :hideLine="dataList.length-1==idx" />

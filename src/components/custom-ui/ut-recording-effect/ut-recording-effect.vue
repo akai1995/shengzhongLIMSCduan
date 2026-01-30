@@ -38,7 +38,7 @@
     />
     
     <!-- 识别结果 -->
-    <view v-if="recognizedText" class="recognition-result">
+    <view v-if="recognizedText" class="recog-result">
       <view class="result-header">
         <text class="result-title">识别结果</text>
         <button class="clear-btn" @tap="clearResult">清空</button>
@@ -124,6 +124,12 @@ export default {
   },
   
   methods: {
+    // 显示加载
+    showLoading(title = '加载中') { uni.showLoading({ title, mask: true }) },    
+    // 显示提示
+    showToast(title) { uni.showToast({ title, icon: 'none', duration: 2000 }) },    
+    // 显示错误
+    showError(message) { uni.showToast({ title: message, icon: 'error', duration: 2000 }) },
     // 初始化录音管理器
     initRecorder() {
       this.recorderManager = uni.getRecorderManager()
@@ -289,8 +295,7 @@ export default {
     
     // 处理语音识别
     async processSpeechRecognition() {
-      this.showLoading('识别中...')
-      
+      this.showLoading('识别中...')      
       try {
         // 模拟识别过程
         await this.simulateRecognition()
@@ -298,10 +303,9 @@ export default {
         // 这里可以替换为真实的语音识别API调用
         // const text = await this.callSpeechAPI(this.audioFilePath)
         
-        this.showToast('识别成功')
-        
+        this.showToast('识别成功')        
         // 触发识别完成事件
-        this.$emit('recognition-complete', {
+        this.$emit('recog-complete', {
           text: this.recognizedText,
           audioPath: this.audioFilePath,
           duration: this.recordingDuration
@@ -341,12 +345,7 @@ export default {
     async checkPermission() {
       try {
         const res = await uni.getSetting()
-        if (!res.authSetting['scope.record']) {
-          const authRes = await uni.authorize({
-            scope: 'scope.record'
-          })
-          return true
-        }
+        if (!res.authSetting['scope.record']) { const authRes = await uni.authorize({ scope: 'scope.record' }); return true }
         return true
       } catch (error) {
         this.showError('需要录音权限才能使用此功能')
@@ -362,25 +361,12 @@ export default {
     
     // 复制文本
     copyText() {
-      uni.setClipboardData({
-        data: this.recognizedText,
-        success: () => {
-          this.showToast('已复制到剪贴板')
-        }
-      })
+      uni.setClipboardData({ data: this.recognizedText, success: () => { this.showToast('已复制到剪贴板') } })
     },
     
     // 分享文本
     shareText() {
-      uni.share({
-        provider: 'weixin',
-        type: 0,
-        title: '语音识别结果',
-        summary: this.recognizedText,
-        success: () => {
-          this.showToast('分享成功')
-        }
-      })
+      uni.share({ provider: 'weixin', type: 0, title: '语音识别结果', summary: this.recognizedText, success: () => { this.showToast('分享成功') } })
     },
     
     // 清除所有计时器
@@ -405,32 +391,6 @@ export default {
       this.effectStatusText = '正在录音...'
       this.cancelHintText = '上滑取消发送'
       this.clearTimers()
-    },
-    
-    // 显示加载
-    showLoading(title = '加载中') {
-      uni.showLoading({
-        title,
-        mask: true
-      })
-    },
-    
-    // 显示提示
-    showToast(title) {
-      uni.showToast({
-        title,
-        icon: 'none',
-        duration: 2000
-      })
-    },
-    
-    // 显示错误
-    showError(message) {
-      uni.showToast({
-        title: message,
-        icon: 'error',
-        duration: 2000
-      })
     }
   }
 }
@@ -520,7 +480,7 @@ export default {
 }
 
 /* 识别结果区域 */
-.recognition-result {
+.recog-result {
   width: 100%;
   max-width: 700rpx;
   background: rgba(255, 255, 255, 0.95);

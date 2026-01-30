@@ -12,7 +12,7 @@
                             green:[4,5,6].includes(item.deviceReserveStatus),
                             red:[3,7].includes(item.deviceReserveStatus),
                         }"
-                    > 
+                    >
                         {{ item.deviceReserveStatus_dictText }}
                     </view>
                 </view>
@@ -28,32 +28,10 @@
         </view> -->
     </view>
 </template>
-
 <script>
 export default {
-    props: {
-        hideLine  : {
-        type: Boolean,
-        default: false
-        },
-        item: {
-        type: Object,
-        default: () => {
-            return {
-            }
-        }
-        }
-    },
-    data() {
-        return {
-        };
-    },
-    methods: {
-        onView(id) {
-            if (!this.checkUserInfo()){ return }
-            this.$ut.jump(`/sub-pack/tab5/reserve/detail?id=${id}`);
-        }
-    }
+    props: { hideLine: { type: Boolean, default: false }, item: { type: Object, default: () => { return { } } } }, data() { return { }},
+    methods: { onView(id) { if (!this.checkUserInfo()){ return } this.$ut.jump(`/sub-pack/tab5/reserve/detail?id=${id}`); } }
 }
 </script>
 

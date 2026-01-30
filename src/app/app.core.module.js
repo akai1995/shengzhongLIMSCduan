@@ -1,26 +1,8 @@
+import StoreConfigs from '@/app/app.store.config';
+import EventsConfigs from '@/app/app.event.config';
 import store from '@/store/index';
-const AppCoreModule = {
-	mpType: 'app',
-	beforeCreate() { console.log('App beforeCreate'); },
-	created() { console.log('App created'); },
-	onLaunch: () => {
-		console.log('App Launch', process.env.VUE_APP_PLATFORM);
-        // #ifdef MP-WEIXIN
-        updateMpWeixin()
-        // #endif
+import Clipboard from 'clipboard';
 
-		requestInterceptor()
-        // 从缓存中获取用户信息，如果用户token过期，重新认证，然后保存到Vuex中
-        store.dispatch('GetWxInfo');
-	},
-	beforeMount() { console.log('App beforeMount'); },
-	onShow: () => { console.log('App Show') },
-	onHide: () => { console.log('App Hide') }
-}
-
-/**
- * 下载小程序新版本并重启应用
- */
 const onDownLoadUpdate = (updateManager) => {
     uni.showLoading({ title: '下载中...', mask: true }); updateManager.onUpdateReady(() => { uni.hideLoading(); updateManager.applyUpdate() })
     updateManager.onUpdateFailed(() => { uni.showModal({ title: '已经有新版本了哟~', content: '新版本已经上线啦~，请您删除当前小程序，重新搜索打开哟~' }) })
@@ -54,6 +36,56 @@ const requestInterceptor = () => {
     invoke(args) { args.url = args?.url || '' }, success(args) { if (args.statusCode === 400) { uni.$emit('z-paging-error-emit', args.data); uni.hideLoading(); uni.hideNavigationBarLoading() } },
     fail(error) { const { message, errMsg } = error; console.log('interceptor-fail', error); uni.$emit('z-paging-error-emit', errMsg||message||error); uni.hideLoading(); uni.hideNavigationBarLoading() }
   })
+}
+
+/**
+ * 初始化数据
+ */
+const initData = (options) => {
+	// #ifndef APP-PLUS
+        // if (/android/i.test(navigator.userAgent)) { store.commit('savePhoneType', 1) }
+        // if (/ipad|iphone|mac/i.test(navigator.userAgent)) { store.commit('savePhoneType', 2) }
+	// #endif
+    
+	// 从缓存中获取用户信息，如果用户token过期，重新认证，然后保存到Vuex中
+	store.dispatch(StoreConfigs.vuex.userModule.actions.updateCurrentUserAction, (res)=>{
+        console.log('initData updateCurrentUserAction', res)
+    });
+};
+
+const AppCoreModule = {
+	mpType: 'app',
+    beforeCreate: () => { console.log('App beforeCreate'); },
+	created: () => { console.log('App created'); },
+	onLaunch: (options) => {
+		console.log('App Launch', process.env.VUE_APP_PLATFORM);
+        // #ifdef MP-WEIXIN
+        updateMpWeixin()
+        // #endif
+		// #ifndef MP-WEIXIN
+		window.askMoreChat = (text) => { uni.$emit(EventsConfigs.eventNames.askMoreChat, { q: text }) }
+		window.copyCode = (codeId) => { console.log('codeId', codeId);
+			const clipboard = new Clipboard(`#${codeId}`, {
+                text(trigger) { console.log(trigger);
+                    return trigger.outerText.replace(/复制\n/g, '\n');
+                }
+            });
+            clipboard.on('success', (_event) => {
+                uni.showToast({ title: '复制成功', icon: 'success' });
+                clipboard.destroy()
+            });
+			clipboard.on('error', (_event) => {
+                uni.showToast({ title: '复制失败', icon: 'error' });
+                clipboard.destroy()
+            });
+		};
+		// #endif
+		requestInterceptor();
+        initData(options);
+	},
+	beforeMount: () => { console.log('App beforeMount'); },
+    onShow: () => { console.log('App Show') },
+    onHide: () => { console.log('App Hide') }
 }
 
 export default AppCoreModule;

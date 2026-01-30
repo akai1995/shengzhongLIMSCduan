@@ -10,38 +10,16 @@
 
 <script>
 export default {
-  props: {
-    hideLine  : {
-      type: Boolean,
-      default: false
+    props: {
+        hideLine: { type: Boolean, default: false },
+        item: { type: Object, default: () => { return { index: 1, createTime: '12-08 10:20:30', checked: false, content: '这是分析名称，这是分析名称，这是分析名称，这是分析名称（最多30个字符）' } } }
     },
-    item: {
-      type: Object,
-      default: () => {
-        return {
-            index: 1, createTime: '12-08 10:20:30', checked: false,
-            content: '这是分析名称，这是分析名称，这是分析名称，这是分析名称（最多30个字符）',            
-        }
-      }
-    }
-  },
-  data() {
-    return { }
-  },
-  methods: {
-        onToggle() {
-            this.$emit('toggle', this.item);
-        },
-		onView() {
-            this.$emit('view', this.item);
-		}
-  }
+    data() { return { } }, methods: { onToggle() { this.$emit('toggle', this.item); }, onView() { this.$emit('view', this.item); } }
 }
 </script>
 
 <style lang="scss" scoped>
-    .liItem {
-        position: relative;
+    .liItem { position: relative;
         padding: 24rpx 28rpx 24rpx 92rpx;
         background-color: white;
         // padding: 32rpx;

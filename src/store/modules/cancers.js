@@ -1,22 +1,18 @@
-import storage from '@/providers/utilities/storage'
-import AppConfig from '@/app/app.constant'
+import StoreConfigs from '@/app/app.store.config';
+import storage, { addCache, getCache, } from '@/providers/storage';
 const cancers = {
 	state: {
-		pickerLabel: storage.get(AppConfig.vuex.pickerLabel),
-		cancerUser: storage.get(AppConfig.vuex.cancerUser)
-	},
-	getters: {
-		cancerUser: (state) => state.cancerUser,
-		pickerLabel: (state) => state.pickerLabel,
+		pickerLabel: storage.get(StoreConfigs.cacheKeys.pickerLabel),
+		cancerUser: storage.get(StoreConfigs.cacheKeys.cancerUser)
 	},
 	mutations: {
 		SET_CANCER_USER: (state, info) => {
 			state.cancerUser = info
-			storage.set(AppConfig.vuex.cancerUser, info)
+			addCache(StoreConfigs.cacheKeys.cancerUser, info)
 		},
 		SET_pickerLabel: (state, info) => {
 			state.pickerLabel = info
-			storage.set(AppConfig.vuex.pickerLabel, info)
+			addCache(StoreConfigs.cacheKeys.pickerLabel, info)
 		},
 	},
 	actions: {

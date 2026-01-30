@@ -1,5 +1,4 @@
-import upload from '@/providers/upload'
-import service from '@/app/app.api';
+import upload from '@/providers/upload'; import service from '@/app/app.api';
 
 /* 用户密码重置 */ export function updateUserPwd(oldPassword, newPassword) { return service.put({ url: '/system/user/profile/updatePwd', params: { oldPassword, newPassword } }) }
 /* 查询用户个人信息 */ export function getUserProfile() { return service.get({ url: '/system/user/profile', method: 'get' }) }

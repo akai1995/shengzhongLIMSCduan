@@ -1,5 +1,5 @@
 {
-  "name": "eAI",
+  "name": "E-AI",
   "version": "1.26.0126",
   "private": true,
   "scripts": {
@@ -75,6 +75,7 @@
     "@dcloudio/uni-stacktracey": "^2.0.2-4080720251210002",
     "@dcloudio/uni-stat": "^2.0.2-4080720251210002",
     "@vue/shared": "^3.0.0",
+    "clipboard": "^2.0.11",
     "core-js": "^3.8.3",
     "flyio": "^0.6.2",
     "github-markdown-css": "^5.8.1",
@@ -93,6 +94,8 @@
     "markdown-it-sup": "^2.0.0",
     "markdown-it-toc": "^1.1.0",
     "recorder-core": "^1.3.25011100",
+    "uni-read-pages": "^1.0.5",
+    "uni-simple-router": "^2.0.8-beta.4",
     "vconsole": "^3.15.1",
     "vue": ">= 2.6.14 < 2.7",
     "vuex": "^3.2.0"

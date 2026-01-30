@@ -5,7 +5,7 @@
         :fixed="true" :auto="false" :refresher-enabled="false" :auto-show-back-to-top="true" :auto-scroll-to-top-when-reload="false"
         :loading-more-enabled="false" :show-refresher-when-reload="false" hide-empty-view
     >
-        <view slot="top"><u-navbar  :title="param.name" :fixed="false" background="transparent" color="#000" left-icon-color="#000" @leftClick="onBack" /></view>
+        <view slot="top"><u-navbar  :title="param.name" :fixed="false" background="transparent" :leftIcon="$leftIcon" @leftClick="onBack" /></view>
         <view class="pubArticleDetail">
             <view class="detail br10">
                 <u-skeleton v-if="!firstLoaded" rows="18" loading animation bgColor="transparent" />

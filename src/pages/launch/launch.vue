@@ -6,21 +6,20 @@
     >
 		<view slot="top" style="height: 280rpx;position: relative; box-sizing: border-box;">
 			<image class="launch-bg" :src="`${$staticPath}imgs/top_bg.png`" />
-			<!-- <view class="launch-head" :style="{ height: headInfo.headHeight }"><view class="launch-title" :style="{ marginTop: headInfo.titleTop }">eAI</view></view> -->
-			<u-navbar title="eAI" :fixed="false" bgColor="transparent"><view class="u-nav-slot" slot="left"></view></u-navbar>
+			<!-- <view class="launch-head" :style="{ height: headInfo.headHeight }"><view class="launch-title" :style="{ marginTop: headInfo.titleTop }">e-AI</view></view> -->
+			<u-navbar title="e-AI" :fixed="false" bgColor="transparent"><view class="u-nav-slot" slot="left"></view></u-navbar>
 		</view>
-		<view class="launch-content">
-			<view class="launch-welcome">欢迎使用eAI系统</view>
-			<view class="launch-description">请选择您需要的服务</view>
-			<view class="launch-buttons">
-				<button class="launch-button" @click="onHome('device-apply')">设备预约</button>
-				<button class="launch-button" @click="onHome('sign-doc')">待签署文件</button>
+		<view class="launchContent">
+			<view class="launchWelcome">欢迎使用e-AI系统</view>
+			<view class="launchDesc">请选择您需要的服务</view>
+			<view class="launchMenus">
+				<button class="launchMenuItem" @click="onHome('/pages/tabs/tab1/tab1')">设备预约</button>
+				<button class="launchMenuItem" @click="onHome('/sub-pack/tab5/sign-doc/sign-doc')">待签署文件</button>
 			</view>
 		</view>
-		<view slot="bottom" class="launch-footer">© 2026 eAI All Rights Reserved</view>
+		<view slot="bottom" class="launch-footer">© 2026 e-AI All Rights Reserved</view>
 	</z-paging>
 </template>
-
 <script>
 export default {
 	data() {
@@ -46,11 +45,11 @@ export default {
 			this.headInfo.listHeight = `calc(100vh - ${popInfo.top + popInfo.height + 155}px)`
 			// #endif
 		},
-		onHome(name) {
-			if (name=='sign-doc'){
+		onHome(path) {
+			if (path.indexOf('sign-doc') > -1){
             	if (!this.checkUserInfo()){ return }
 			}
-			this.$ut.jump('/pages/tabs/tab1/'+name) 
+			this.$ut.jump(path) 
 		}
 	},
 };
@@ -77,33 +76,33 @@ export default {
 		}
 	}
 
-	.launch-content {
+	.launchContent {
 		background-color: #fff;
 		// padding: 32rpx;
 		text-align: center;
 		
-		.launch-welcome {
+		.launchWelcome {
 			font-size: 48rpx;
 			font-weight: 700;
 			line-height: 96rpx;
 			color: #303133;
 		}
 		
-		.launch-description {
+		.launchDesc {
 			font-size: 32rpx;
 			line-height: 64rpx;
 			color: #606266;
 			margin-bottom: 56rpx;
 		}
 		
-		.launch-buttons {
+		.launchMenus {
 			align-items: center;
 			display: flex;
 			flex-direction: column;
 			gap: 36rpx; width: 100%;
 			margin: 20rpx 0;
 			
-			.launch-button {
+			.launchMenuItem {
 				width: 80%; height: 120rpx;
 				color: #fff; border: none;
 				border-radius: 60rpx;

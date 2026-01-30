@@ -24,7 +24,8 @@ else {
 console.log('envVersion', filePath);
 
 export default {
-	baseUrl, wsUrl,
+	envWx, baseUrl, wsUrl, currentPages: getCurrentPages(),
+	leftIcon: getCurrentPages().length > 1 ? 'home' : uni.$u.props.navbar.leftIcon,
 	onlineFilePath: `http://${filePath}/eai-lims/sys/common/static/`,
 	staticPath: 'https://genepiapi.ypzlfx.com/file/eai/temp/',
 	AES_KEY:'yinpecloudgenepi', IV: 'yinpecloudgenepi',
@@ -41,7 +42,7 @@ export default {
 	/* wss:// */ webSocketBaseUrl: wsUrl,
 	/* 应用信息 */
 	appInfo: {
-		/* 应用名称 */ name: 'eAI',
+		/* 应用名称 */ name: 'e-AI',
 		/* 应用版本 */ version: '2.26.0122',
 		/* 应用logo */ logo: '/static/logo.png',
 		/* 官方网站 */ site_url: 'http://ruoyi.vip',
@@ -50,15 +51,5 @@ export default {
 			{ title: '隐私政策', url: 'https://ruoyi.vip/protocol.html'	},
 			{ title: '用户服务协议', url: 'https://ruoyi.vip/protocol.html'	}
 		]
-	},
-   vuex: {
-		token: 'vuex_token',
-		avatar: 'vuex_avatar', name: 'vuex_name',
-		sex: 'vuex_sex', roles: 'vuex_roles',
-		permissions: 'vuex_permissions',
-		userId: 'vuex_userid', user: 'vuex_user',
-		idcard: 'vuex_idcard', userType: 'vuex_type',
-		orgid: 'vuex_orgid', tips: 'isTips',
-		cancerUser: 'cancerUser', pickerLabel: 'pickerLabel',
-   },
+	}
  }

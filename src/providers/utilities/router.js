@@ -1,9 +1,10 @@
 // providers/utilities/router.js
 
+const _404Path = '/pages/404/404'
 const homePath = '/pages/tabs/tab1/tab1'
 const loginPath = '/sub-pack/project-pages/login/login'
 export default {  
-  homePath, loginPath,
+  _404Path, homePath, loginPath,
   navTo(options = {}) {
     const { url, ...restOptions } = options;
     const pages = getCurrentPages();

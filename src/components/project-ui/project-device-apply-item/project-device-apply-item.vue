@@ -22,24 +22,13 @@
 <script>
 export default {
   props: {
-    hideLine  : {
-      type: Boolean,
-      default: false
-    },
-    item: {
-      type: Object,
-      default: () => {
-        return {
-        }
-      }
-    }
+    hideLine: { type: Boolean, default: false },
+    item: { type: Object, default: () => { return { } } }
   },
-  data() {
-    return { };
-  },
+  data() { return { } },
   methods: {
 		onView(id, deviceId) {
-            // if (!this.checkUserInfo()){ return }
+            if (!this.checkUserInfo()){ return }
 			this.$ut.jump(`/sub-pack/tab1/device/detail?instrumentId=${id}&deviceId=${deviceId}`);
 		}
   }

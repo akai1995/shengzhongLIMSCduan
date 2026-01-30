@@ -15,14 +15,9 @@
 <script>
 export default {
 	name: 'ut-bottom-nav',
-	props: { value: { type: Number, default: 0 }, },
-	data() { return { } },
+	props: { value: { type: Number, default: 0 }, }, data() { return { } },
 	methods: {
-		onJump(path, idx) {
-			if (this.value === idx) return
-			if (idx!=0) { if (!this.checkUserInfo()){ return } }
-			this.$eUni.redirectTo({ url: path })
-		}
+		onJump(path, idx) { if (this.value === idx) { return } if (idx!=0) { if (!this.checkUserInfo()){ return } } this.$eUni.redirectTo({ url: path }) }
 	}
 }
 </script>

@@ -2,17 +2,17 @@
 	<view class="page">
 		<image class="home-bg" :src="`${$staticPath}temp/imgs/top_bg.png`" />
 		<view class="home-head" :style="{ height: headInfo.headHeight }">
-			<view class="home-title" :style="{ marginTop: headInfo.titleTop }">eAI</view>
+			<view class="home-title" :style="{ marginTop: headInfo.titleTop }">e-AI</view>
 		</view>
 
 		<view class="home-content">
-			<view class="home-welcome">欢迎使用eAI系统</view>
+			<view class="home-welcome">欢迎使用e-AI系统</view>
 			<view class="home-description">请选择您需要的服务</view>
 			<view class="home-buttons">
 				<button class="home-button" @click="onHome('device-apply')">设备预约</button>
 				<button class="home-button" @click="onHome('sign-doc')">待签署文件</button>
 			</view>
-			<view class="home-footer">© 2026 eAI All Rights Reserved</view>
+			<view class="home-footer">© 2026 e-AI All Rights Reserved</view>
 		</view>
 	</view>
 </template>

@@ -15,29 +15,14 @@
 
 <script>
 export default {
-  props: {
-    hideLine  : {
-      type: Boolean,
-      default: false
-    },
-    item: {
-      type: Object,
-      default: () => {
-        return {
-        }
-      }
-    }
-  },
-  data() {
-    return {
-    };
-  },
-  methods: {
+    props: { hideLine: {type: Boolean,default: false }, item: {type: Object,default: () => {return {}}} },
+    data() { return { } },
+    methods: {
 		onSign(id) {
             if (!this.checkUserInfo()){ return }
 			this.$ut.jump(`/sub-pack/tab5/sign-doc/doc-sign?id=${id}&showSign=true`);
 		}
-  }
+    }
 }
 </script>
 

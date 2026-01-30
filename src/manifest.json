@@ -1,7 +1,7 @@
 {
-    "name" : "eAI",
+    "name" : "e-AI",
     "appid" : "__UNI__DE9C615",
-    "description" : "eAI",
+    "description" : "e-AI",
     "versionName" : "2.26.0126",
     "versionCode" : "100",
     "transformPx" : false,
@@ -79,7 +79,7 @@
     /* 小程序特有相关 */
     "mp-weixin" : {
         "appid" : "wxc5b836db531c0df1",
-        "projectname": "eAI",
+        "projectname": "e-AI",
         "optimization" : {
             "subPackages" : true
         },

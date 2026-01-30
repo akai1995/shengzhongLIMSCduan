@@ -7,7 +7,7 @@
             :fixed="true" :auto="false" :refresher-enabled="false" :auto-show-back-to-top="true" :auto-scroll-to-top-when-reload="false"
             :loading-more-enabled="false" :show-refresher-when-reload="false" hide-empty-view
         >
-            <view slot="top"><u-navbar  title="图文识别" :fixed="false" background="transparent" color="#000" left-icon-color="#000" @leftClick="onBack" /></view>
+            <view slot="top"><u-navbar  title="图文识别" :fixed="false" background="transparent" :leftIcon="$leftIcon" @leftClick="onBack" /></view>
             <view class="content">
                 <view class="tipBox">
                     <view class="tipTitle">上传图片</view><view class="tipTitle">帮您<text class="tipBb">OCR智能识别提取文字</text></view><view class="subTip">您可以上传需要识别的图片，我们将为您智能识别提取文字信息~</view>
@@ -27,29 +27,21 @@
 
 <script>
 import { ocrUploadFile, parseDoc, saveOcrInfo } from '@/app/api/index'
-import { onChooseFile } from '@/providers/upload'
-import ocrResultLog from './ocr-result-log.vue'
-import ocrResult from './ocr-result.vue'
-
+import { onChooseFile } from '@/providers/upload';
+import ocrResultLog from './ocr-result-log.vue'; import ocrResult from './ocr-result.vue';
 export default {
     components: { 'ocr-result': ocrResult, 'ocr-result-log': ocrResultLog },
 	data() {
 		return {
-			dataList: [], firstLoaded: false, fileList: [],
+			dataList: [], firstLoaded: false, fileList: [], showOcrResultLog: false,
             fileValue: '', info: { imgPath: '', content: '', filePath: '', title: '' },
-            showOcrResultLog: false,
 		};
 	},
 	mounted() { setTimeout(() => { this.$refs.paging && this.$refs.paging.refresh(); }, 250); },
 	methods: {
-        onOcrResultLogShow() {
-			if (!this.checkUserInfo()) { return; }
-            this.showOcrResultLog = true
-        },
+        onOcrResultLogShow() { if (!this.checkUserInfo()) { return; } this.showOcrResultLog = true },
         onOcrResultLogClose() { this.showOcrResultLog = false },
-		queryList(pageNo, pageSize) {
-			this.$refs.paging.endRefresh()
-		},
+		queryList(pageNo, pageSize) { this.$refs.paging.endRefresh() },
         onChoose(sourceType){
 			if (!this.checkUserInfo()) { return; }
             const params = {
@@ -65,13 +57,8 @@ export default {
                     if (resp.success) {
                         this.fileValue = `${this.$onlineFilePath}${resp.message}`
                         console.log('this.fileValue', this.fileValue)
-                    } else {
-                        this.showTips('上传异常', 'error');
-                    }
-                }).catch((error) => { 
-                    console.error(error);
-                    this.showTips('上传异常', 'error');
-                })
+                    } else { this.showTips('上传异常', 'error'); }
+                }).catch((error) => { console.error(error); this.showTips('上传异常', 'error'); })
             }).catch((error) => { console.error(error) });
         },
         onCropperClose() {
@@ -79,8 +66,7 @@ export default {
             this.info = { title: '', imgPath: '', content: '' }
         },
         onCropSave(event) {
-            console.log('onCropSave', event)
-            const _self = this
+            console.log('onCropSave', event); const _self = this
             // uni.previewImage({ urls: [event.tempFilePath], current: 0 });
             uni.showLoading({ title: '识别中...', mask: true });
             ocrUploadFile({ filePath: event.url || event.tempFilePath, formData: {
@@ -96,18 +82,9 @@ export default {
                         _self.info = Object.assign(_self.info, {...res.data,imgPath: cropPath})
                         console.log('_self.info', _self.info)
                     }
-                    }).finally(()=>{
-                        uni.hideLoading()
-                    })
-                } else {
-                    _self.showTips('上传异常', 'error');
-                }
-            }).catch((error) => { 
-                console.error(error);
-                _self.showTips('上传异常', 'error');
-            }).finally(() => {
-                uni.hideLoading();
-            });
+                    }).finally(()=>{ uni.hideLoading() })
+                } else { _self.showTips('上传异常', 'error'); }
+            }).catch((error) => {  console.error(error); _self.showTips('上传异常', 'error'); }).finally(() => { uni.hideLoading(); });
         },
         onCopy() {
             uni.setClipboardData({

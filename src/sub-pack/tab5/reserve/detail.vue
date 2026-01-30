@@ -4,7 +4,7 @@
 		:fixed="true" :auto="false" :refresher-enabled="false" :auto-show-back-to-top="true" :auto-scroll-to-top-when-reload="false"
 		:loading-more-enabled="false" :show-refresher-when-reload="false" hide-empty-view
 	>
-        <view slot="top"><u-navbar title="预约详情" :fixed="false" background="transparent" color="#000" left-icon-color="#000" @leftClick="onBack" /></view>
+        <view slot="top"><u-navbar title="预约详情" :fixed="false" background="transparent" :leftIcon="$leftIcon" @leftClick="onBack" /></view>
         <view class="reserve-detail">
             <ut-components ref="utComponents" />
             <view class="reserve-detail-status">
@@ -49,8 +49,8 @@ export default {
         onCheckStatus() { const status = this.info.deviceReserveStatus; if (![3,5,6,7].includes(status)) { return true } else { return false } },
         getDetail() {
             reserveDetail(this.reserveId).then((resp) => {
-                if (resp.code == 200) { this.info = resp.result;
-                    if (resp.result.deviceReserveStatus == 7) { this.getReject() }
+                if (resp.code == 200) { this.info = resp.data;
+                    if (resp.data.deviceReserveStatus == 7) { this.getReject() }
                     if (this.onCheckStatus() && this.checkTime()) { this.cancelReserve.button = true }
                 }
             });

@@ -28,7 +28,6 @@
 		<ut-bottomNav slot="bottom" :value="0" />
 	</z-paging>
 </template>
-
 <script>
 import { getDeviceList } from '@/app/api/index'
 export default {
@@ -39,46 +38,29 @@ export default {
 			dataList: [], totalCount: 0, firstLoaded: false
 		};
 	},
-	onShow() {
-		this.getHeadInfo()
-		// this.getDeviceList()
-	},
-	mounted() {
-		setTimeout(() => { this.$refs.paging && this.$refs.paging.refresh() }, 250);
-	},
+	onShow() { this.getHeadInfo(); },
+	mounted() { setTimeout(() => { this.$refs.paging && this.$refs.paging.refresh() }, 250); },
 	methods: {
 		getHeadInfo() {
 			// #ifdef MP-WEIXIN
 			// const popInfo = uni.getMenuButtonBoundingClientRect()
-			// this.headInfo.headHeight = `${popInfo.height}px`
-			// this.headInfo.titleTop = `${popInfo.top}px`
+			// this.headInfo.headHeight = `${popInfo.height}px`; this.headInfo.titleTop = `${popInfo.top}px`
 			// this.headInfo.listHeight = `calc(100vh - ${popInfo.top + popInfo.height + 155}px)`
 			// #endif
 		},
 		queryList(pageNo, pageSize) {
 			// this.$refs.paging.endRefresh()
-			this.queryParams.pageNo = pageNo
-			this.queryParams.pageSize = pageSize
+			this.queryParams.pageNo = pageNo; this.queryParams.pageSize = pageSize;
 			const type = pageNo>1 ? 'search': ''
-			getDeviceList(this.queryParams).then((resp) => {
-				this.totalCount = resp&&resp.result?resp.result.total : 0 
-				this.$refs.paging.complete(resp&&resp.result?resp.result.records:false)
+			getDeviceList(this.queryParams).then((res) => {
+				this.totalCount = res&&res.data?res.data.total : 0 
+				this.$refs.paging.complete(res&&res.data?res.data.records:false)
 			}).catch(()=>{
 				this.$refs.paging.complete(false)
-			}).finally(()=>{
-				setTimeout(()=>{ this.firstLoaded = true; }, 1750)
-				uni.hideLoading();
-			});
+			}).finally(()=>{ setTimeout(()=>{ this.firstLoaded = true; }, 750); uni.hideLoading(); })
 		},
-		onSearch(e) {
-			const searchData = e
-			this.queryParams.deviceName = searchData
-			this.$refs.paging && this.$refs.paging.refresh();
-		},
-		handleGoDetail(id, deviceId) {
-            if (!this.checkUserInfo()){ return }
-			this.$ut.jump(`/sub-pack/tab1/device/detail?instrumentId=${id}&deviceId=${deviceId}`);
-		}
+		onSearch(event) { this.queryParams.deviceName = event; this.$refs.paging && this.$refs.paging.refresh(); },
+		handleGoDetail(id, deviceId) { if (!this.checkUserInfo()){ return }; this.$ut.jump(`/sub-pack/tab1/device/detail?instrumentId=${id}&deviceId=${deviceId}`); }
 	},
 };
 </script>

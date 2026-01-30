@@ -1,3 +1,4 @@
+const pages = getCurrentPages();
 export default {
 	props: {
 		// 是否开启顶部安全区适配
@@ -23,7 +24,7 @@ export default {
 		// 左边的图标
 		leftIcon: {
 			type: String,
-			default: uni.$u.props.navbar.leftIcon
+			default: pages.length > 1 ? 'home' : uni.$u.props.navbar.leftIcon
 		},
 		// 左边的提示文字
 		leftText: {
