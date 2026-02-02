@@ -36,7 +36,7 @@ export default {
 	onShow() { this.getHeadInfo() },
 	mounted() {
 		uni.$on('app-list-refresh', this.eventHandle)
-		setTimeout(() => { this.$refs.paging && this.$refs.paging.refresh() }, 250);
+		setTimeout(() => { this.$refs.paging && this.$refs.paging.refresh() }, 450);
 	},
 	methods: {
 		eventHandle() { setTimeout(() => { this.$refs.paging && this.$refs.paging.refresh() }, 250) },

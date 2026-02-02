@@ -52,11 +52,12 @@
 					<!-- <chat-input :disabled="isAnswering" ref="chatInputBar" @send-fail="showTips($event, 'warning')" @show-log="onChatLogShow" @send="doSend" /> -->					
 					<view class="write chat-input-bar-container" :class="{ speak: showVoice }" @touchmove.stop.prevent>
 						<view class="lWrite chat-input-bar">
-							<u-scroll-list :indicator="false" v-if="fileList.length>0">
+							<u-scroll-list :indicator="false" v-if="fileList.length > 0">
 								<view class="fileWarp">
 									<project-file-card
-										v-for="file,idx in fileList" :key="idx" border mode="small"
-										closable :file="file" @del="onDelFile(idx)"
+										v-for="file,idx in fileList" :key="idx"
+										border mode="small" closable :file="file"
+										@del="onDelFile(idx)"
 									/>
 								</view>
 							</u-scroll-list>
@@ -64,21 +65,29 @@
 								<!-- :adjust-position="false"必须设置，防止键盘弹窗自动上顶，交由z-paging内部处理 -->
 								<view class="writeBox">
 									<u--textarea
-										v-if="!showVoice" border="none" :focus="focus" class="chat-input" v-model="chatCentent"
-										:adjust-position="false" confirm-type="send" :placeholder="isGenChat ? '正在回答中...' : '请输入您的问题'"
+										v-if="!showVoice" border="none" :focus="focus"
+										class="chat-input" v-model="chatCentent"
+										:adjust-position="false" confirm-type="send"
+										:placeholder="isGenChat ? '正在回答中...' : '请输入您的问题'"
 										@confirm="onSendClick()"
 									/>
 									<view class="voiceBox" v-else>
 										<text class="fTip" v-if="!isRecording">按住 说话</text>
-										<template v-else><text class="fTip">{{ cancelRecording ? '松开手指，取消发送' : '向上滑动，取消发送' }}</text></template>
+										<template v-else>
+											<text class="fTip">{{ cancelRecording ? '松开手指，取消发送' : '向上滑动，取消发送' }}</text>
+										</template>
 									</view>
 								</view>
 							</view>
-							<view class="chat-input-history" @click.stop="onChatLogShow()"><u-icon :name="`${$staticPath}imgs/icon-history.png`" size="45rpx" /></view>
-							<view class="chat-input-plus" :class="{ 'rotate-45': showMenu }" @click.stop="onTogglePlus()"><u-icon :name="`${$staticPath}imgs/icon-plus.png`" size="45rpx" /></view>
+							<view class="chat-input-history" @click.stop="onChatLogShow()">
+								<u-icon :name="`${$staticPath}imgs/icon-history.png`" size="45rpx" />
+							</view>
+							<view class="chat-input-plus" :class="{ 'rotate-45': showMenu }" @click.stop="onTogglePlus()">
+								<u-icon :name="`${$staticPath}imgs/icon-plus.png`" size="45rpx" />
+							</view>
 							<view class="chat-input-send" :class="{'chat-input-send-disabled': !sendEnabled }" @click.stop="onSendClick()">
 								<u-icon v-if="showVoice" :name="`${$staticPath}imgs/icon-voice.png`" size="46rpx" />
-								<u-icon v-else :name="`${$staticPath}imgs/icon-${sendEnabled?'send2':'voice'}.png`" size="46rpx" />
+								<u-icon v-else :name="`${$staticPath}imgs/icon-${sendEnabled?'send2':'keyboard'}.png`" size="48rpx" />
 							</view>
 						</view>
 						<!-- <view class="menuBox" v-show="showMenu">
@@ -97,12 +106,21 @@
 
 		<!-- 删除历史记录弹出层 -->
 		<u-mask class="delPopupMark" :show="showLongDel" z-index="10100" :custom-style="{ background: 'rgba(0, 0, 0, 0)' }" @click="showLongDel = false">
-			<view class="delPopup"><view class="inBtn" :style="{ top: delItemTop + 'px' }"><u-button class="delBtn" @click="delHis()"><u-icon name="delete" custom-prefix="custom-icon" color="#0F0F0F" size="48" />删除</u-button></view></view>
+			<view class="delPopup">
+				<view class="inBtn" :style="{ top: delItemTop + 'px' }">
+					<u-button class="delBtn" @click="delHis()">
+						<u-icon name="delete" custom-prefix="custom-icon" color="#0F0F0F" size="48" />
+						删除
+					</u-button>
+				</view>
+			</view>
 		</u-mask>
 
 		<!-- 微信隐私保护指引 -->
 		<u-modal :show="showPrivacy" width="90%" :show-cancel-button="true" :title="privacyTitle" cancel-text="拒绝" @cancel="denyPrivacy()">
-			<view class="privacyContent">在您使用之前，请仔细阅读<u-button class="txtBtn" @click="handleOpenPrivacyContract()">{{ privacyTitle }}</u-button>。如您同意{{ privacyTitle }}，请点击“同意”开始使用。</view>
+			<view class="privacyContent">
+				在您使用之前，请仔细阅读<u-button class="txtBtn" @click="handleOpenPrivacyContract()">{{ privacyTitle }}</u-button>。如您同意{{ privacyTitle }}，请点击“同意”开始使用。
+			</view>
 			<button id="agree-btn" open-type="agreePrivacyAuthorization" class="u-reset-button" slot="confirm-button" @agreeprivacyauthorization="handleAgreePrivacyAuthorization">同意</button>
 		</u-modal>			
 
@@ -110,7 +128,7 @@
 		<u-popup
 			:show="showVoiceRecord" mode="bottom"
 			:mask-close-able="false" :safe-area-inset-bottom="true"
-			@close="onVoicePopupClose()"
+			@close="onVoicePopupClose()" @click="onVoicePopupClose()"
 		>
 			<view class="voiceInputMark">
 				<view class="voiceInputPopup">
@@ -133,7 +151,7 @@
 							<view class="botImg">
 								<!-- <u-icon name="speak" custom-prefix="custom-icon" color="#242424" size="44" /> -->
 								<!-- <view class="recwave" :style="{display:recwaveChoiceKey!='WaveView'?'none':''}"><canvas type="2d" class="recwave-WaveView"></canvas></view> -->
-								<u-icon :name="!cancelRecording?`${$staticPath}imgs/speak2.png`:`${$staticPath}imgs/speak2.png`" size="44" />
+								<u-icon :name="!cancelRecording?`${$staticPath}imgs/speak2.png`:`${$staticPath}imgs/speak2.png`" size="99" />
 								<view class="layer" v-if="cancelRecording"></view>
 							</view>
 						</view>

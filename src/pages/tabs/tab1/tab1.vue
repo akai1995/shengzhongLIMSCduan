@@ -39,7 +39,7 @@ export default {
 		};
 	},
 	onShow() { this.getHeadInfo(); },
-	mounted() { setTimeout(() => { this.$refs.paging && this.$refs.paging.refresh() }, 250); },
+	mounted() { setTimeout(() => { this.$refs.paging && this.$refs.paging.refresh() }, 450); },
 	methods: {
 		getHeadInfo() {
 			// #ifdef MP-WEIXIN

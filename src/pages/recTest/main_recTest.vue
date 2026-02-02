@@ -35,11 +35,11 @@ DCloud 插件市场下载组件: https://ext.dcloud.net.cn/plugin?name=Recorder-
 	<!-- 控制按钮 -->
 	<view style="display: flex;padding-top:10px">
 		<view style="width:10px"></view>
-		<view style="flex:1"><button type="warn" @click="recReq" style="font-size:16px;padding:0">请求录音权限</button></view>
+		<view style="flex:1"><button type="warn" @click="recReq" style="font-size:16px;padding:0">录音权限</button></view>
 		<view style="width:10px"></view>
-		<view style="flex:1"><button type="primary" @click="recStart" style="font-size:16px;padding:0">开始录音</button></view>
+		<view style="flex:1"><button type="primary" @click="recStart" style="font-size:16px;padding:0">录音</button></view>
 		<view style="width:10px"></view>
-		<view style="flex:1"><button @click="recStop" style="font-size:16px;padding:0">停止录音</button></view>
+		<view style="flex:1"><button @click="recStop" style="font-size:16px;padding:0">停止</button></view>
 		<view style="width:10px"></view>
 	</view>
 	<view style="padding:10px 10px 0">
@@ -292,7 +292,7 @@ export default {
 	components: { TestPlayer,TestUploadView,TestRtVoiceView,TestNativePluginView,TestNativePluginPcmPlayerView,TestPageRenderjsView },
 	data() {
 		return {
-			recType:"mp3",
+			recType:"wav",
 			recSampleRate:16000,
 			recBitRate:16,
 

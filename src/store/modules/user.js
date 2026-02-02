@@ -50,6 +50,7 @@ const user = {
 			getCache(StoreConfigs.cacheKeys.currentUser).then((res) => {
 				if (res.code === 200) { const us = res.data; console.log('用户缓存信息', us);
 					if ((us.hasOwnProperty('isLogined')&&!us.isLogined) || !us.openId) {
+						delToken();
 						context.commit(StoreConfigs.vuex.userModule.mutations.updateCurrentUser, null);
 						return;
 					}

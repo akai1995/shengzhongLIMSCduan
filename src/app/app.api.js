@@ -1,7 +1,7 @@
 import httpStatusCode from '@/providers/utilities/httpStatusCode';
+import { getToken, delToken } from '@/providers/storage';
 import { onToast, tansParams } from '@/providers/index';
 import router from '@/providers/utilities/router';
-import { getToken } from '@/providers/storage';
 import config from '@/app/app.config';
 import store from '@/store/index';
 
@@ -54,7 +54,7 @@ const request = config => {
           const { statusCode, errMsg, data } = response; const code = data.code || 200;
           const msg = httpStatusCode[code] || data.message || httpStatusCode['default']
           if (statusCode == 401||code == 401) {
-            if(toLogin) { return }; toLogin = true;
+            if(toLogin) { delToken(); return; }; toLogin = true;
             uni.navigateTo({
               url: router.loginPath,
               complete:()=>{ toLogin = false }
@@ -65,7 +65,10 @@ const request = config => {
           else if (statusCode == 200 && code == 200) {
             const objData = data;
             if (objData.hasOwnProperty('message')) { delete objData.message; };
-            if (objData.hasOwnProperty('result')) { delete objData.result; };
+            if (objData.hasOwnProperty('result')) {
+              if (!objData.data&&objData.result) { objData.data = objData.result };
+              delete objData.result;
+            };
             resolve(checkData(objData))
           }
           else { onToast(msg); reject(code) }

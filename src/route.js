@@ -1,6 +1,9 @@
 // router.js
 import { RouterMount, createRouter } from 'uni-simple-router';
 
+// 确保ROUTES变量存在，如果不存在则初始化为空数组
+const routes = [ ...(typeof ROUTES !== 'undefined' ? ROUTES : []), { path: '*', redirect: (to) => { return { name: '404' } } } ];
+
 const router = createRouter({
     platform: process.env.VUE_APP_PLATFORM,
 	keepUniOriginNav: false, debugger: true,
@@ -27,7 +30,7 @@ const router = createRouter({
     // },
     applet: { /* v2.0.6+ */ animationDuration: 300 },
     // beforeProxyHooks: { /* v2.0.8+ */ onLoad: ([options], next, router) => { next([parseQuery({query: options}, router)]) } },
-	routes: [ ...ROUTES, { path: '*', redirect: (to) => { return { name: '404' } } } ]
+	routes
 })
 
 /* 全局路由前置守卫 */

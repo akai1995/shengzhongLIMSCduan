@@ -8,16 +8,15 @@ import store from '@/store/index'
 
 /** 先引入Recorder （ 需先 npm install recorder-core ）**/
 import Recorder from 'recorder-core'
-
 Recorder.DefaultDataType="arraybuffer"
 
 // #ifdef H5 || MP-WEIXIN
 //按需引入需要的录音格式编码器，用不到的不需要引入，减少程序体积；H5、renderjs中可以把编码器放到static文件夹里面用动态创建script来引入，免得这些文件太大
-import 'recorder-core/src/engine/mp3.js'
-import 'recorder-core/src/engine/mp3-engine.js'
+// import 'recorder-core/src/engine/mp3.js'
+// import 'recorder-core/src/engine/mp3-engine.js'
 import 'recorder-core/src/engine/wav.js'
 import 'recorder-core/src/engine/pcm.js'
-import 'recorder-core/src/engine/g711x'
+// import 'recorder-core/src/engine/g711x'
 // #endif
 
 /** 引入RecordApp **/
@@ -99,29 +98,30 @@ export default {
     },
     mounted() {
         const _self = this
-        console.log('Recorder.SampleData', Recorder.SampleData);
+        // console.log('Recorder.SampleData', Recorder.SampleData);
         setTimeout(() => {
             _self.useMarkdown = initMd(md);
+			console.log('%c _self.useMarkdown，请勿操作...' + _self.useMarkdown, 'color: #3c9cff; padding:5px 0; border-radius: 5px;');
             /* 可选，立即显示出环境信息 */
-            console.log('%c 正在执行Install，请勿操作...', 'color: #3c9cff; padding:5px 0; border-radius: 5px;');
-            RecordApp.Install(()=>{
-                console.log('Install成功，环境：' + _self.currentKeyTag(), 2);				
-                uni.showLoading({ title:'初始化...', mask: true })
-                /* 获取录音权限 */
-                _self.openPermission(
-                    () => {
-                        console.log('%c openPermission success', 'color: #ff0;');
-                        uni.hideLoading(); _self.isOpenPermission = true;
-                    },
-                    () => {
-                        console.log('%c openPermission fail', 'color: #f00;');
-                        uni.hideLoading(); _self.isOpenPermission = false;
-                    }
-                )
-            },(err)=>{
-                console.log('%c RecordApp.Install出错：'+err,1, 'color: #3c9cff; padding:5px 0; border-radius: 5px;');
-            });
-        }, 250);
+            // console.log('%c 正在执行Install，请勿操作...', 'color: #3c9cff; padding:5px 0; border-radius: 5px;');
+            // RecordApp.Install(()=>{
+            //     console.log('Install成功，环境：' + _self.currentKeyTag(), 2);				
+            //     uni.showLoading({ title:'初始化...', mask: true })
+            //     /* 获取录音权限 */
+            //     _self.openPermission(
+            //         () => {
+            //             console.log('%c openPermission success', 'color: #ff0;');
+            //             uni.hideLoading(); _self.isOpenPermission = true;
+            //         },
+            //         () => {
+            //             console.log('%c openPermission fail', 'color: #f00;');
+            //             uni.hideLoading(); _self.isOpenPermission = false;
+            //         }
+            //     )
+            // },(err)=>{
+            //     console.log('%c RecordApp.Install出错：'+err,1, 'color: #3c9cff; padding:5px 0; border-radius: 5px;');
+            // });
+        }, 450);
     },
     destroyed() {
         RecordApp.Stop(); //清理资源，如果打开了录音没有关闭，这里将会进行关闭
@@ -135,8 +135,8 @@ export default {
 			this.cancelRecording = true;
 			this.isRecording = false;
 			this.showVoiceRecord = false;
-			RecordApp.Stop(); //清理资源，如果打开了录音没有关闭，这里将会进行关闭
-			// this.stopRecording();
+			// RecordApp.Stop(); //清理资源，如果打开了录音没有关闭，这里将会进行关闭
+			this.stopRecording();
 		},
 
 		/**
@@ -456,38 +456,77 @@ export default {
                 this.audioChunks = [];
             }
         },
+		//Android App启用后台录音保活服务，需要原生插件支持，注意必须RecordApp.RequestPermission得到权限后调用
+		tryStart_androidNotifyService(){
+			if(RecordApp.UniIsApp() && !this._tips_anfs){ this._tips_anfs=1;
+				console.log("App中提升后台录音的稳定性：需要启用后台录音保活服务（iOS不需要），Android 9开始，锁屏或进入后台一段时间后App可能会被禁止访问麦克风导致录音静音、无法录音（App中H5录音也受影响），需要原生层提供搭配常驻通知的Android后台录音保活服务（Foreground services）；可调用配套原生插件的androidNotifyService接口，或使用第三方保活插件","#4face6");
+			}
+			if(RecordApp.UniIsApp()!=1) return; //非Android App不处理
+			if(!RecordApp.UniNativeUtsPlugin) return; //未使用原生插件
+			
+			this._NotifyService=false;
+			RecordApp.UniNativeUtsPluginCallAsync("androidNotifyService",{
+				title:"正在录音" ,
+				content:"正在录音中，请勿关闭App运行"
+			}).then((data)=>{
+				this._NotifyService=true;
+				var nCode=data.notifyPermissionCode, nMsg=data.notifyPermissionMsg;
+				console.log("搭配常驻通知的Android后台录音保活服务已打开，ForegroundService已运行(通知可能不显示或会延迟显示，并不影响服务运行)，通知显示状态(1有通知权限 3可能无权限)code="+nCode+" msg="+nMsg,2);
+			}).catch((e)=>{
+				console.log("原生插件的androidNotifyService接口调用出错："+e.message,1);
+				console.log("如果你已集成了配套的原生录音插件，并且是打包自定义基座运行，请检查本项目根目录的AndroidManifest.xml里面是否已经解开了注释，否则被注释掉的service不会包含在App中",1);
+			});
+		},
+		
+		tryClose_androidNotifyService(){
+			if(!this._NotifyService) return; this._NotifyService=false;
+			RecordApp.UniNativeUtsPluginCallAsync('androidNotifyService',{
+				close:true
+			}).then(()=>{
+				console.log('已关闭搭配常驻通知的Android后台录音保活服务');
+			}).catch((e)=>{
+				console.log('原生插件的androidNotifyService接口调用出错：'+e.message,1);
+			});
+		},
 
 		/****************************************************
 		 * 开始
 		 * *************************************************/
 		startRecording(event=null) {
-			if (!this.showVoice) { return }
-			if (this.isGenChat) {
-				this.showTips('正在生成结果中，请稍后再进行操作!', 'info');
+			const _self = this;
+			if (!_self.showVoice) { return }
+			if (_self.isGenChat) {
+				_self.showTips('正在生成结果中，请稍后再进行操作!', 'info');
 				return;
 			}
-			if (this.isProcessingSSEData) {
-				this.showTips('正在输出结果中，请稍后再进行操作!', 'info');
+			if (_self.isProcessingSSEData) {
+				_self.showTips('正在输出结果中，请稍后再进行操作!', 'info');
 				return;
 			}
-			if (event) this.startY = event.touches[0].clientY;
-			this.showVoiceRecord = true;
-			this.isRecording = true;
-			this.cancelRecording = false;
+			if (event) _self.startY = event.touches[0].clientY;
+			_self.showVoiceRecord = true;
+			_self.isRecording = true;
+			_self.cancelRecording = false;
 			console.log('开始录音');
-			if (!this.isHoldRecording) {
-				this.audioChunks = []; /* 清空录音数据 */
-				this.isHoldRecording = true; let processTime;
-				this.openPermission(() => {
-					if (AppConfig.useRealTimeSend) { this.realTimeAudioRequiredId = `${Date.now()}-${Math.random().toString(32)}`; this.currentConversationTaskId = guid(); }
-					RecordApp.UniWebViewActivate(this); // App环境下必须先切换成当前页面WebView
+			if (!_self.isHoldRecording) {
+				_self.audioChunks = []; /* 清空录音数据 */
+				_self.isHoldRecording = true; let processTime;
+				_self.openPermission(() => {
+					_self.takeoffEncodeChunkMsg="";var takeEcCount=0,takeEcSize=0;
+					_self.takeEcChunks=_self.takeoffEncodeChunkSet?[]:null;
+					_self.watchDogTimer=0; _self.wdtPauseT=0; var processTime=0;
+					
+					if(_self.useANotifySrv) _self.tryStart_androidNotifyService(); //Android App+原生插件环境下，如需后台或锁屏录音，就必须启用后台录音保活服务（iOS不需要），Android 9开始，锁屏或进入后台一段时间后App可能会被禁止访问麦克风导致录音静音、无法录音（renderjs中H5录音、原生插件录音均受影响），因此需要调用原生插件的`androidNotifyService`接口保活，或使用第三方保活插件
+			
+					if (AppConfig.useRealTimeSend) { _self.realTimeAudioRequiredId = `${Date.now()}-${Math.random().toString(32)}`; _self.currentConversationTaskId = guid(); }
+					RecordApp.UniWebViewActivate(_self); // App环境下必须先切换成当前页面WebView
 					RecordApp.Start({
 						type: AppConfig.audioType, sampleRate: AppConfig.audioSampleRate, bitRate: AppConfig.audioBitRate,
-						audioTrackSet: !this.useAEC ? null : { // 配置回声消除，H5、App、小程序均可用，但并不一定会生效；注意：H5、App+renderjs中需要在请求录音权限前进行相同配置RecordApp.RequestPermission_H5OpenSet后此配置才会生效
+						audioTrackSet: !_self.useAEC ? null : { // 配置回声消除，H5、App、小程序均可用，但并不一定会生效；注意：H5、App+renderjs中需要在请求录音权限前进行相同配置RecordApp.RequestPermission_H5OpenSet后此配置才会生效
 							noiseSuppression:true,echoCancellation:true,autoGainControl:true
 						},
-						setSpeakerOff: !this.recStart_setSpeaker ? null : { // 使用原生录音插件时，可以提供一个扬声器外放和听筒播放的切换默认配置
-							off: this.recStart_speakerOff, headset: this.recStart_speakerHds
+						setSpeakerOff: !_self.recStart_setSpeaker ? null : { // 使用原生录音插件时，可以提供一个扬声器外放和听筒播放的切换默认配置
+							off: _self.recStart_speakerOff, headset: _self.recStart_speakerHds
 						},
 						onProcess: (buffers, powerLevel, duration, sampleRate, newBufferIdx, asyncEnd) => {
 							console.log('buffers', buffers);
@@ -496,26 +535,26 @@ export default {
 							console.log('sampleRate', sampleRate);
 							console.log('newBufferIdx', newBufferIdx);
 							console.log('asyncEnd', asyncEnd);
-							if (AppConfig.useRealTimeSend) { this.realTimeSendTry(buffers, sampleRate, false); }
-							this.recpowerx=powerLevel; this.recpowert=this.formatTime(duration,1)+' / '+powerLevel; processTime=Date.now();
+							if (AppConfig.useRealTimeSend) { _self.realTimeSendTry(buffers, sampleRate, false); }
+							_self.recpowerx=powerLevel; _self.recpowert=_self.formatTime(duration,1)+' / '+powerLevel; processTime=Date.now();
 							
 							// #ifdef H5 || MP-WEIXIN
-							this.wave = this.waveStore && this.waveStore[this.recwaveChoiceKey];
-							if (this.wave) { this.wave.input(buffers[buffers.length - 1], powerLevel, sampleRate); }
+							_self.wave = _self.waveStore && _self.waveStore[_self.recwaveChoiceKey];
+							if (_self.wave) { _self.wave.input(buffers[buffers.length - 1], powerLevel, sampleRate); }
 							// #endif
 							/* 实时语音通话对讲，实时处理录音数据 */
-							if (this.wsVoiceProcess) this.wsVoiceProcess(buffers, powerLevel, duration, sampleRate, newBufferIdx);
+							if (_self.wsVoiceProcess) _self.wsVoiceProcess(buffers, powerLevel, duration, sampleRate, newBufferIdx);
 							
 							/* 实时释放清理内存，用于支持长时间录音；在指定了有效的type时，编码器内部可能还会有其他缓冲，必须同时提供takeoffEncodeChunk才能清理内存，否则type需要提供unknown格式来阻止编码器内部缓冲，App的onProcess_renderjs中需要进行相同操作 */
-							if (this.takeEcChunks) {
-								if(this.clearBufferIdx>newBufferIdx){ this.clearBufferIdx=0 } /* 重新录音了就重置 */
-								for(var i = this.clearBufferIdx || 0; i < newBufferIdx; i++) buffers[i] = null; this.clearBufferIdx = newBufferIdx;
+							if (_self.takeEcChunks) {
+								if(_self.clearBufferIdx>newBufferIdx){ _self.clearBufferIdx=0 } /* 重新录音了就重置 */
+								for(var i = _self.clearBufferIdx || 0; i < newBufferIdx; i++) buffers[i] = null; _self.clearBufferIdx = newBufferIdx;
 							}
 						},
-						takeoffEncodeChunk:!this.takeoffEncodeChunkSet?null:(chunkBytes)=>{
+						takeoffEncodeChunk:!_self.takeoffEncodeChunkSet?null:(chunkBytes)=>{
 							/* 全平台通用：实时接收到编码器编码出来的音频片段数据，chunkBytes是Uint8Array二进制数据，可以实时上传（发送）出去 */
 							/* App中如果未配置RecordApp.UniWithoutAppRenderjs时，建议提供此回调，因为录音结束后会将整个录音文件从renderjs传回逻辑层，由于uni-app的逻辑层和renderjs层数据交互性能实在太拉跨了，大点的文件传输会比较慢，提供此回调后可避免Stop时产生超大数据回传 */
-							takeEcCount++; takeEcSize+=chunkBytes.byteLength; this.takeoffEncodeChunkMsg="已接收到"+takeEcCount+"块，共"+takeEcSize+"字节"; this.takeEcChunks.push(chunkBytes);
+							takeEcCount++; takeEcSize+=chunkBytes.byteLength; _self.takeoffEncodeChunkMsg="已接收到"+takeEcCount+"块，共"+takeEcSize+"字节"; _self.takeEcChunks.push(chunkBytes);
 							
 							/* App中使用原生插件时，可方便的将数据实时保存到同一文件，第一帧时append:false新建文件，后面的append:true追加到文件 */
 							/* RecordApp.UniNativeUtsPluginCallAsync("writeFile",{path:"xxx.mp3",append:回调次数!=1, dataBase64:RecordApp.UniBtoa(chunkBytes.buffer)}).then(...).catch(...) */
@@ -546,12 +585,12 @@ export default {
 						}`
 					},
 					()=>{
-						console.log(this.currentKeyTag()+' 录制中：'+this.recType+' '+this.recSampleRate+' '+this.recBitRate+'kbps'+(this.takeoffEncodeChunkSet?' takeoffEncodeChunk':'')+(this.useAEC?' useAEC':'')+(this.appUseH5Rec?' appUseH5Rec':''),2);
+						console.log(_self.currentKeyTag()+' 录制中：'+_self.recType+' '+_self.recSampleRate+' '+_self.recBitRate+'kbps'+(_self.takeoffEncodeChunkSet?' takeoffEncodeChunk':'')+(_self.useAEC?' useAEC':'')+(_self.appUseH5Rec?' appUseH5Rec':''),2);
 						/* 【稳如老狗WDT】可选的，监控是否在正常录音有onProcess回调，如果长时间没有回调就代表录音不正常 */
 						if(RecordApp.Current.CanProcess()){
-							var wdt = this.watchDogTimer = setInterval(()=>{
-								if (wdt!=this.watchDogTimer) { clearInterval(wdt); return } /*sync */
-								if (Date.now()<this.wdtPauseT) return; /* 如果暂停录音了就不检测：puase时赋值this.wdtPauseT=Date.now()*2（永不监控），resume时赋值this.wdtPauseT=Date.now()+1000（1秒后再监控） */
+							var wdt = _self.watchDogTimer = setInterval(()=>{
+								if (wdt!=_self.watchDogTimer) { clearInterval(wdt); return } /*sync */
+								if (Date.now()<_self.wdtPauseT) return; /* 如果暂停录音了就不检测：puase时赋值_self.wdtPauseT=Date.now()*2（永不监控），resume时赋值_self.wdtPauseT=Date.now()+1000（1秒后再监控） */
 								if (Date.now()-(processTime || startTime)>1500) { clearInterval(wdt); console.log(processTime?"录音被中断":"录音未能正常开始",1); /* ... 错误处理，关闭录音，提醒用户 */ }
 							},1000);
 						}else{
@@ -559,7 +598,7 @@ export default {
 						}
 						var startTime=Date.now();
 					},(msg)=>{
-						console.log(this.currentKeyTag()+" 开始录音失败："+msg,1);
+						console.log(_self.currentKeyTag()+" 开始录音失败："+msg,1);
 					})
 				})
 			}
@@ -574,6 +613,7 @@ export default {
 		stopRecording() {
 			if (!this.isHoldRecording) return;
 			this.isHoldRecording = false;
+			this.tryClose_androidNotifyService(); //关闭后台录音保活服务
 			RecordApp.Stop((aBuf,duration,mime)=>{
 				var recSet=(RecordApp.GetCurrentRecOrNull()||{set:{type:this.recType}}).set;
 				console.log("已录制["+mime+"]："+this.formatTime(duration,1)+" "+aBuf.byteLength+"字节 " +recSet.sampleRate+"hz "+recSet.bitRate+"kbps",2);
@@ -847,11 +887,11 @@ export default {
 		// 点击了发送按钮
 		onSendClick() {
 			const _self = this
-			console.log('this.showVoice', _self.showVoice)
 			/* 文字对话 */
 			if (!_self.showVoice) {
 				if (!_self.sendEnabled) {
-					_self.onToggleVoice()
+					_self.showVoice = false
+					// _self.onToggleVoice()
 				} else {
 					if (_self.fileList.length>0) {
 						const i = _self.fileList.findIndex((row)=>['uploading'].includes(row.status))
@@ -866,22 +906,8 @@ export default {
 					setTimeout(()=>{ _self.chatCentent = ''; _self.fileList = []; }, 350)
 				}
 			} else { /* 语音对话 */
-				_self.onToggleVoice()
-				// if (!_self.sendEnabled) {
-				// 	if (_self.fileList.length>0) {
-				// 		const i = _self.fileList.findIndex((row)=>['uploading'].includes(row.status))
-				// 		if (i>-1) { _self.showTips('图片/文件还在上传中...', 'warning'); return;	}
-				// 		const index = _self.fileList.findIndex((row)=>['analysis'].includes(row.status))
-				// 		if (index>-1) { _self.showTips('图片/文件还在解析中...', 'warning'); return;	}
-				// 		const idx = _self.fileList.findIndex((row)=>['upload-fail','fail'].includes(row.status))
-				// 		if (idx>-1) { _self.showTips('请删除上传失败/异常文件', 'warning'); return;	}
-				// 	}
-				// 	if (!_self.sendEnabled) return;
-				// 	_self.doSend({ msg: _self.chatCentent, files: _self.fileList, });
-				// 	setTimeout(()=>{ _self.chatCentent = ''; _self.fileList = []; }, 350)
-				// } else {
-				// 	_self.showVoice = !_self.showVoice
-				// }
+				_self.showVoice = false
+				// _self.onToggleVoice()
 			}
 		},
 
@@ -1038,7 +1064,7 @@ export default {
 				this.outputBuffer += dt.answer; this.outputBufferAll += dt.answer;
 				if (!this.isProcessingSSEData) { this.processBuffer(true); }
 			}
-			setTimeout(() => { this.$refs.refChatList.scrollBtn(); }, 300);
+			setTimeout(() => { if (this.$refs.refChatList) { this.$refs.refChatList.scrollBtn(); } }, 300);
 		},
 
 		/**
@@ -1057,7 +1083,7 @@ export default {
 			}
 			this.chatType = 'text'; this.clearChatAttachAttr();
 			// this.currentConversationTaskId = '';
-			setTimeout(() => { this.$refs.refChatList.scrollBtn(); }, 500);
+			setTimeout(() => { if (this.$refs.refChatList) { this.$refs.refChatList.scrollBtn(); } }, 500);
 		},
 
 		/**
@@ -1073,7 +1099,7 @@ export default {
 					this.outputBuffer = this.outputBuffer.slice(1);
 					if (words === 85) {
 						words = 0;
-						setTimeout(() => { this.$refs.refChatList.scrollBtn(); }, 500);
+						setTimeout(() => { if (this.$refs.refChatList) { this.$refs.refChatList.scrollBtn(); } }, 500);
 					}
 					// 使用 setTimeout 分批处理数据，防止页面卡死
 					setTimeout(() => {
@@ -1085,7 +1111,7 @@ export default {
 					setTimeout(() => {
 						// 这里只有发送的是文字消息，回复渲染完成时才会执行
 						if (needUpdateReplyMsg && this.$refs.refChatList) { this.updateFormatedChatLog('processBuffer'); }
-						this.$refs.refChatList.scrollBtn();
+						if (this.$refs.refChatList) { this.$refs.refChatList.scrollBtn(); }
 					}, 1000);
 				}
 			};
@@ -1132,7 +1158,7 @@ export default {
 			this.showUpload = false;
 
 			this.showChatList = true; this.isGenChat = true;
-			setTimeout(() => { this.$refs.refChatList.scrollBtn(); }, 300);
+			setTimeout(() => { if (this.$refs.refChatList) { this.$refs.refChatList.scrollBtn(); } }, 300);
 
 			return true;
 		},
@@ -1270,7 +1296,7 @@ export default {
 				this.dataList.push({ role: 'user', content: m.sendMsg, chat_type: ct, isPlayingVoice: false, isContentComplete: true, isGenChat: false, ...m });
 				this.dataList.push({ role: 'assistant', content: m.replyMsg == null || m.replyMsg === '' ? '被终止的消息' : m.replyMsg, chat_type: ct, isAbandon: false, isPlayingVoice: false, isContentComplete: true, isGenChat: false, ...m });
 			});
-			setTimeout(() => { this.$refs.refChatList.scrollBtn(); }, 300);
+			setTimeout(() => { if (this.$refs.refChatList) { this.$refs.refChatList.scrollBtn(); } }, 300);
 		},
     },
 }

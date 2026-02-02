@@ -49,7 +49,7 @@ export default {
 		setTimeout(() => {
 			this.useMarkdown = initMd(md)
 		    // this.$refs.pagingRef && this.$refs.pagingRef.refresh();
-		}, 250);
+		}, 450);
 	},
 	methods: {
 		queryList(pageNo, pageSize) {

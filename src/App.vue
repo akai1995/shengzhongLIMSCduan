@@ -1,3 +1,9 @@
+<!-- <template>
+  <div id="app" style="width: 100%; height: 100%;">
+    <router-view v-if="$route"></router-view>
+  </div>
+</template> -->
+
 <script>
 	import Vue from 'vue';
 	import AppCoreModule from '@/app/app.core.module';

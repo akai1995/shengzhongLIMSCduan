@@ -1,9 +1,25 @@
 // #ifdef H5
 var envWx = 'release';
 // #endif
-var baseUrl = 'http://eai.natapp1.cc/eai-lims'; var wsUrl = 'wss://api.ypzlfx.com/prod-api'; var filePath = '192.168.0.151:9889';
+var baseUrl = 'http://eai.natapp1.cc/eai-lims';
+var wsUrl = 'wss://api.ypzlfx.com/prod-api';
+var filePath = '192.168.0.151:9889';
 // #ifdef MP-WEIXIN
-const accountInfo = wx.getAccountInfoSync(); var envWx = accountInfo.miniProgram.envVersion;
+try {
+  const systemInfo = uni.getSystemInfoSync();
+  console.log('systemInfo：', systemInfo); // getSystemInfoSync
+  console.log('systemInfo：', systemInfo.model); // 手机型号
+  console.log('systemInfo：', systemInfo.system); // 操作系统版本
+  console.log('systemInfo：', systemInfo.platform); // 客户端平台
+} catch (err) {
+  console.error(err);
+}
+const { miniProgram } = uni.getAccountInfoSync();
+console.log('miniProgram：', miniProgram);
+const { appId, envVersion, version } = miniProgram;
+console.log('miniProgram：', { appId, envVersion, version });
+const envWx = envVersion;
+
 console.log(envWx)
 if (envWx === 'develop') { /* 开发 */
 	// baseUrl = 'http://192.168.112.29:9083/eai-lims';

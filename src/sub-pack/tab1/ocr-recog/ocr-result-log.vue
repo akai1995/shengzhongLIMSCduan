@@ -51,12 +51,7 @@ export default {
 		};
 	},
     computed: { allDisabled() { return this.dataList.length==0 } },
-	mounted() {
-		setTimeout(() => {
-			this.useMarkdown = initMd(md)
-		    this.$refs.pagingLog && this.$refs.pagingLog.refresh();
-		}, 250);
-	},
+	mounted() { setTimeout(() => { this.useMarkdown = initMd(md); this.$refs.pagingLog && this.$refs.pagingLog.refresh(); }, 450); },
 	methods: {
 		queryList(pageNo, pageSize) {
 			this.queryParams.pageNO = pageNo

@@ -10,7 +10,9 @@
 	"pages": [
 		{ "path": "pages/tabs/tab1/tab1", "name": "tab1Page", "style": { "navigationBarTitleText": "设备预约", "enablePullDownRefresh": false	} },
 		{ "path": "pages/tabs/tab5/tab5", "name": "tab5Page", "style": { "navigationBarTitleText": "我的", "enablePullDownRefresh": false	} },
-		{ "path": "pages/404/404", "name": "unFound", "style": { "navigationStyle": "default", "enablePullDownRefresh": false, "navigationBarTitleText": "页面丢失了"	} }
+		{ "path": "pages/404/404", "name": "unFound", "style": { "navigationStyle": "default", "enablePullDownRefresh": false, "navigationBarTitleText": "页面丢失了"	} },
+		
+		{ "path" : "pages/recTest/main_recTest",	"style" : { "navigationBarTitleText": "RecordApp新开页面main - uni-app", "navigationStyle": "default" } }
 	],
 	"subPackages": [
 		{
@@ -48,7 +50,7 @@
 		"current": 0,
 		"list": [
 			{ "name": "报告分析", "path": "/sub-pack/chat/chat-stream/chat-stream", "query": "" },
-			{ "name": "图片识别", "path": "/sub-pack/tab1/ocr-recog/ocr-recog", "query": "" }
+			{ "name": "RecordApp录音测试", "path": "pages/recTest/main_recTest", "query": "" }
 		]
 	}
 }

@@ -1,7 +1,13 @@
 <template>
     <view>
-        <ut-cropper v-show="fileValue&&!info.imgPath" check-range :choosable="false" :width="1200" :height="1600" :src="fileValue" @close="onCropperClose" @crop="onCropSave"><view class="slotCropper">可拖动边线裁剪识别区域</view></ut-cropper>
-        <ocr-result v-if="fileValue&&info.imgPath" :info="info" @copy="onCopy" @close="onResultClose" /><ocr-result-log v-if="showOcrResultLog" @close="onOcrResultLogClose" />
+        <ut-cropper
+            v-show="fileValue&&!info.imgPath" check-range :choosable="false" :width="1200" :height="1600"
+            :src="fileValue" @close="onCropperClose" @crop="onCropSave"
+        >
+            <view class="slotCropper">可拖动边线裁剪识别区域</view>
+        </ut-cropper>
+        <ocr-result v-if="fileValue&&info.imgPath" :info="info" @copy="onCopy" @close="onResultClose" />
+        <ocr-result-log v-if="showOcrResultLog" @close="onOcrResultLogClose" />
         <z-paging 
             ref="paging" v-show="!!!fileValue&&!showOcrResultLog" class="page" :paging-style="{ backgroundColor: '#F7F8FA' }" v-model="dataList" @query="queryList"
             :fixed="true" :auto="false" :refresher-enabled="false" :auto-show-back-to-top="true" :auto-scroll-to-top-when-reload="false"
@@ -37,7 +43,7 @@ export default {
             fileValue: '', info: { imgPath: '', content: '', filePath: '', title: '' },
 		};
 	},
-	mounted() { setTimeout(() => { this.$refs.paging && this.$refs.paging.refresh(); }, 250); },
+	mounted() { setTimeout(() => { this.$refs.paging && this.$refs.paging.refresh(); }, 450); },
 	methods: {
         onOcrResultLogShow() { if (!this.checkUserInfo()) { return; } this.showOcrResultLog = true },
         onOcrResultLogClose() { this.showOcrResultLog = false },

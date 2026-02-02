@@ -1,6 +1,6 @@
 <template>
     <z-paging 
-        ref="pagingLog" class="page" :paging-style="{ backgroundColor: '#F7F8FA' }" v-model="dataList" @query="queryList"
+        ref="paging" class="page" :paging-style="{ backgroundColor: '#F7F8FA' }" v-model="dataList" @query="queryList"
         :fixed="true" :auto="false" :auto-show-back-to-top="true" :enable-back-to-top="true" :show-refresher-when-reload="detailInfo?false:true" 
         :auto-scroll-to-top-when-reload="false" :auto-clean-list-when-reload="detailInfo?false:true" :safe-area-inset-bottom="true"
         :hide-empty-view="detailInfo?true:false" :refresher-enabled="detailInfo?false:true" :loading-more-enabled="detailInfo?false:true"
@@ -53,15 +53,11 @@ export default {
             return this.dataList.length==0
         }
     },
-	mounted() {
-		setTimeout(() => {
-		    this.$refs.paging && this.$refs.paging.refresh();
-		}, 250);
-	},
+	mounted() { setTimeout(() => { this.$refs.paging && this.$refs.paging.refresh(); }, 450); },
 	methods: {
 		queryList(pageNo, pageSize) {
-			this.$refs.pagingLog.endRefresh()
-            this.$refs.pagingLog.complete(Array.from({ length: 8 }, (_, index) => { 
+			this.$refs.paging.endRefresh()
+            this.$refs.paging.complete(Array.from({ length: 8 }, (_, index) => { 
                 return {
                     index: index+1, imgPath: '',
                     content: '这是分析名称，这是分析名称，这是分析名称，这是分析名称（最多30个字符）',
