@@ -1,4 +1,4 @@
-import upload from '@/providers/upload'; import service from '@/app/app.api';
+import { upload } from '@/providers/upload'; import service from '@/app/app.api';
 
 /* 轮播 */ export function swiperList(params) { return service.get({ 'url': '/generalcontent/carousel/carousel/carouselList', params }) }
 

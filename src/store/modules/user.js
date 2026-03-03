@@ -21,6 +21,7 @@ const user = {
 		currentUser: null, currentDoctor: null,
 		socket: null, token: getToken(),
 		userType: storage.get(StoreConfigs.cacheKeys.type),
+		permission: storage.get(StoreConfigs.cacheKeys.permission),
 	},
 	mutations: {
 		savePhoneType(state, pt) { state.phoneType = pt; }, saveRegisterCodeParam(state, code) { state.wxRegisterParams.code = code; },
@@ -31,6 +32,17 @@ const user = {
 		},
 		updateCurrentDoctor: (state, doctor) => {
 			state.currentDoctor = doctor;
+		},
+		updatePermission(state, ps=[]) {
+			state.permission = ps			
+			if (ps&&ps.length > 0 ) {
+				storage.set(StoreConfigs.cacheKeys.permission, state.permission);
+				addCache(StoreConfigs.cacheKeys.permission, state.permission);
+			}
+			else {
+				storage.set(StoreConfigs.cacheKeys.permission, []);
+				delCache(StoreConfigs.cacheKeys.permission);
+			}
 		},
 		createSocket(state, uid) {
 			if (state.socket != null && state.socket.is_open_socket) { return }
@@ -50,16 +62,56 @@ const user = {
 			getCache(StoreConfigs.cacheKeys.currentUser).then((res) => {
 				if (res.code === 200) { const us = res.data; console.log('用户缓存信息', us);
 					if ((us.hasOwnProperty('isLogined')&&!us.isLogined) || !us.openId) {
-						delToken();
+						// delToken();
+						delCache(StoreConfigs.cacheKeys.permission);
 						context.commit(StoreConfigs.vuex.userModule.mutations.updateCurrentUser, null);
 						return;
 					}
 					if (us.access_token) { setToken(us.access_token) };
+					context.dispatch(StoreConfigs.vuex.userModule.mutations.updateCurrentUserAction);
 					context.commit(StoreConfigs.vuex.userModule.mutations.updateCurrentUser, { ...us, isLogined: true });
 					if (us.id || us.user_id) context.commit(StoreConfigs.vuex.userModule.mutations.createSocket, us.id || us.user_id);
 					attemptLoginUser(context, us)
 				}
 			});
+		},
+		updateCurrentUserAction(context) {
+			/* 从缓存还原用户权限 */
+			// const us = context.state.currentUser; console.log('用户权限缓存信息', us);
+			// if ((us.hasOwnProperty('isLogined')&&!us.isLogined) || !us.openId) {
+			// 	delCache(StoreConfigs.cacheKeys.permission);
+			// 	return;
+			// }			
+			context.commit(StoreConfigs.vuex.userModule.mutations.updatePermission, [
+				{
+					"path": "/pages/tabs/tab1/tab1",
+					"name": "tab1",
+					"type": "path",
+					"action": "",
+					"describe": "E-AI 智能助手",
+				},
+				{
+					"path": "",
+					"name": "",
+					"type": "action",
+					"action": "tab1:ocr-recog",
+					"describe": "扫图识字，一扫既得",
+				},
+				{
+					"path": "",
+					"name": "",
+					"type": "action",
+					"action": "tab1:chat",
+					"describe": "医疗报告智能分析助手",
+				},
+				{
+					"path": "",
+					"name": "",
+					"type": "data",
+					"action": "tab1:ocr-recog",
+					"describe": "",
+				},
+			]);
 		},
 		/* 退出系统 */
 		LogOut({ state }) {

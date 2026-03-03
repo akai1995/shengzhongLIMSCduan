@@ -1,7 +1,7 @@
 // #ifdef H5
 var envWx = 'release';
 // #endif
-var baseUrl = 'http://eai.natapp1.cc/eai-lims';
+var baseUrl = 'http://192.168.0.151:9083/eai-lims';
 var wsUrl = 'wss://api.ypzlfx.com/prod-api';
 var filePath = '192.168.0.151:9889';
 // #ifdef MP-WEIXIN
@@ -58,7 +58,7 @@ export default {
 	/* wss:// */ webSocketBaseUrl: wsUrl,
 	/* 应用信息 */
 	appInfo: {
-		/* 应用名称 */ name: 'e-AI',
+		/* 应用名称 */ name: 'E-AI',
 		/* 应用版本 */ version: '2.26.0122',
 		/* 应用logo */ logo: '/static/logo.png',
 		/* 官方网站 */ site_url: 'http://ruoyi.vip',

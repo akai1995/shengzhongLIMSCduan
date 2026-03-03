@@ -12,11 +12,41 @@ export default {
 			// #ifdef MP-WEIXIN
 			envWx, $onlineFilePath: onlineFilePath, $staticPath: staticPath, $eUni: router, $leftIcon: leftIcon,
             shareParams: {
-                title: 'e-AI', path: router.homePath, imageUrl: `${staticPath}imgs/logo.png`, fail: (err) => { uni.showToast({ title: '分享失败', icon: 'error' }); },
+                title: 'E-AI', path: router.homePath, imageUrl: `${staticPath}imgs/logo.png`, fail: (err) => { uni.showToast({ title: '分享失败', icon: 'error' }); },
                 desc: '', content: '', success: (res) => { if (res.errMsg == 'shareAppMessage:ok') { uni.showToast({ title: '分享成功', icon: 'success' }); } },                
             },
+			hasMenu: (value='') => {
+				const permission = store.getters.permission||[];
+				const paths = permission.filter(item => item.type === 'path');
+        		console.log('paths',permission, paths)
+				if (paths.length>0) {
+					const idx = paths.findIndex(item => item.action === value);
+					return idx > -1
+				}
+				return false
+			},
+			hasData: (value='') => {
+				const permission = store.getters.permission||[];
+				const datas = permission.filter(item => item.type === 'data');
+        		console.log('datas',permission, datas)
+				if (datas.length>0) {
+					const idx = datas.findIndex(item => item.action === value);
+					return idx > -1
+				}
+				return false
+			},
+			hasAction: (value='') => {
+				const permission = store.getters.permission||[];
+				const actions = permission.filter(item => item.type === 'action');
+        		console.log('actions',permission, actions)
+				if (actions.length>0) {
+					const idx = actions.findIndex(item => item.action === value);
+					return idx > -1
+				}
+				return false
+			},
 			// #endif
-			default_img: `${staticPath}imgs/default_doctor.png`,
+			default_img: `${staticPath}imgs/default_doctor.png`
         }
     },
     computed: { utComponentsRef() { return this.$refs.utComponents } },

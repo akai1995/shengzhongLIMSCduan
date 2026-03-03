@@ -1,10 +1,10 @@
 <template>
     <view class="cardBox">
-        <view class="cardWarp f1" @click="onJump('tab1/ocr-recog/ocr-recog')">
+        <view v-if="hasAction('tab1:ocr-recog')" class="cardWarp f1" @click="onJump('tab1/ocr-recog/ocr-recog')">
             <view class="cardInfo"><view class="cardTitle">图文识别</view><view class="cardSubTitle">扫图识字，一扫既得</view></view>
             <view class="cardIcon"><u-icon :name="`${$staticPath}imgs/img-ocr.png`" size="140rpx" /></view>
         </view>
-        <view class="cardWarp f2" @click="onJump('chat/chat-stream/chat-stream')">
+        <view v-if="hasAction('tab1:chat')" class="cardWarp f2" @click="onJump('chat/chat-stream/chat-stream')">
             <view class="cardInfo"><view class="cardTitle">报告分析</view><view class="cardSubTitle">医疗报告智能分析助手</view></view>
             <view class="cardIcon"><u-icon :name="`${$staticPath}imgs/img-report.png`" size="140rpx" /></view>
         </view>
@@ -26,10 +26,14 @@ export default {
 <style lang="scss" scoped>
 .cardBox {
     display: flex; justify-content: flex-start; gap: 22rpx;
-    .f1 { @include background-image('imgs/img-ocr-bg.png');
-    .cardInfo { .cardSubTitle{ color: #7D6B54; } } }
-    .f2 { @include background-image('imgs/img-report-bg.png');
-    .cardInfo { .cardSubTitle { color: #4B5980; } } }
+    .f1 { 
+        @include background-image('imgs/img-ocr-bg.png'); 
+        .cardInfo { .cardSubTitle{ color: #7D6B54; } } 
+    }
+    .f2 {
+        @include background-image('imgs/img-report-bg.png');
+        .cardInfo { .cardSubTitle { color: #4B5980; } }
+    }
     .cardWarp {
         width: 332rpx; height: 200rpx; position: relative; padding: 20rpx 140rpx 20rpx 20rpx; border-radius: 24rpx;
         .cardInfo { .cardTitle { font-weight: bold; color: #222; font-size: 32rpx; line-height: 50rpx; }

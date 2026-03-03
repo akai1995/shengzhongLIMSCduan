@@ -5,6 +5,7 @@ const getters = {
 	phoneType: (state) => state.user.phoneType,
 	wxRegisterParams: (state) => state.user.wxRegisterParams,
 	currentUser: (state) => state.user.currentUser,
+	permission: state => state.user.permission,
 	currentDoctor: (state) => state.user.currentDoctor,
 	socket: (state) => state.user.socket,
 	token: state => state.user.token,

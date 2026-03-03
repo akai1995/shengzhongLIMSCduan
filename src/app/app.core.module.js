@@ -51,6 +51,9 @@ const initData = (options) => {
 	store.dispatch(StoreConfigs.vuex.userModule.actions.updateCurrentUserAction, (res)=>{
         console.log('initData updateCurrentUserAction', res)
     });
+    store.dispatch(StoreConfigs.vuex.userModule.actions.updatePermissionAction, (res)=>{
+        console.log('initData updatePermissionAction', res)
+    });
 };
 
 const AppCoreModule = {

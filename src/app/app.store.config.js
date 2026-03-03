@@ -12,6 +12,7 @@ const StoreConfigs = {
         token: 'app.eai.token',
         userType: 'app.eai.type',
         tips: 'app.eai.isTips',
+		permission: 'app.eai.permission',
 	},
 
 	/**
@@ -24,6 +25,7 @@ const StoreConfigs = {
 		userModule: {
 			mutations: {
 				updateCurrentUser: 'updateCurrentUser',
+				updatePermission: 'updatePermission',
 				saveRegisterCodeParam: 'saveRegisterCodeParam',
 				savePhoneType: 'savePhoneType',
 				updateFirstLoginPageShowed: 'updateFirstLoginPageShowed',
@@ -31,6 +33,7 @@ const StoreConfigs = {
 				sendSocketMessage: 'sendSocketMessage',
 			},
 			actions: {
+				updateCurrentUserAction: 'updateCurrentUserAction',
 				updateCurrentUserAction: 'updateCurrentUserAction'
 			}
 		}

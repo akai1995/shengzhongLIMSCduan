@@ -19,7 +19,7 @@
 			</view>
 		</view>
 		<view class="home-content">
-			<project-home-card />
+			<project-home-card v-if="hasAction('tab1:ocr-recog')||hasAction('tab1:chat')" />
 			<view class="luBox">
 				<view class="luTitle">设备列表</view><u-skeleton v-if="!firstLoaded&&dataList.length==0" rows="8" title loading />
       			<project-device-apply-item v-for="item,idx in dataList" :key="item.id" :item="item" :hideLine="dataList.length-1==idx" />
@@ -65,9 +65,9 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.page {
-	box-sizing: border-box;
-}
+	.page {
+		box-sizing: border-box;
+	}
 
 	.home-bg {
 		position: absolute;

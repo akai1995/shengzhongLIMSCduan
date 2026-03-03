@@ -11,9 +11,7 @@ console.log('router', router)
 Vue.use(router);
 
 // 创建app实例并立即挂载到#app元素
-const app = new App({
-  router
-});
+const app = new App();
 RouterMount(app, router, '#app')
 
 // #endif
@@ -23,5 +21,4 @@ const app = new App();
 app.$mount(); //为了兼容小程序及app端必须这样写才有效果
 // #endif
 
-console.warn = () => {}
 console.warn = () => {}

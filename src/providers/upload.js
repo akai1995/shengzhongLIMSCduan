@@ -6,7 +6,7 @@ import { getToken } from '@/providers/storage'
 let timeout = 10000
 const baseUrl = config.baseUrl
 
-export default upload = config => {
+export const upload = config => {
   /* 是否需要设置 token */
   const isToken = (config.headers || {}).isToken === false; config.header = config.header || { }
   if ((store.getters.token || getToken()) && !isToken) { config.header['X-Access-Token'] = store.getters.token || getToken() }

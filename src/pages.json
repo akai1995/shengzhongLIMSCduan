@@ -8,6 +8,7 @@
         }
     },
 	"pages": [
+		{ "path": "pages/launch/launch", "name": "launchPage", "style": { "navigationBarTitleText": "E-AI", "enablePullDownRefresh": false	} },
 		{ "path": "pages/tabs/tab1/tab1", "name": "tab1Page", "style": { "navigationBarTitleText": "设备预约", "enablePullDownRefresh": false	} },
 		{ "path": "pages/tabs/tab5/tab5", "name": "tab5Page", "style": { "navigationBarTitleText": "我的", "enablePullDownRefresh": false	} },
 		{ "path": "pages/404/404", "name": "unFound", "style": { "navigationStyle": "default", "enablePullDownRefresh": false, "navigationBarTitleText": "页面丢失了"	} },
@@ -45,7 +46,7 @@
 			]
 		}
 	],
-	"globalStyle": { "navigationStyle": "custom", "navigationBarTextStyle": "black", "navigationBarTitleText": "e-AI", "navigationBarBackgroundColor": "#F8F8F8", "backgroundColor": "#F8F8F8" },
+	"globalStyle": { "navigationStyle": "custom", "navigationBarTextStyle": "black", "navigationBarTitleText": "E-AI", "navigationBarBackgroundColor": "#F8F8F8", "backgroundColor": "#F8F8F8" },
 	"condition": {
 		"current": 0,
 		"list": [

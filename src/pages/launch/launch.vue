@@ -6,18 +6,18 @@
     >
 		<view slot="top" style="height: 280rpx;position: relative; box-sizing: border-box;">
 			<image class="launch-bg" :src="`${$staticPath}imgs/top_bg.png`" />
-			<!-- <view class="launch-head" :style="{ height: headInfo.headHeight }"><view class="launch-title" :style="{ marginTop: headInfo.titleTop }">e-AI</view></view> -->
-			<u-navbar title="e-AI" :fixed="false" bgColor="transparent"><view class="u-nav-slot" slot="left"></view></u-navbar>
+			<!-- <view class="launch-head" :style="{ height: headInfo.headHeight }"><view class="launch-title" :style="{ marginTop: headInfo.titleTop }">E-AI</view></view> -->
+			<u-navbar title="E-AI" :fixed="false" bgColor="transparent"><view class="u-nav-slot" slot="left"></view></u-navbar>
 		</view>
 		<view class="launchContent">
-			<view class="launchWelcome">欢迎使用e-AI系统</view>
-			<view class="launchDesc">请选择您需要的服务</view>
+			<view class="launchWelcome">欢迎使用E-AI系统</view>
+			<!-- <view class="launchDesc">请选择您需要的服务</view>
 			<view class="launchMenus">
 				<button class="launchMenuItem" @click="onHome('/pages/tabs/tab1/tab1')">设备预约</button>
 				<button class="launchMenuItem" @click="onHome('/sub-pack/tab5/sign-doc/sign-doc')">待签署文件</button>
-			</view>
+			</view> -->
 		</view>
-		<view slot="bottom" class="launch-footer">© 2026 e-AI All Rights Reserved</view>
+		<view slot="bottom" class="launch-footer">© 2026 E-AI All Rights Reserved</view>
 	</z-paging>
 </template>
 <script>
@@ -31,6 +31,11 @@ export default {
 	},
 	onShow() {
 		this.getHeadInfo()
+		uni.showLoading({
+			title: '初始化中...',
+			mask: true
+		})
+		this.onHome('/pages/tabs/tab1/tab1')
 	},
 	methods: {
 		queryList(pageNo, pageSize) {
@@ -47,8 +52,10 @@ export default {
 		},
 		onHome(path) {
 			if (path.indexOf('sign-doc') > -1){
+				uni.hideLoading()
             	if (!this.checkUserInfo()){ return }
 			}
+			uni.hideLoading()
 			this.$ut.jump(path) 
 		}
 	},
