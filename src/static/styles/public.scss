@@ -416,6 +416,15 @@ text {
     }
 }
 
+.searchBox {
+    position: relative;
+    width: 100%;
+    padding: 20rpx 32rpx;
+    margin: 0 auto;
+    box-sizing: border-box;
+    min-height: 80rpx;
+}
+
 .writeArea {
     position: relative;
 

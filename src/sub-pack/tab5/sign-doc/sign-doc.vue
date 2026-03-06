@@ -9,7 +9,7 @@
 			<image class="home-bg" :src="`${$staticPath}imgs/top_bg.png`" />
 			<!-- <view class="home-head" :style="{ height: headInfo.headHeight }"><view class="home-title" :style="{ marginTop: headInfo.titleTop }">待签署文件</view></view> -->
 			<u-navbar title="我的待签署" :fixed="false" bgColor="transparent" :leftIcon="$leftIcon" @leftClick="onBack" />
-			<view class="home-search">
+			<view class="searchBox">
 				<u--input border="surround" placeholder="请输入文件名称" suffixIcon="search" suffixIconStyle="color: #909399" customStyle="background-color: white;" @change="onSearch" />
 			</view>
 		</view>
@@ -94,14 +94,6 @@ export default {
 			color: #000000;
 			text-align: center;
 		}
-	}
-
-	.home-search {
-		position: relative;
-		width: 100%;
-		padding: 20rpx 32rpx;
-		margin: 0 auto;
-		box-sizing: border-box;
 	}
 
 	.home-content {

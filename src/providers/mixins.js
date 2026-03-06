@@ -66,8 +66,8 @@ export default {
 		hidePhone(phone) { if (phone){ return phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2') } else { return phone } },
 		checkUserInfo() {
 			const user = store.getters.currentUser;
-			if (user!=null&&user.access_token) { return true; }
-			this.$ut.jump('/sub-pack/project-pages/login/login');
+			// if (user!=null&&user.access_token) { return true; }
+			// this.$ut.jump('/sub-pack/project-pages/login/login');
 			return false; 
 		},
 		showTips(msg, type = 'primary', duration = 1500) {

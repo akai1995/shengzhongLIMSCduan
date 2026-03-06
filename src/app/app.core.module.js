@@ -3,6 +3,7 @@ import EventsConfigs from '@/app/app.event.config';
 import store from '@/store/index';
 import Clipboard from 'clipboard';
 
+// #ifdef MP-WEIXIN
 const onDownLoadUpdate = (updateManager) => {
     uni.showLoading({ title: '下载中...', mask: true }); updateManager.onUpdateReady(() => { uni.hideLoading(); updateManager.applyUpdate() })
     updateManager.onUpdateFailed(() => { uni.showModal({ title: '已经有新版本了哟~', content: '新版本已经上线啦~，请您删除当前小程序，重新搜索打开哟~' }) })
@@ -30,6 +31,7 @@ const updateMpWeixin = () => {
         })
     } else { uni.showModal({ title: '提示', content: '当前微信版本过低，无法使用该功能，请升级到最新微信版本后重试。' }) }
 }
+// #endif
 
 const requestInterceptor = () => {
   uni.addInterceptor('request', {
@@ -42,18 +44,20 @@ const requestInterceptor = () => {
  * 初始化数据
  */
 const initData = (options) => {
-	// #ifndef APP-PLUS
-        // if (/android/i.test(navigator.userAgent)) { store.commit('savePhoneType', 1) }
-        // if (/ipad|iphone|mac/i.test(navigator.userAgent)) { store.commit('savePhoneType', 2) }
-	// #endif
-    
-	// 从缓存中获取用户信息，如果用户token过期，重新认证，然后保存到Vuex中
-	store.dispatch(StoreConfigs.vuex.userModule.actions.updateCurrentUserAction, (res)=>{
-        console.log('initData updateCurrentUserAction', res)
-    });
-    store.dispatch(StoreConfigs.vuex.userModule.actions.updatePermissionAction, (res)=>{
-        console.log('initData updatePermissionAction', res)
-    });
+    if (store&&store.dispatch) {
+        // #ifndef APP-PLUS
+            // if (/android/i.test(navigator.userAgent)) { store.commit('savePhoneType', 1) }
+            // if (/ipad|iphone|mac/i.test(navigator.userAgent)) { store.commit('savePhoneType', 2) }
+        // #endif
+        
+        // 从缓存中获取用户信息，如果用户token过期，重新认证，然后保存到Vuex中
+        store.dispatch(StoreConfigs.vuex.userModule.actions.updateCurrentUserAction, (res)=>{
+            console.log('initData updateCurrentUserAction', res)
+        });
+        store.dispatch(StoreConfigs.vuex.userModule.actions.updatePermissionAction, (res)=>{
+            console.log('initData updatePermissionAction', res)
+        });
+    }
 };
 
 const AppCoreModule = {
