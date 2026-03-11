@@ -18,8 +18,7 @@ const user = {
 	state: {
 		phoneType: 0,
 		wxRegisterParams: { code: '', phoneCode: '', scene: '' },
-		currentUser: null, currentDoctor: null,
-		socket: null, token: getToken(),
+		currentUser: null, currentDoctor: null, socket: null, token: getToken(),
 		userType: storage.get(StoreConfigs.cacheKeys.type),
 		permission: storage.get(StoreConfigs.cacheKeys.permission),
 	},
@@ -67,15 +66,15 @@ const user = {
 						context.commit(StoreConfigs.vuex.userModule.mutations.updateCurrentUser, null);
 						return;
 					}
-					if (us.access_token) { setToken(us.access_token) };
-					context.dispatch(StoreConfigs.vuex.userModule.mutations.updateCurrentUserAction);
+					if (us.access_token) { setToken(us.access_token); context.commit(StoreConfigs.vuex.userModule.mutations.SET_TOKEN, us.access_token); };
+					context.dispatch(StoreConfigs.vuex.userModule.actions.updatePermissionAction);
 					context.commit(StoreConfigs.vuex.userModule.mutations.updateCurrentUser, { ...us, isLogined: true });
 					if (us.id || us.user_id) context.commit(StoreConfigs.vuex.userModule.mutations.createSocket, us.id || us.user_id);
 					attemptLoginUser(context, us)
 				}
 			});
 		},
-		updateCurrentUserAction(context) {
+		updatePermissionAction(context) {
 			/* 从缓存还原用户权限 */
 			// const us = context.state.currentUser; console.log('用户权限缓存信息', us);
 			// if ((us.hasOwnProperty('isLogined')&&!us.isLogined) || !us.openId) {
@@ -83,34 +82,13 @@ const user = {
 			// 	return;
 			// }			
 			context.commit(StoreConfigs.vuex.userModule.mutations.updatePermission, [
-				{
-					"path": "/pages/tabs/tab1/tab1",
-					"name": "tab1",
-					"type": "path",
-					"action": "",
-					"describe": "E-AI 智能助手",
-				},
-				{
-					"path": "",
-					"name": "",
-					"type": "action",
-					"action": "tab1:ocr-recog",
-					"describe": "扫图识字，一扫既得",
-				},
-				{
-					"path": "",
-					"name": "",
-					"type": "action",
-					"action": "tab1:chat",
-					"describe": "医疗报告智能分析助手",
-				},
-				{
-					"path": "",
-					"name": "",
-					"type": "data",
-					"action": "tab1:ocr-recog",
-					"describe": "",
-				},
+				{ 'path': '/pages/tabs/tab1/tab1', 'name': 'tab1', 'type': 'path',   'action':               '',   'describe': 'E-AI 智能助手' },
+				// { 'path':                      '', 'name':     '', 'type': 'action', 'action': 'tab1:ocr-recog',   'describe': '图文识别' },
+				// { 'path':                      '', 'name':     '', 'type': 'action', 'action': 'tab1:chat-stream', 'describe': '报告分析' },
+				// { 'path':                      '', 'name':     '', 'type': 'action', 'action': 'tab1:reserve', 'describe': '设备预约' },
+				// { 'path':                      '', 'name':     '', 'type': 'action', 'action': 'tab1:sign-doc', 'describe': '待签署文件' },
+				{ 'path':                      '', 'name':     '', 'type': 'action', 'action': 'tab1:temperature-monitoring', 'describe': '温度监控' },
+				// { 'path':                      '', 'name':     '', 'type': 'data',   'action': 'tab1:ocr-recog', 'describe': '' },
 			]);
 		},
 		/* 退出系统 */

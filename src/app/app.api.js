@@ -55,7 +55,8 @@ const request = config => {
           const msg = httpStatusCode[code] || data.message || httpStatusCode['default']
           if (statusCode == 401||code == 401) {
             if(toLogin) { delToken(); return; }; toLogin = true;
-            uni.navigateTo({
+            console.log(router, '401', '无效的会话，或者会话已过期，请重新登录。');
+            router.navTo({
               url: router.loginPath,
               complete:()=>{ toLogin = false }
             })

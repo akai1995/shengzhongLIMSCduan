@@ -1,15 +1,15 @@
 <template>
-    <view class="temperature-monitoring-item" :class="statusClass" @click="onView(item.id)">
-       <view class="item-name">
-            这是设备名称（这是正常温度样式）
+        <view class="liItem" :class="[statusClass]" :style="hideMb ? 'margin-bottom: 0;' : ''" @click="onView(item.sn)">
+            <view class="item-name">
+            {{item.deviceName}}
         </view>
         <view class="item-sn">
-            设备SN：800640220648
+            <text>设备SN：</text>{{item.sn}}
         </view>
         <view class="item-temperature">
             <view class="temperature-box">
                 <view class="temperature-box-label temperature">
-                    23.5℃
+                    {{item.currentTemperature}}℃
                 </view>
                 <view class="temperature-box-name">
                     温度
@@ -17,7 +17,7 @@
             </view>
             <view class="temperature-box">
                 <view class="temperature-box-label">
-                    0-35.0℃
+                    {{item.temperatureLow}}-{{item.temperatureHigh}}℃
                 </view>
                 <view class="temperature-box-name">
                     预警范围
@@ -27,10 +27,37 @@
     </view>
 </template>
 <script>
+function objToStr(obj) {
+  let str = "";
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      str += `${key}=${obj[key]}&`;
+    }
+  }
+  // 去掉最后一个 &
+  return str.slice(0, -1);
+}
 export default {
     props: { 
-        hideLine: { type: Boolean, default: false }, 
-        item: { type: Object, default: () => { return { } } } 
+        hideMb: { type: Boolean, default: false }, 
+        item: { 
+            type: Object, 
+            default: () => { 
+                return {
+                    id: "1",
+                    deviceName: "",
+                    sn: "800640220648",
+                    currentTemperature: "20.7",
+                    temperatureHigh: "35",
+                    temperatureLow: "0",
+                    tenantIds: null,
+                    timeCode: "01",
+                    type: "ydg",
+                    // '1':高温预警，'2':低温预警，null：正常
+                    warning: null,
+                } 
+            } 
+        } 
     }, 
     data() { 
         return {
@@ -40,29 +67,44 @@ export default {
     computed: {
         statusClass() {
             // 随机输出class，实际使用时根据温度值判断
-            return ['', 'blue', 'red'][Math.floor(Math.random() * 3)]
+            const {warning,currentTemperature,temperatureHigh,temperatureLow} = this.item
+            const a = Number(currentTemperature)
+            const b = Number(temperatureHigh)
+            const c = Number(temperatureLow)
+            if (a < c) {
+                return 'blue'
+            } else if (a > b){
+                return 'red'
+            }
+            else {
+                return ''
+            }
+            // switch (warning) {
+            //     case '1': return 'red'
+            //     case '2': return 'blue'
+            //     default: return ''
+            // }
+            // return ['', 'blue', 'red'][Math.floor(Math.random() * 3)]
         }
     },
     methods: { 
-        onView(id) { 
+        onView(sn) { 
             if (!this.checkUserInfo()){ return } 
-            this.$ut.jump(`/sub-pack/tab5/temperature-monitoring/temperature-monitoring-detail?id=${id}`); 
+            this.$ut.jump(`/sub-pack/tab5/temperature-monitoring/temperature-monitoring-detail?${objToStr(this.item)}`); 
         } 
     }
 }
 </script>
 
 <style lang="scss" scoped>
-    .temperature-monitoring-item {
+    .liItem {
         background-color: white;
         width: 100%;
         padding: 32rpx;
         border-radius: 12rpx;
         position: relative;
         overflow: hidden;
-        &:not(:last-child) {
-            margin-bottom: 20rpx;
-        }
+        margin-bottom: 20rpx;
         &::after {
             content: '';
             position: absolute;

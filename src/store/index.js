@@ -8,10 +8,7 @@ import user from '@/store/modules/user'
 
 Vue.use(Vuex)
 const store = new Vuex.Store({
-  modules: {
-    cancers, dict,
-    equipment, user,
-  },
+  modules: { cancers, dict, equipment, user },
   getters
 })
 

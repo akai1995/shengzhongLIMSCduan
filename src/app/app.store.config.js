@@ -31,10 +31,11 @@ const StoreConfigs = {
 				updateFirstLoginPageShowed: 'updateFirstLoginPageShowed',
 				createSocket: 'createSocket',
 				sendSocketMessage: 'sendSocketMessage',
+				SET_TOKEN: 'SET_TOKEN',
 			},
 			actions: {
 				updateCurrentUserAction: 'updateCurrentUserAction',
-				updateCurrentUserAction: 'updateCurrentUserAction'
+				updatePermissionAction: 'updatePermissionAction'
 			}
 		}
 	}

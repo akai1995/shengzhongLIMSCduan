@@ -6,21 +6,21 @@ var wsUrl = 'wss://api.ypzlfx.com/prod-api';
 var filePath = '192.168.0.151:9889';
 // #ifdef MP-WEIXIN
 try {
-  const systemInfo = uni.getSystemInfoSync();
-  console.log('systemInfo：', systemInfo); // getSystemInfoSync
-  console.log('systemInfo：', systemInfo.model); // 手机型号
-  console.log('systemInfo：', systemInfo.system); // 操作系统版本
-  console.log('systemInfo：', systemInfo.platform); // 客户端平台
+//   const systemInfo = uni.getSystemInfoSync();
+//   console.log('systemInfo：', systemInfo); // getSystemInfoSync
+//   console.log('systemInfo：', systemInfo.model); // 手机型号
+//   console.log('systemInfo：', systemInfo.system); // 操作系统版本
+//   console.log('systemInfo：', systemInfo.platform); // 客户端平台
 } catch (err) {
-  console.error(err);
+//   console.error(err);
 }
 const { miniProgram } = uni.getAccountInfoSync();
-console.log('miniProgram：', miniProgram);
+// console.log('miniProgram：', miniProgram);
 const { appId, envVersion, version } = miniProgram;
-console.log('miniProgram：', { appId, envVersion, version });
+// console.log('miniProgram：', { appId, envVersion, version });
 const envWx = envVersion;
 
-console.log(envWx)
+// console.log(envWx)
 if (envWx === 'develop') { /* 开发 */
 	// baseUrl = 'http://192.168.112.29:9083/eai-lims';
 	// wsUrl = 'ws://192.168.0.154:5200';
@@ -37,7 +37,6 @@ else {
 	filePath = '192.168.0.151:9889';
 }
 // #endif
-console.log('envVersion', filePath);
 
 export default {
 	envWx, baseUrl, wsUrl, currentPages: getCurrentPages(),

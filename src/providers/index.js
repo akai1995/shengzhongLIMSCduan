@@ -1,5 +1,6 @@
 import { setToken, getToken, setOrgId, delToken, addCache } from '@/providers/storage'
 import { wxMiniCodeLogin, wxMiniLogin } from '@/app/api/login'
+import EventsConfigs from '@/app/app.event.config'
 import { getInfoByToken } from '@/app/api/person'
 import router from '@/providers/utilities/router'
 import { areaList } from '@/providers/area'
@@ -112,12 +113,11 @@ export const refreshSelfInfo = (needEmitEvent = false, isRegister = false) => {
       newUs.user_id = currentUser.user_id; newUs.orgId = res.orgId;
       newUs.avatar = newUs.avatar || `${AppConfig.staticPath}imgs/default_head.png`;      
       
-      console.log('refreshSelfInfo newUs, currentUser', newUs, currentUser)
       store.commit(StoreConfigs.vuex.userModule.mutations.updateCurrentUser, newUs);
       addCache(StoreConfigs.cacheKeys.currentUser, newUs).then((res) => {
         if (res.code == 200) {
           store.commit(StoreConfigs.vuex.userModule.mutations.updateCurrentUser, newUs);
-          if (needEmitEvent) { setTimeout(() => { uni.$emit('refreshLoginedPage'); }, 300) }
+          if (needEmitEvent) { setTimeout(() => { uni.$emit(EventsConfigs.eventNames.refreshLoginedPage) ; }, 300) }
         }
         resolve({ tip: isRegister ? '用户注册成功' : '用户登录成功', type: 'success' })
       })
@@ -140,12 +140,11 @@ export const refreshSelfInfo2 = (needEmitEvent = false, isRegister = false) => {
       newUs.user_id = currentUser.user_id; newUs.orgId = res.orgId;
       newUs.avatar = newUs.avatar || `${AppConfig.staticPath}imgs/default_head.png`;      
       
-      console.log('refreshSelfInfo newUs, currentUser', newUs, currentUser)
       store.commit(StoreConfigs.vuex.userModule.mutations.updateCurrentUser, newUs);
       addCache(StoreConfigs.cacheKeys.currentUser, newUs).then((res) => {
         if (res.code == 200) {
           store.commit(StoreConfigs.vuex.userModule.mutations.updateCurrentUser, newUs);
-          if (needEmitEvent) { setTimeout(() => { uni.$emit('refreshLoginedPage'); }, 300) }
+          if (needEmitEvent) { setTimeout(() => { uni.$emit(EventsConfigs.eventNames.refreshLoginedPage) ; }, 300) }
         }
         resolve({ tip: isRegister ? '用户注册成功' : '用户登录成功', type: 'success' })
       })
@@ -173,7 +172,7 @@ export const wxCodeLogin = (code, needShowLoading = true, needEmitEvent = true) 
       };
       store.commit(StoreConfigs.vuex.userModule.mutations.updateCurrentUser, loginedUs);
       refreshSelfInfo(needEmitEvent).then((resp) => { resolve(resp) })
-    }).catch((err)=>{ if (needShowLoading){ uni.hideLoading() } })
+    }).catch((err)=>{}).finally(()=>{ if (needShowLoading){ uni.hideLoading() } })
   })
   return act
 }
@@ -192,12 +191,18 @@ export const wxRegisterLogin = (params, needShowLoading = true, needEmitEvent = 
       }
       const loginedUs = {
         userId: res.data.user_id, isLogined: true,
-        access_token: res.data.access_token, expired_in: res.data.expired_in,
+        access_token: res.data.access_token,
+        expired_in: res.data.expired_in,
         expiredTime: new Date().getTime() + (7 * 24 * 60 * 60 * 1000) 
       };
+      console.log('wxRegisterLogin loginedUs.access_token', loginedUs.access_token);
+      store.commit(StoreConfigs.vuex.userModule.mutations.SET_TOKEN, loginedUs.access_token);
       store.commit(StoreConfigs.vuex.userModule.mutations.updateCurrentUser, loginedUs);
-      refreshSelfInfo(needEmitEvent).then((resp) => { resolve(resp) })
-    }).catch((err)=>{ if (needShowLoading){ uni.hideLoading() } })
+      refreshSelfInfo(needEmitEvent).then((resp) => {
+        if (needEmitEvent) { setTimeout(() => { uni.$emit(EventsConfigs.eventNames.refreshLoginedPage) ; }, 300) }
+        resolve(resp) 
+      })
+    }).catch((err)=>{}).finally(()=>{ if (needShowLoading){ uni.hideLoading() } })
   })
   return act
 }

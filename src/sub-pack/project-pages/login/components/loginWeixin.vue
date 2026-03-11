@@ -12,8 +12,7 @@
 				<!-- <u-icon name="weixin-fill" color="#fff" size="40rpx"></u-icon> -->
 				<text style="margin: 0 10rpx;">手机号快捷登录</text>
 			</button>
-			<!-- #endif -->
-			 
+			<!-- #endif -->			 
 			<!-- #ifdef H5 -->
 			<button size="mini" class="btn" v-if="checked.length>0" @click="showTips(`请到小程序里面操作`)">手机号快捷登录</button>
 			<button size="mini" class="btn" style="background:#82848a;" v-if="checked.length == 0" @click="showTips(`请到小程序里面操作`)">手机号快捷登录</button>
@@ -27,18 +26,26 @@
 		</view>
 	</view>
 </template>
-
 <script>
 import { wxRegisterLogin, getWxCode } from '@/providers'
 export default {
-	data() { return { checked: [], wxLoginForm: {}, phoneCode: '' } },
+	data() {
+		return {
+			checked: [], wxLoginForm: {}, phoneCode: ''
+		}
+	},
 	methods: {
 		onSubmit() {
-			if (this.checked.length === 0) { this.wxHandleLogin() }
+			const _self = this;
+			if (_self.checked.length === 0) { _self.wxHandleLogin() }
 			else {
 				uni.showModal({
 					title: '提示', content: '阅读并同意《服务条款》和《隐私协议》', showCancel: true,
-					success: ({ confirm, cancel }) => { if (confirm) { this.checked = ['ok']; this.wxHandleLogin() } }
+					success: ({ confirm, cancel }) => {
+						if (confirm) {
+							_self.checked = ['ok']; _self.wxHandleLogin()
+						}
+					}
 				})
 			}
 		},
@@ -46,14 +53,14 @@ export default {
 			const _self = this;
 			getWxCode().then((resp) => {
 				if (resp.code==200) { _self.wxLoginForm.code = resp.wxcode; uni.showLoading({ title:'登录中...', mask: true })
-					console.log({code:_self.wxLoginForm.code,phoneCode: _self.phoneCode});
 					wxRegisterLogin({code:_self.wxLoginForm.code,phoneCode: _self.phoneCode}).then((res) => {
 						uni.hideLoading(); console.log("获取登录用户信息", res);
 						if (res.type=='success') { _self.showTips(res.tip); const pages = getCurrentPages()
 							const pagesNum = pages.filter(({ route }) => route == '/sub-pack/project-pages/login/login').length
-							console.info("pagesNum", pagesNum)
 							_self.$eUni.navBack({ delta: pagesNum }); uni.$emit('refresh')
-							// uni.removeStorageSync('orderReceive'); uni.removeStorageSync('signin'); uni.removeStorageSync('report');
+							// uni.removeStorageSync('orderReceive');
+							// uni.removeStorageSync('signin');
+							// uni.removeStorageSync('report');
 						} else {
 							_self.showTips(res.tip, 'error')
 						}
@@ -67,7 +74,7 @@ export default {
 		},
 		getPhoneNumber(event) { 
 			const _self = this		
-			if (event.detail) { console.log('event.detail:', event.detail); 
+			if (event.detail) { 
 				const { errMsg, code, iv, encryptedData } = event.detail
 				if (errMsg == "getPhoneNumber:ok") {
 					_self.phoneCode = code; _self.wxHandleLogin() 

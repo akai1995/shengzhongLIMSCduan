@@ -4,10 +4,11 @@
         :fixed="true" :auto="false" :refresher-enabled="false" :auto-show-back-to-top="true" :auto-scroll-to-top-when-reload="false"
         :loading-more-enabled="false" :show-refresher-when-reload="false" hide-empty-view
     >
-		<view slot="top" style="height: 280rpx;position: relative; box-sizing: border-box;">
+	<!--  slot="top" -->
+		<view style="height: 308rpx; position: relative; box-sizing: border-box;">
 			<image class="launch-bg" :src="`${$staticPath}imgs/top_bg.png`" />
 			<!-- <view class="launch-head" :style="{ height: headInfo.headHeight }"><view class="launch-title" :style="{ marginTop: headInfo.titleTop }">E-AI</view></view> -->
-			<u-navbar title="E-AI" :fixed="false" bgColor="transparent"><view class="u-nav-slot" slot="left"></view></u-navbar>
+			<u-navbar title="E-AI" :fixed="true" bgColor="transparent"><view class="u-nav-slot" slot="left"></view></u-navbar>
 		</view>
 		<view class="launchContent">
 			<view class="launchWelcome">欢迎使用E-AI系统</view>

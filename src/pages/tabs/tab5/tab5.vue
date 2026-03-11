@@ -41,14 +41,14 @@ export default {
 			headInfo: { headHeight: '0px', titleTop: '0px', listHeight: '0px' },
 			userName: '尊敬的用户',
             menuList: [
-                {
-                    name:'我的预约', path: '/sub-pack/tab5/reserve/reserve',
-                    icon: `${this.$staticPath}imgs/icon-reserver.png`
-                },
-                {
-                    name:'我的待签署', path: '/sub-pack/tab5/sign-doc/sign-doc',
-                    icon: `${this.$staticPath}imgs/icon-reserver.png`
-                },
+                // {
+                //     name:'我的预约', path: '/sub-pack/tab5/reserve/reserve',
+                //     icon: `${this.$staticPath}imgs/icon-reserver.png`
+                // },
+                // {
+                //     name:'我的待签署', path: '/sub-pack/tab5/sign-doc/sign-doc',
+                //     icon: `${this.$staticPath}imgs/icon-reserver.png`
+                // },
                 {
                     name:'联系客服', path: '',
                     icon: `${this.$staticPath}imgs/icon-service.png`

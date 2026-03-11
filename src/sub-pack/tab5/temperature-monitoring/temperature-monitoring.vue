@@ -7,63 +7,83 @@
     >
 		<view slot="top" class="">
             <u-navbar title="温度监控" :fixed="false" background="transparent" :leftIcon="$leftIcon" @leftClick="onBack" />
-			<u-tabs class="cusTab" :scrollable="false" :list="tabList"></u-tabs>
+			<u-tabs class="cusTab" :scrollable="false" :list="tabList" @click="onTabClick"></u-tabs>
             <view class="searchBox">
-                <u--input border="surround" placeholder="请输入设备名称" suffixIcon="search" suffixIconStyle="color: #909399" customStyle="background-color: white;" @change="onSearch" />
+                <u--input
+                    border="surround" v-model="queryParams.deviceName"
+                    placeholder="请输入设备名称" suffixIcon="search" suffixIconStyle="color: #909399"
+                    customStyle="background-color: white;" @clear="onSearch" @confirm="onSearch"
+                />
             </view>
-            <u-scroll-list :indicator="false" class="categoryList">
+            <!-- <u-scroll-list :indicator="false" class="categoryList">
                 <view v-for="(item, index) in 4" :key="index" class="category-item" :class="{ on: selCate == index }" @click="onToggle(item, index)">{{item}}</view>
-            </u-scroll-list>
+            </u-scroll-list> -->
         </view>
 		<u-skeleton v-if="!firstLoaded&&dataList.length==0" rows="15" title loading />
         <view class="luBox" v-else>
-            <project-temperature-monitoring-item v-for="item,idx in dataList" :key="item.id" :item="item" :hideLine="dataList.length-1==idx" />
+            <project-temperature-monitoring-item
+                v-for="item,idx in dataList" :key="item.id"
+                :item="item" :hideMb="dataList.length-1==idx"
+            />
         </view>
     </z-paging>
 </template>
 
 <script>
-import { getReserveList } from '@/app/api/index'
+import { deviceDetail, getTemperatureDevice } from '@/app/api/index'
 export default {
     data() {
         return {
             tabList: [
-                { name: '液氮罐', value: 'temperature' },
-                { name: '冰箱', value: 'temperature' }
+                { name: '液氮罐', value: 'ydg' },
+                { name: '冰箱', value: 'bx' }
             ],
             selCate: 0,
-            queryParams: { pageNo: 1, pageSize: 10 },
+            queryParams: { pageNo: 1, pageSize: 10, deviceName: '', type: 'ydg' },
             dataList:[], totalCount:0, firstLoaded: false
         }
     },
-    onLoad() { this.getReserveList() },
 	mounted() { setTimeout(() => { this.$refs.paging && this.$refs.paging.refresh(); }, 250) },
     methods: {
 		queryList(pageNo, pageSize) {
 			this.queryParams.pageNo = pageNo
 			this.queryParams.pageSize = pageSize
-            this.totalCount = 8 
-            this.$refs.paging.complete([{},{}, {}, {}, {}, {}, {}, {}, {}, {}, {}])
-			// getReserveList(this.queryParams).then((resp) => {
-			// 	this.totalCount = resp&&resp.data?resp.data.total : 0 
-			// 	this.$refs.paging.complete(resp&&resp.data?resp.data.records:false)
-			// }).catch(()=>{
-			// 	this.$refs.paging.complete(false)
-			// }).finally(()=>{
+            // this.totalCount = 8 
+            // this.$refs.paging.complete([{},{}, {}, {}, {}, {}, {}, {}, {}, {}, {}])
+            const params = {...this.queryParams,type: this.queryParams.type, deviceName: this.queryParams.deviceName }
+			getTemperatureDevice(this.queryParams).then((resp) => {
+				this.totalCount = resp&&resp.data?resp.data.total : 0 
+				this.$refs.paging.complete(resp&&resp.data?resp.data.records:false)
+			}).catch(()=>{
+				this.$refs.paging.complete(false)
+			}).finally(()=>{
 				setTimeout(()=>{ this.firstLoaded = true; }, 1750)
 				uni.hideLoading();
-			// });
+			});
 		},
-        handleGoDetail(id) { this.$ut.jump(`/sub-pack/temperature-monitoring/temperature-monitoring-detail?id=${id}`) },
         onToggle(item, idx) {
             this.selCate = idx
+        },
+        onTabClick(item) {
+            console.log('item::', item)
+            const { name, value } = item
+            this.queryParams.type = value
+            setTimeout(() => { this.$refs.paging && this.$refs.paging.refresh(); }, 250)
+        },
+        onSearch(event) {
+            console.log('search::', event)
+            // this.queryParams.deviceName = event
+            setTimeout(() => { this.$refs.paging && this.$refs.paging.refresh(); }, 250)
         }
     }
 }
 </script>
 <style lang="scss" scoped>
 .cusTab{
-    background-color: white;
+    background-color: white !important;
+}
+::v-deep .u-tabs {
+    background-color: white !important;
 }
 .categoryList{
     padding: 0 24rpx;

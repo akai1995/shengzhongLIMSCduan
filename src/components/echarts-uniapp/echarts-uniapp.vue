@@ -51,17 +51,19 @@
 		mounted() {
 			// Disable prograssive because drawImage doesn't support DOM as parameter
 			// See https://developers.weixin.qq.com/miniprogram/dev/api/canvas/CanvasContext.drawImage.html
-			echarts.registerPreprocessor(option => {
-				if (option && option.series) {
-					if (option.series.length > 0) {
-						option.series.forEach(series => {
-							series.progressive = 0;
-						});
-					} else if (typeof option.series === 'object') {
-						option.series.progressive = 0;
+			if (echarts.registerPreprocessor) {
+				echarts.registerPreprocessor(option => {
+					if (option && option.series) {
+						if (option.series.length > 0) {
+							option.series.forEach(series => {
+								series.progressive = 0;
+							});
+						} else if (typeof option.series === 'object') {
+							option.series.progressive = 0;
+						}
 					}
-				}
-			});
+				});
+			}
 
 		},
 
@@ -135,26 +137,30 @@
 			// #endif
 			// #ifndef H5
 			//绘制图表
-			async initChart(option) {
-				// #ifdef MP-WEIXIN || MP-TOUTIAO 
-				const canvasAttr = await this.getCanvasAttr2d();
-				// #endif
-				// #ifndef MP-WEIXIN || MP-TOUTIAO
-				const canvasAttr = await this.getCanvasAttr();
-				// #endif
-				const {
-					canvas,
-					canvasWidth,
-					canvasHeight,
-					canvasDpr
-				} = canvasAttr
-				chartList[this.canvasId] = echarts.init(canvas, null, {
-					width: canvasWidth,
-					height: canvasHeight,
-					devicePixelRatio: canvasDpr // new
-				});
-				canvas.setChart(chartList[this.canvasId]);
-				chartList[this.canvasId].setOption(option?option:this.option);
+			initChart(option) {
+				const _self = this
+				_self.$nextTick(async () => {
+					// #ifdef MP-WEIXIN || MP-TOUTIAO 
+					const canvasAttr = await _self.getCanvasAttr2d();
+					// #endif
+					// #ifndef MP-WEIXIN || MP-TOUTIAO
+					const canvasAttr = await _self.getCanvasAttr();
+					// #endif
+					const {
+						canvas,
+						canvasWidth,
+						canvasHeight,
+						canvasDpr
+					} = canvasAttr
+					chartList[_self.canvasId] = echarts.init(canvas, null, {
+						width: canvasWidth,
+						height: canvasHeight,
+						devicePixelRatio: canvasDpr // new
+					});
+					console.log('initChart:::', chartList[_self.canvasId])
+					canvas.setChart(chartList[_self.canvasId]);
+					chartList[_self.canvasId].setOption(option ? option : _self.option);
+				})
 			},
 			//生成图片
 			canvasToTempFilePath(opt) {

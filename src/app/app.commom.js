@@ -36,32 +36,38 @@ export const initVue = (Vue) => {
         }
     }
     Vue.prototype.hasMenu = (value='') => {
-        const permission = store.getters.permission;
-        const paths = permission.filter(item => item.type === 'path');
-        console.log('paths',permission, paths)
-        if (paths.length>0) {
-            const idx = paths.findIndex(item => item.action === value);
-            return idx > -1
+        if (store&&store.getters) {
+            const permission = store.getters.permission;
+            const paths = permission.filter(item => item.type === 'path');
+            // console.log('paths',permission, paths)
+            if (paths.length>0) {
+                const idx = paths.findIndex(item => item.action === value);
+                return idx > -1
+            }
         }
         return false
     }
     Vue.prototype.hasData = (value='') => {
-        const permission = store.getters.permission||[];
-        const datas = permission.filter(item => item.type === 'data');
-        console.log('datas',permission, datas)
-        if (datas.length>0) {
-            const idx = datas.findIndex(item => item.action === value);
-            return idx > -1
+        if (store&&store.getters) {
+            const permission = store.getters.permission||[];
+            const datas = permission.filter(item => item.type === 'data');
+            // console.log('datas',permission, datas)
+            if (datas.length>0) {
+                const idx = datas.findIndex(item => item.action === value);
+                return idx > -1
+            }
         }
         return false
     }
     Vue.prototype.hasAction = (value='') => {
-        const permission = store.getters.permission;
-        const actions = permission.filter(item => item.type === 'action');
-        console.log('actions',permission, actions)
-        if (actions.length>0) {
-            const idx = actions.findIndex(item => item.action === value);
-            return idx > -1
+        if (store&&store.getters) {
+            const permission = store.getters.permission;
+            const actions = permission.filter(item => item.type === 'action');
+            // console.log('actions',permission, actions)
+            if (actions.length>0) {
+                const idx = actions.findIndex(item => item.action === value);
+                return idx > -1
+            }
         }
         return false
     }

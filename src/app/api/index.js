@@ -1,12 +1,15 @@
 import { upload } from '@/providers/upload'; import service from '@/app/app.api';
 
-/* 轮播 */ export function swiperList(params) { return service.get({ 'url': '/generalcontent/carousel/carousel/carouselList', params }) }
+/* 轮播 */ export function swiperList(params) { return service.get({ 'url': '/generalcontent/carousel/carousel/carouselList', params }) } 
 
 /* 获取某个频道的消息列表 */ export function loadHisMsg(params) { return service.post({ 'url': '/im/imapi/message', data: params }) }
 /* 同步最近会话 */ /* export function syncConversation(params) { return service.post({ 'url': '/im/im/syncMsg', data: params }) } */
-/* 删除某个频道的最近会话 */ export function deleteConversion(params) { return service.post({ 'url': '/generalcontent/carousel/carousel/carouselList', data: params }) }
+/* 设备列表 */ export function deleteConversion(params) { return service.post({ 'url': '/generalcontent/carousel/carousel/carouselList', data: params }) }
 /* 删除某个频道的最近会话 */ export function registerIm() { return service.get({ 'url': '/im/im/registerUser' }) }
 
+/* 页面 上  预警 高温数量  预警低温数量 */ export function getDeviceTemperatureCount(params) { return service.get({ 'url': '/appDevice/storageInstrumentReserve/getDeviceTemperatureCount', params }) }
+/* （deviceName, sn ,type[ydg,bx]） */ export function getTemperatureDevice(params) { return service.get({ 'url': '/appDevice/storageInstrumentReserve/getTemperatureDevice', params }) }
+/* 温度设备数据曲线 */ export function getRealTimeCurve(sn) { return service.get({ 'url': '/appDevice/storageInstrumentReserve/getRealTimeCurve'+(sn?'?sn='+sn:'') }) }
 
 export function getSignFileList(params) { return service.get({ url: '/appDevice/storageInstrumentReserve/getSignList', params	}) }
 export function appSignDataSubmit(data) { return service.post({ url: '/appDevice/storageInstrumentReserve/appSignDataSubmit', data }) }

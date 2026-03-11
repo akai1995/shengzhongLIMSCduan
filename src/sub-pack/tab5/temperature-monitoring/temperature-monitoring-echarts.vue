@@ -1,76 +1,28 @@
 <template>
 	<z-paging
-		ref="paging" class="temperature" :paging-style="{ backgroundColor: '#F7F8FA' }"
+		ref="paging" class="temperature" :paging-style="{ backgroundColor: 'white' }"
 		v-model="dataList" @query="queryList":fixed="true" :auto="false" :auto-show-back-to-top="true" :enable-back-to-top="true" :show-refresher-when-reload="true"
         :safe-area-inset-bottom="true" empty-view-text="暂无数据" :loading-more-no-more-text="`已加载完，共${totalCount}条记录`" :auto-scroll-to-top-when-reload="false"
 		:loading-more-enabled="false" hide-empty-view
 	>
         <view slot="top">
-			<u-navbar title="温度监控详情" :fixed="false" background="transparent" :leftIcon="$leftIcon" @leftClick="onBack" />
+		<u-navbar title="温度监控" :fixed="false" background="transparent" :leftIcon="$leftIcon" @leftClick="onBack" />
 		</view>
 		<ut-components ref="utComponents" />
-        <view class="temperatureDetail">
-			<view class="temperature-monitoring-item">
-				<view class="item-name">
-					{{info.deviceName||'-'}}
-				</view>
-				<view class="item-sn">
-					<text>设备SN：</text>{{info.sn||'-'}}
-				</view>
-				<view class="item-sn">
-					<text>预警范围：</text>{{ warnTip }}
-				</view>
-			</view>
-            <view class="temperatureLogWrap">
-				<view class="temperatureHead">
-					温度记录
-					<view class="btnBox" @click="onToggle()">
-						{{ showType=='list'?'列表':'曲线图' }}显示
-						<u-icon style="margin-left: 12rpx;" :name="`${$staticPath}imgs/icon-toggle.png`" size="24rpx" />
+		<view class="echartsBox">
+			<u-scroll-list :indicator="false">
+				<view class="infoBox" :style="echartsStyle">
+					<view class="echartArea">
+						<e-chart ref="eChartsRef" :option="echartsOptions" width="100%" :canvasId="'e-chartsSnId'" />
 					</view>
 				</view>
-				<u-skeleton v-if="!firstLoaded&&dataList.length==0" rows="8" title loading />
-				<view class="temperatureLogBox" v-show="showType=='list'">
-					<view
-						class="temperatureLogItem"
-						v-for="item,idx in dataList" :key="idx"
-						:class="{
-							'blue': checkBlue(item.temperature),
-							'red': checkRed(item.temperature)
-						}"
-					>
-						{{item.date}}
-						<view class="temperature">{{item.temperature}}℃</view>
-					</view>
-				</view>
-				<u-scroll-list
-					:indicator="false"
-					v-show="showType == 'echarts'"
-					@click="onEchartsClick()"
-				>
-					<view class="infoBox">
-						<view class="echartArea">
-							<e-chart ref="eChartsRef" :option="echartsOptions" width="100%" :canvasId="'e-chartsSnId'" />
-						</view>
-					</view>
-				</u-scroll-list>
-            </view>
-        </view>
+			</u-scroll-list>
+		</view>
     </z-paging>
 </template>
 
 <script>
 import { getRealTimeCurve } from '@/app/api/index'
-function objToStr(obj) {
-  let str = "";
-  for (const key in obj) {
-    if (obj.hasOwnProperty(key)) {
-      str += `${key}=${obj[key]}&`;
-    }
-  }
-  // 去掉最后一个 &
-  return str.slice(0, -1);
-}
 export default {
     data() {
 		// 模拟大量数据（50个类目）
@@ -187,20 +139,6 @@ export default {
 			}
 		}
 	},
-    computed: {
-        warnTip() {
-            // 随机输出class，实际使用时根据温度值判断
-            const { temperatureLow, temperatureHigh } = this.info
-			if (['string', 'number'].includes(typeof temperatureLow))
-			{
-				return `${temperatureLow}~${temperatureHigh}℃`
-			}
-			return `${temperatureHigh}℃`
-        },
-        echartsStyle() {
-			return `width:${this.dataList.length>5?(this.dataList.length*60):480}rpx;`
-        }
-    },
     onLoad(options) {
 		const _self = this
 		for (const key in options) {
@@ -219,6 +157,20 @@ export default {
 			}, 1050) 
 		})
 	},
+    computed: {
+        warnTip() {
+            // 随机输出class，实际使用时根据温度值判断
+            const { temperatureLow, temperatureHigh } = this.info
+			if (['string', 'number'].includes(typeof temperatureLow))
+			{
+				return `${temperatureLow}~${temperatureHigh}℃`
+			}
+			return `${temperatureHigh}℃`
+        },
+        echartsStyle() {
+			return `width:${this.dataList.length>5?(this.dataList.length*60):480}rpx;`
+        }
+    },
 	mounted() {
 		const _self = this
 		setTimeout(async () => { 
@@ -226,40 +178,20 @@ export default {
 		}, 250) 
 	},
     methods: {
-		checkRed(temp) { return temp > this.info.temperatureHigh },
-		checkBlue(temp) { return temp < this.info.temperatureLow },
-		onToggle() {
+		onInitChart() {
 			const _self = this
-			_self.showType = _self.showType=='list'?'echarts':'list'
-			if (_self.showType=='echarts'){
-				_self.onInitChart()
-			}
-		},
-		onEchartsClick() {
-			const itemStr = objToStr({...this.info,detailType:'2'})
-			console.log('onEchartsClick', itemStr)
-            if (!this.checkUserInfo()){ return }
-            this.$ut.jump(`/sub-pack/tab5/temperature-monitoring/temperature-monitoring-echarts?${itemStr}`); 
-		},
-		onInitChart(rows) {
-			const _self = this
-			if (_self.$refs.eChartsRef) {
-				setTimeout(() => {
-					console.log('_self.$refs.eChartsRef:::', _self.echartsOptions, _self.$refs.eChartsRef)
-					_self.$refs.eChartsRef.init(_self.echartsOptions);
-					setTimeout(() => {
-						_self.$nextTick(async () => {
-							if (rows&&rows.length > 0) {
-								const items = rows.length>16?rows.slice(0, 16):rows
-								_self.echartsOptions.xAxis.data = items.map(r=>r.date);
-								_self.echartsOptions.series.data = items.map(r=>r.temperature);
-							}
-							console.log('_self.$refs:::', await _self.$refs.eChartsRef)
-							_self.$refs.eChartsRef.setOption(_self.echartsOptions);
-						})
-					}, 1560);
-				}, 1060);
-			}
+			if (_self.$refs.eChartsRef) _self.$refs.eChartsRef.init(_self.echartsOptions);
+			setTimeout(() => { 
+				_self.$nextTick(async () => {
+					if (_self.dataList&&_self.dataList.length > 0) {
+						const items = _self.dataList.length>16?_self.dataList.slice(0, 16):_self.dataList
+						_self.echartsOptions.xAxis.data = items.map(r=>r.date);
+						_self.echartsOptions.series.data = items.map(r=>r.temperature);
+					}
+					console.log('_self.$refs:::', await _self.$refs.eChartsRef)
+					_self.$refs.eChartsRef.setOption(_self.echartsOptions);
+				})
+			}, 1060);
 		},
 		getDetail() {
 			const _self = this
@@ -268,8 +200,8 @@ export default {
 				if (resp.data) {
 					const { dateList, temperatureList } = resp.data;
 					const rows = dateList.map((date, idx) => ({ date, temperature: temperatureList[idx] }))
-					console.log('_self.info boo::',_self.info,_self.detailType==2&&rows.length > 0)
-					if (_self.detailType==2&&rows.length > 0) { _self.onInitChart(rows) }
+					console.log('getRealTimeCurve.length:::', rows.length)
+					if (rows.length > 0) { _self.onInitChart() }
 					_self.$refs.paging.complete(rows)
 				}
 			}).catch(()=>{}).finally(()=>{
@@ -287,101 +219,20 @@ export default {
 </script>
 <style lang="scss" scoped>
 
-.temperatureDetail {
-	padding: 32rpx;
-	.temperature-monitoring-item {
-		background-color: white;
-		width: 100%;
-		padding: 32rpx;
-		border-radius: 12rpx;
-		position: relative;
-		overflow: hidden;
-		margin-bottom: 32rpx;
-		.item-name {
-			font-size: 32rpx;
-			color: #222222;
-			line-height: 50rpx;
-			font-size: bold;
-			margin-bottom: 8rpx;
-		}
-		.item-sn {
-			font-size: 28rpx;
-			color: #4B4B4E;
-			line-height: 40rpx;
-			margin-bottom: 24rpx;
-		}
-	}
-	.temperatureLogWrap{
-		background-color: white;
-		border-radius: 12rpx;
-		padding: 38rpx 32rpx;
-		min-height: 50vh;
-		.temperatureHead{
-			padding: 8rpx 232rpx 8rpx 8rpx;
-			position: relative;
-			margin-bottom: 24rpx;
-			height: 60rpx;
-			line-height: 60rpx;
-			font-size: 32rpx;
-			color: #222;
-			.btnBox {
-				position: absolute;
-				top: 50%;
-				right: 0;
-				transform: translateY(-50%);
-				display: inline-flex;
-				padding: 0 24rpx;
-				font-size: 24rpx;
-				border-radius: 56rpx;
-				height: 56rpx;
-				line-height: 56rpx;
-				border: 1rpx solid #E6E9F1;
-			}
-		}
-		.temperatureLogBox{
-			.temperatureLogItem{
-				background-color: #F0F2F7;
-				border-radius: 12rpx;
-				font-size: 28rpx;
-				color: #222222;
-				line-height: 40rpx;
-				position: relative;
-				padding: 16rpx 24rpx;
-				margin-bottom: 24rpx;
-				&:last-child{
-					margin-bottom: 0;
-				}
-				&.blue{
-					.temperature{
-						color: #0D70F3;
-					}
-				}
-				&.red{
-					.temperature{
-						color: #E72929;
-					}
-				}
-				.temperature{
-					position: absolute;
-					right: 20rpx;
-					top: 50%;
-					transform: translateY(-50%);
-					font-weight: bold;
-				}
-			}
-		}
+.echartsBox {
+	padding: 16rpx;
+	background: #fff;
 		
-		.infoBox {
+	.infoBox {
+		background: #fff;
+		border-radius: 10rpx;
+		overflow: hidden;
+		padding: 0;
+		.echartArea {
 			background: #fff;
 			border-radius: 10rpx;
 			overflow: hidden;
-			padding: 0;
-			.echartArea {
-				background: #fff;
-				border-radius: 10rpx;
-				overflow: hidden;
-				height: 480rpx;
-			}
+			height: 480rpx;
 		}
 	}
 }
