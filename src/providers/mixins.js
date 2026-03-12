@@ -64,7 +64,16 @@ export default {
 			eventHanlder: null
         }
     },
-    computed: { utComponentsRef() { return this.$refs.utComponents } },
+    computed: {
+		utComponentsRef() { return this.$refs.utComponents },
+		isLogin() {
+			if (store&&store.getters) {
+				const token = store.getters.token
+				if (token != null && token != '' && token != undefined) { return true }
+			}
+			return false; 
+		}
+	},
 	mounted() {
 		const _self = this
 		setTimeout(() => {

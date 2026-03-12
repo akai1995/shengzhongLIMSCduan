@@ -21,7 +21,7 @@
 				<u-checkbox name="ok" shape="circle" activeColor="#3B7EFFFF"></u-checkbox>
 			</u-checkbox-group>
 			<text class="grey">已仔细阅读并同意</text>
-			<text class="blue" @click="$ut.jump('/sub-pack/project-pages/article-detail/article-detail?type=1&name=E-AI平台服务协议')">《E-AI平台服务协议》</text>
+			<text class="blue" @click="$ut.jump('/sub-pack/project-pages/article-detail/article-detail?type=1&name=用户服务协议')">《用户服务协议》</text>
 			<text class="blue" @click="$ut.jump('/sub-pack/project-pages/article-detail/article-detail?type=2&name=知情同意')">《知情同意》</text>
 		</view>
 		<view class="btn">登录</view>

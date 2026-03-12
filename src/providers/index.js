@@ -7,7 +7,7 @@ import { areaList } from '@/providers/area'
 
 const { street_list, county_list, city_list, province_list } = areaList
 export const getAddressByCode = (code, splitStr = '-') => { if (!code || code.length < 6) { return '' } const pC = code.slice(0, 2) + '0000'; const cC = code.slice(0, 4) + '00'; const qC = code.slice(0, 6); return province_list[pC] + (city_list[cC] ? splitStr + city_list[cC] : '') + (county_list[qC] ? splitStr + county_list[qC] : '') + (code.length >= 9 ? splitStr + street_list[code] : '') }
-export const onToast = (content) => { uni.showToast({ title: content, icon: 'none', }) }; export const onShowConfirm = (content) => { return new Promise((resolve) => { uni.showModal({ title: '提示', content: content, cancelText: '取消', confirmText: '确定', success: (res) => resolve(res), fail: (err) => reject(err) }) }) }
+export const onToast = (content) => { uni.showToast({ title: content, icon: 'none', duration: 7000 }) }; export const onShowConfirm = (content) => { return new Promise((resolve) => { uni.showModal({ title: '提示', content: content, cancelText: '取消', confirmText: '确定', success: (res) => resolve(res), fail: (err) => reject(err) }) }) }
 export const tansParams = (params) =>  { let result = ''; for (const propName of Object.keys(params)) { const value = params[propName]; var part = encodeURIComponent(propName) + '='; if (value !== null && value !== '' && typeof(value) !== 'undefined') { if (typeof value === 'object') { for (const key of Object.keys(value)) { if (value[key] !== null && value[key] !== '' && typeof(value[key]) !== 'undefined') { const params = propName + '[' + key + ']'; var subPart = encodeURIComponent(params) + '='; result += subPart + encodeURIComponent(value[key]) + '&' } } } else { result += part + encodeURIComponent(value) + '&' } } }; return result }
 export const guid = () => { return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) { var r = (Math.random() * 16) | 0, v = c == 'x' ? r : (r & 0x3) | 0x8; return v.toString(16); }); }; export const debounce = (fn, delay = 500) => { let timer = null; return (...args) => { if (timer !== null) { clearTimeout(timer) }; timer = setTimeout(() => { fn.apply(this, args); timer = null }, delay) } }
 export const dateFormat = (date, fmt = 'YYYY-mm-dd') => { let ret; let opt = { 'Y+': date.getFullYear().toString(), 'm+': (date.getMonth() + 1).toString(), 'd+': date.getDate().toString(), 'H+': date.getHours().toString(), 'M+': date.getMinutes().toString(), 'S+': date.getSeconds().toString() }; for (let k in opt) { ret = new RegExp('(' + k + ')').exec(fmt); if (ret) { fmt = fmt.replace(ret[1], (ret[1].length == 1) ? (opt[k]) : (opt[k].padStart(ret[1].length, "0"))) } }; return fmt }
@@ -210,5 +210,5 @@ export const wxRegisterLogin = (params, needShowLoading = true, needEmitEvent = 
 export default {
 	jump(path) { router.navTo({ url: path || '/pages/404/404' }) },
 	strSlice(str) { if (str) { return str.slice(0, 10) } },
-	showText(str) { uni.showToast({ title: str || '敬请期待', icon: 'none' }) }  
+	showText(str) { uni.showToast({ title: str || '敬请期待', icon: 'none', duration: 3000 }) }  
 }

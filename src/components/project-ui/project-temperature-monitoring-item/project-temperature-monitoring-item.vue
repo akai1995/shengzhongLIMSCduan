@@ -152,6 +152,9 @@ export default {
             color: #4B4B4E;
             line-height: 40rpx;
             margin-bottom: 24rpx;
+            text{
+                font-size: bold;
+            }
         }
         .item-temperature {
             display: flex;
@@ -169,6 +172,7 @@ export default {
                     font-size: 36rpx;
                     color: #222222;
                     line-height: 50rpx;
+                    font-size: bold;
                 }
                 .temperature-box-name {
                     font-size: 28rpx;

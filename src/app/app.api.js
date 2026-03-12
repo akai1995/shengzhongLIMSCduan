@@ -5,7 +5,7 @@ import router from '@/providers/utilities/router';
 import config from '@/app/app.config';
 import store from '@/store/index';
 
-const timeout = 10000; const baseUrl = config.baseUrl; let toLogin = false
+const timeout = (60 * 1000); const baseUrl = config.baseUrl; let toLogin = false
 
 /**
  * 移除 空值、null值、undefined值以及一些特殊字段值
@@ -51,8 +51,9 @@ const request = config => {
         data: noEmpty(config.data, config.method || 'get'),
         header: config.header, dataType: 'json',
 				success: (response) => {
+          console.log('response', response);
           const { statusCode, errMsg, data } = response; const code = data.code || 200;
-          const msg = httpStatusCode[code] || data.message || httpStatusCode['default']
+          const msg = data.message || httpStatusCode[code] || httpStatusCode['default']
           if (statusCode == 401||code == 401) {
             if(toLogin) { delToken(); return; }; toLogin = true;
             console.log(router, '401', '无效的会话，或者会话已过期，请重新登录。');
@@ -62,7 +63,7 @@ const request = config => {
             })
             reject('无效的会话，或者会话已过期，请重新登录。')
           } 
-          else if (statusCode == 500||code == 500) { onToast(msg); reject('500') } 
+          else if (statusCode == 500||code == 500) { console.error('msg', msg); onToast(msg); reject('500') } 
           else if (statusCode == 200 && code == 200) {
             const objData = data;
             if (objData.hasOwnProperty('message')) { delete objData.message; };
@@ -72,15 +73,18 @@ const request = config => {
             };
             resolve(checkData(objData))
           }
-          else { onToast(msg); reject(code) }
+          else { console.error('msg', msg); onToast(msg); reject(code) }
 				},
 				fail: (error) => {
           console.error('error', error); const { message, errMsg } = error
-          if (typeof message=='string') { if (message == 'Network Error') { message = '后端接口连接异常' }
-          else if (message.includes('timeout')) { message = '系统接口请求超时' }
-          else if (message.includes('Request failed with status code')) { message = '系统接口' + message.substr(message.length - 3) + '异常' }; onToast(message); reject(message) }
+          if (typeof message=='string') { 
+            if (message == 'Network Error') { message = '后端接口连接异常' }
+            else if (message.includes('timeout')) { message = '系统接口请求超时' }
+            else if (message.includes('Request failed with status code')) {  message = '系统接口' + message.substr(message.length - 3) + '异常' }; 
+            console.error('message', message); onToast(message); reject(message) 
+          }
           else if (typeof errMsg=='string') { console.log('errMsg', errMsg); onToast(errMsg); reject(errMsg) }
-          else { onToast('异常'); reject(error) }
+          else { console.log('errMsg', '异常'); onToast('异常'); reject(error) }
 				}
       })
   })

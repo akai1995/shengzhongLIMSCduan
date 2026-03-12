@@ -10,13 +10,14 @@
 		</view>
 		<ut-components ref="utComponents" />
 		<view class="echartsBox">
-			<u-scroll-list :indicator="false">
-				<view class="infoBox" :style="echartsStyle">
+			<!-- <u-scroll-list :indicator="false"> -->
+				<!-- :style="echartsStyle" -->
+				<view class="infoBox" >
 					<view class="echartArea">
 						<e-chart ref="eChartsRef" :option="echartsOptions" width="100%" :canvasId="'e-chartsSnId'" />
 					</view>
 				</view>
-			</u-scroll-list>
+			<!-- </u-scroll-list> -->
 		</view>
     </z-paging>
 </template>
@@ -28,8 +29,8 @@ export default {
 		// 模拟大量数据（50个类目）
 		const xAxisData = [];
 		const seriesData = [];
-		for (let i = 0; i < 50; i++) {
-			xAxisData.push(`类目${i + 1}`);
+		for (let i = 0; i < 1; i++) {
+			xAxisData.push(`2026-03-11 00:${i + 1}:00`);
 			seriesData.push([12.5, 16.5, 18.5,21.5, 33.5, 23.5,21.5, 22.5, 36.5][Math.floor(Math.random() * 9)]);
 		}
 		// 统一线条样式（X/Y轴共用）
@@ -56,11 +57,27 @@ export default {
 				warning: '',
 			},
 			echartsOptions: {
-				grid: { x: 50, y: 10, x2: 20, y2: 30 },
+				grid: { 
+					left: '2%',   // 左边距百分比，自适应
+					right: '16%',
+					top: '10%',
+					bottom: '25%', // 底部多留空间给X轴标签
+					containLabel: true // 自动包含标签，避免标签被截断
+				},
 				tooltip: {
 					trigger: 'item',
 					// trigger: 'axis', 
 					// position: (pt) => ([pt[0], '50%']) 
+					formatter: function(params) {
+						const time = params[0].name;
+						const temp = params[0].value;
+						return `
+						<div style="text-align: left;">
+							<p>时间：${time}</p>
+							<p>温度：${temp}℃</p> <!-- 这里添加 ℃ -->
+						</div>
+						`;
+					},
 				},
 				// dataZoom: [ { type: 'inside', start: 0, end: 20	}, { start: 0, end: 20	} ],
 				xAxis: {
@@ -73,7 +90,9 @@ export default {
 							const suffix = `:${timeParts[2]}`;
 							return `{prefixStyle|${prefix}}{minuteStyle|${minute}}{suffixStyle|${suffix}}`;
 						},
-						interval: 0, rotate: 300, fontSize: 10,
+						interval: 0,
+						rotate: 288, 
+						fontSize: 10,
 						rich: {
 							prefixStyle: { color: '#333', fontSize: 10 },
 							minuteStyle: { color: '#ff4400', fontSize: 11, fontWeight: 'bold' },
@@ -90,7 +109,7 @@ export default {
 					},
 					// X轴轴线
 					axisLine: axisCommonStyle,
-					boundaryGap: [0.05, 0.10],
+					boundaryGap: [0.05, 0.05],
 					interval: 0
 				},
 				yAxis: {
@@ -134,7 +153,7 @@ export default {
 					itemStyle: { color: '#3b7eff', borderColor: '#3b7eff', borderWidth: 1 },
 
 					// 禁用悬浮高亮，只保留选中高亮
-					// emphasis: { disabled: true }
+					emphasis: { disabled: true }
 				}
 			}
 		}
@@ -220,19 +239,19 @@ export default {
 <style lang="scss" scoped>
 
 .echartsBox {
-	padding: 16rpx;
+	padding: 42rpx 10rpx;
 	background: #fff;
 		
 	.infoBox {
 		background: #fff;
 		border-radius: 10rpx;
-		overflow: hidden;
+		// overflow: hidden;
 		padding: 0;
 		.echartArea {
 			background: #fff;
 			border-radius: 10rpx;
-			overflow: hidden;
-			height: 480rpx;
+			// overflow: hidden;
+			height: 720rpx;
 		}
 	}
 }

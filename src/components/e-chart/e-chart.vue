@@ -38,7 +38,7 @@ export default {
     },
     height: {
       type: [Number, String],
-      default: 600,
+      default: 720,
     },
     disableScroll: Boolean,
     theme: String,

@@ -5,8 +5,8 @@ export default {
 		// 模拟大量数据（50个类目）
 		const xAxisData = [];
 		const seriesData = [];
-		for (let i = 0; i < 50; i++) {
-			xAxisData.push(`类目${i + 1}`);
+		for (let i = 0; i < 7; i++) {
+			xAxisData.push(`2026-03-11 00:${i + 1}:00`);
 			seriesData.push([12.5, 16.5, 18.5,21.5, 33.5, 23.5,21.5, 22.5, 36.5][Math.floor(Math.random() * 9)]);
 		}
 		// 统一线条样式（X/Y轴共用）

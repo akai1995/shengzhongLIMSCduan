@@ -1,6 +1,6 @@
 {
   "name": "E-AI",
-  "version": "1.26.0126",
+  "version": "1.26.0311",
   "private": true,
   "scripts": {
     "serve": "npm run dev:h5",

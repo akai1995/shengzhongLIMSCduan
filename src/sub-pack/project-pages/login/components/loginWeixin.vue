@@ -20,10 +20,33 @@
 		</view>
 		<view class="clause">
 			<u-checkbox-group v-model="checked"><u-checkbox name="ok" shape="circle" activeColor="#3B7EFFFF" /></u-checkbox-group>
-			<text class="grey">已仔细阅读并同意</text>
-			<text class="blue" @click="$ut.jump('/sub-pack/project-pages/article-detail/article-detail?type=1&name=服务条款')">《服务条款》</text>
+			<text class="grey" @click="()=>{ checked = checked.length > 0 ? [] : ['ok'] }">已仔细阅读并同意</text>
+			<text class="blue" @click="$ut.jump('/sub-pack/project-pages/article-detail/article-detail?type=1&name=用户服务协议')">《用户服务协议》</text>
 			<text class="blue" @click="$ut.jump('/sub-pack/project-pages/article-detail/article-detail?type=2&name=隐私协议')">《隐私协议》</text>
 		</view>
+		
+		<!-- 微信隐私保护指引 -->
+		<u-popup
+			:show="showPrivacy" mode="bottom" closeable width="90%" safeAreaInsetBottom
+		>
+			<view class="privacyTitle">
+				{{privacyTitle}}
+			</view>
+			<view class="privacyContent">
+				在您注册之前，请仔细阅读
+				<u-button class="txtBtn" @click="handleOpenPrivacyContract()">
+				{{privacyTitle}}
+				</u-button>。如您同意{{privacyTitle}}，请点击“同意”开始注册用户。
+			</view>
+			<view class="privacyFooter">
+				<u-button
+					id="agree-btn" open-type="agreePrivacyAuthorization" class="u-reset-button"
+					@agreeprivacyauthorization="handleAgreePrivacyAuthorization"
+				>
+				同意
+				</u-button>
+			</view>
+		</u-popup>
 	</view>
 </template>
 <script>
@@ -31,16 +54,66 @@ import { wxRegisterLogin, getWxCode } from '@/providers'
 export default {
 	data() {
 		return {
-			checked: [], wxLoginForm: {}, phoneCode: ''
+			checked: [], wxLoginForm: {}, phoneCode: '',privacyTitle:'《微信隐私协议保护指引》',showPrivacy:false
 		}
 	},
+	mounted() {
+		// #ifdef MP-WEIXIN
+		try {
+			uni.getPrivacySetting({
+				success: (res) => {
+					console.log('getPrivacySetting', res)
+					// 返回结果为: res = { needAuthorization: true/false, privacyContractName: '《xxx隐私保护指引》' }
+					if (res.needAuthorization) {
+						this.privacyTitle = res.privacyContractName
+						// 需要弹出隐私协议
+						this.showPrivacy = true
+					}
+					else {
+						console.log('用户已经同意过隐私协议，所以不需要再弹出隐私协议，也能调用已声明过的隐私接口')
+					}
+				},
+				fail: () => { },
+				complete: () => { },
+			})
+		}
+		catch (e) { }
+		// #endif
+	},
 	methods: {
+		/**
+		 * 拒绝微信隐私保护指引
+		 */
+		denyPrivacy() {
+			this.showPrivacy = false
+			uni.navigateBack({
+				delta: 1,
+			})
+		},
+		/**
+		 * 查看微信隐私保护指引
+		 */
+		handleOpenPrivacyContract() {
+			// 打开隐私协议页面
+			wx.openPrivacyContract({
+				success: () => { }, // 打开成功
+				fail: () => { }, // 打开失败
+				complete: () => { },
+			})
+		},
+
+		/**
+		 * 同意微信隐私保护指引
+		 */
+		handleAgreePrivacyAuthorization(e) { },
 		onSubmit() {
 			const _self = this;
 			if (_self.checked.length === 0) { _self.wxHandleLogin() }
 			else {
 				uni.showModal({
-					title: '提示', content: '阅读并同意《服务条款》和《隐私协议》', showCancel: true,
+					title: '提示',
+					content: '阅读并同意《用户服务协议》和《隐私协议》',
+					showCancel: true,
 					success: ({ confirm, cancel }) => {
 						if (confirm) {
 							_self.checked = ['ok']; _self.wxHandleLogin()

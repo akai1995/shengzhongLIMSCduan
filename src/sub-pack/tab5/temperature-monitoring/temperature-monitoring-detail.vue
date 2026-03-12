@@ -43,17 +43,11 @@
 						<view class="temperature">{{item.temperature}}℃</view>
 					</view>
 				</view>
-				<u-scroll-list
-					:indicator="false"
-					v-show="showType == 'echarts'"
-					@click="onEchartsClick()"
-				>
-					<view class="infoBox">
-						<view class="echartArea">
-							<e-chart ref="eChartsRef" :option="echartsOptions" width="100%" :canvasId="'e-chartsSnId'" />
-						</view>
+				<view class="infoBox" v-show="showType == 'echarts'" @click.stop="onEchartsClick()">
+					<view class="echartArea">
+						<e-chart ref="eChartsRef" :option="echartsOptions" width="100%" :canvasId="'e-chartsSnId'" />
 					</view>
-				</u-scroll-list>
+				</view>
             </view>
         </view>
     </z-paging>
@@ -76,8 +70,8 @@ export default {
 		// 模拟大量数据（50个类目）
 		const xAxisData = [];
 		const seriesData = [];
-		for (let i = 0; i < 50; i++) {
-			xAxisData.push(`类目${i + 1}`);
+		for (let i = 0; i < 1; i++) {
+			xAxisData.push(`2026-03-11 00:${i + 1}:00`);
 			seriesData.push([12.5, 16.5, 18.5,21.5, 33.5, 23.5,21.5, 22.5, 36.5][Math.floor(Math.random() * 9)]);
 		}
 		// 统一线条样式（X/Y轴共用）
@@ -104,11 +98,27 @@ export default {
 				warning: '',
 			},
 			echartsOptions: {
-				grid: { x: 50, y: 10, x2: 20, y2: 30 },
+				grid: { 
+					left: '2%',   // 左边距百分比，自适应
+					right: '16%',
+					top: '10%',
+					bottom: '25%', // 底部多留空间给X轴标签
+					containLabel: true // 自动包含标签，避免标签被截断
+				},
 				tooltip: {
 					trigger: 'item',
 					// trigger: 'axis', 
 					// position: (pt) => ([pt[0], '50%']) 
+					formatter: function(params) {
+						const time = params[0].name;
+						const temp = params[0].value;
+						return `
+						<div style="text-align: left;">
+							<p>时间：${time}</p>
+							<p>温度：${temp}℃</p> <!-- 这里添加 ℃ -->
+						</div>
+						`;
+					},
 				},
 				// dataZoom: [ { type: 'inside', start: 0, end: 20	}, { start: 0, end: 20	} ],
 				xAxis: {
@@ -121,7 +131,9 @@ export default {
 							const suffix = `:${timeParts[2]}`;
 							return `{prefixStyle|${prefix}}{minuteStyle|${minute}}{suffixStyle|${suffix}}`;
 						},
-						interval: 0, rotate: 300, fontSize: 10,
+						interval: 0,
+						rotate: 288, 
+						fontSize: 10,
 						rich: {
 							prefixStyle: { color: '#333', fontSize: 10 },
 							minuteStyle: { color: '#ff4400', fontSize: 11, fontWeight: 'bold' },
@@ -138,7 +150,7 @@ export default {
 					},
 					// X轴轴线
 					axisLine: axisCommonStyle,
-					boundaryGap: [0.05, 0.10],
+					boundaryGap: [0.05, 0.05],
 					interval: 0
 				},
 				yAxis: {
@@ -182,7 +194,7 @@ export default {
 					itemStyle: { color: '#3b7eff', borderColor: '#3b7eff', borderWidth: 1 },
 
 					// 禁用悬浮高亮，只保留选中高亮
-					// emphasis: { disabled: true }
+					emphasis: { disabled: true }
 				}
 			}
 		}
@@ -228,13 +240,6 @@ export default {
     methods: {
 		checkRed(temp) { return temp > this.info.temperatureHigh },
 		checkBlue(temp) { return temp < this.info.temperatureLow },
-		onToggle() {
-			const _self = this
-			_self.showType = _self.showType=='list'?'echarts':'list'
-			if (_self.showType=='echarts'){
-				_self.onInitChart()
-			}
-		},
 		onEchartsClick() {
 			const itemStr = objToStr({...this.info,detailType:'2'})
 			console.log('onEchartsClick', itemStr)
@@ -243,22 +248,28 @@ export default {
 		},
 		onInitChart(rows) {
 			const _self = this
-			if (_self.$refs.eChartsRef) {
-				setTimeout(() => {
+			setTimeout(() => {
+				console.log('onInitChart', rows)
+				if (_self.$refs.eChartsRef) {
 					console.log('_self.$refs.eChartsRef:::', _self.echartsOptions, _self.$refs.eChartsRef)
 					_self.$refs.eChartsRef.init(_self.echartsOptions);
-					setTimeout(() => {
-						_self.$nextTick(async () => {
-							if (rows&&rows.length > 0) {
-								const items = rows.length>16?rows.slice(0, 16):rows
-								_self.echartsOptions.xAxis.data = items.map(r=>r.date);
-								_self.echartsOptions.series.data = items.map(r=>r.temperature);
-							}
-							console.log('_self.$refs:::', await _self.$refs.eChartsRef)
-							_self.$refs.eChartsRef.setOption(_self.echartsOptions);
-						})
+					setTimeout(async () => {
+						if (rows&&rows.length > 0) {
+							const items = rows.length>16?rows.slice(0, 16):rows
+							_self.echartsOptions.xAxis.data = items.map(r=>r.date);
+							_self.echartsOptions.series.data = items.map(r=>r.temperature);
+						}
+						console.log('_self.$refs:::', await _self.$refs.eChartsRef)
+						_self.$refs.eChartsRef.setOption(_self.echartsOptions);
 					}, 1560);
-				}, 1060);
+				}
+			}, 1060);
+		},
+		onToggle() {
+			const _self = this
+			_self.showType = _self.showType=='list'?'echarts':'list'
+			if (_self.showType=='echarts'){
+				_self.onInitChart(this.dataList)
 			}
 		},
 		getDetail() {
@@ -308,7 +319,13 @@ export default {
 			font-size: 28rpx;
 			color: #4B4B4E;
 			line-height: 40rpx;
-			margin-bottom: 24rpx;
+			margin-bottom: 10rpx;
+			&:last-child{
+				margin-bottom: 24rpx;
+			}
+			text{
+				font-size: bold;
+			}
 		}
 	}
 	.temperatureLogWrap{
@@ -374,13 +391,13 @@ export default {
 		.infoBox {
 			background: #fff;
 			border-radius: 10rpx;
-			overflow: hidden;
+			// overflow: hidden;
 			padding: 0;
 			.echartArea {
 				background: #fff;
 				border-radius: 10rpx;
-				overflow: hidden;
-				height: 480rpx;
+				// overflow: hidden;
+				height: 720rpx;
 			}
 		}
 	}

@@ -17,79 +17,79 @@
 			</view>
 		</view>
 		<view class="home-content">
-    <view class="cardBox">
-        <!-- 原有模板内容不变 -->
-        <view v-if="hasAction('tab1:ocr-recog')" class="cardWarp f1" @click="onJump('/sub-pack/tab1/ocr-recog/ocr-recog')">
-            <view class="cardInfo">
-                <view class="cardTitle">
-                    图文识别
-                    <u-icon class="iconR" :name="`${$staticPath}imgs/home_card_r_1.png`" size="32rpx" />
-                </view>
-                <view class="cardSubTitle">扫图识字，一扫既得</view>
-            </view>
-            <view class="cardIcon">
-                <u-icon :name="`${$staticPath}imgs/home_card_1.png`" size="140rpx" />
-            </view>
-        </view>
-        <view v-if="hasAction('tab1:chat-stream')" class="cardWarp f2" @click="onJump('/sub-pack/chat/chat-stream/chat-stream')">
-            <view class="cardInfo">
-                <view class="cardTitle">
-                    报告分析
-                    <u-icon class="iconR" :name="`${$staticPath}imgs/home_card_r_2.png`" size="32rpx" />
-                </view>
-                <view class="cardSubTitle">医疗报告智能分析助手</view>
-            </view>
-            <view class="cardIcon">
-                <u-icon :name="`${$staticPath}imgs/home_card_2.png`" size="140rpx" />
-            </view>
-        </view>
-        <view v-if="hasAction('tab1:reserve')" class="cardWarp f3" @click="onJump('/sub-pack/tab5/reserve/reserve')">
-            <view class="cardInfo">
-                <view class="cardTitle">
-                    设备预约
-                    <u-icon class="iconR" :name="`${$staticPath}imgs/home_card_r_3.png`" size="32rpx" />
-                </view>
-                <view class="cardSubTitle">实验室设备预约</view>
-            </view>
-            <view class="cardIcon">
-                <u-icon :name="`${$staticPath}imgs/home_card_3.png`" size="140rpx" />
-            </view>
-        </view>
-        <view v-if="hasAction('tab1:sign-doc')" class="cardWarp f4" @click="onJump('/sub-pack/tab5/sign-doc/sign-doc')">
-            <view class="cardInfo">
-                <view class="cardTitle">
-                    待签署文件
-                    <u-icon class="iconR" :name="`${$staticPath}imgs/home_card_r_4.png`" size="32rpx" />
-                </view>
-                <view class="cardSubTitle">一键签署，高效便捷</view>
-            </view>
-            <view class="cardIcon">
-                <u-icon :name="`${$staticPath}imgs/home_card_4.png`" size="140rpx" />
-            </view>
-        </view>
-        <view v-if="hasAction('tab1:temperature-monitoring')" class="cardWarp f5" @click="onJump('/sub-pack/tab5/temperature-monitoring/temperature-monitoring')">
-            <view class="cardInfo">
-                <view class="cardTitle">
-                    温度监控
-                    <u-icon class="iconR" :name="`${$staticPath}imgs/home_card_r_5.png`" size="32rpx" />
-                </view>
-                <view class="cardSubTitle data">
-                    <view class="">
-                        预警低温：
-                        <text>{{temperatureCount.temperatureLowCount||'0'}}</text>
+            <view class="cardBox">
+                <!-- 原有模板内容不变 -->
+                <view v-if="hasAction('tab1:ocr-recog')" class="cardWarp f1" @click="onJump('/sub-pack/tab1/ocr-recog/ocr-recog')">
+                    <view class="cardInfo">
+                        <view class="cardTitle">
+                            图文识别
+                            <u-icon class="iconR" :name="`${$staticPath}imgs/home_card_r_1.png`" size="32rpx" />
+                        </view>
+                        <view class="cardSubTitle">扫图识字，一扫既得</view>
                     </view>
-                        
-                    <view class="">
-                        预警高温：
-                        <text>{{temperatureCount.temperatureHighCount||'0'}}</text>
+                    <view class="cardIcon">
+                        <u-icon :name="`${$staticPath}imgs/home_card_1.png`" size="140rpx" />
                     </view>
                 </view>
+                <view v-if="hasAction('tab1:chat-stream')" class="cardWarp f2" @click="onJump('/sub-pack/chat/chat-stream/chat-stream')">
+                    <view class="cardInfo">
+                        <view class="cardTitle">
+                            报告分析
+                            <u-icon class="iconR" :name="`${$staticPath}imgs/home_card_r_2.png`" size="32rpx" />
+                        </view>
+                        <view class="cardSubTitle">医疗报告智能分析助手</view>
+                    </view>
+                    <view class="cardIcon">
+                        <u-icon :name="`${$staticPath}imgs/home_card_2.png`" size="140rpx" />
+                    </view>
+                </view>
+                <view v-if="hasAction('tab1:reserve')" class="cardWarp f3" @click="onJump('/sub-pack/tab5/reserve/reserve')">
+                    <view class="cardInfo">
+                        <view class="cardTitle">
+                            设备预约
+                            <u-icon class="iconR" :name="`${$staticPath}imgs/home_card_r_3.png`" size="32rpx" />
+                        </view>
+                        <view class="cardSubTitle">实验室设备预约</view>
+                    </view>
+                    <view class="cardIcon">
+                        <u-icon :name="`${$staticPath}imgs/home_card_3.png`" size="140rpx" />
+                    </view>
+                </view>
+                <view v-if="hasAction('tab1:sign-doc')" class="cardWarp f4" @click="onJump('/sub-pack/tab5/sign-doc/sign-doc')">
+                    <view class="cardInfo">
+                        <view class="cardTitle">
+                            待签署文件
+                            <u-icon class="iconR" :name="`${$staticPath}imgs/home_card_r_4.png`" size="32rpx" />
+                        </view>
+                        <view class="cardSubTitle">一键签署，高效便捷</view>
+                    </view>
+                    <view class="cardIcon">
+                        <u-icon :name="`${$staticPath}imgs/home_card_4.png`" size="140rpx" />
+                    </view>
+                </view>
+                <view class="cardWarp f5" @click="onJump('/sub-pack/tab5/temperature-monitoring/temperature-monitoring')">
+                    <view class="cardInfo">
+                        <view class="cardTitle">
+                            温度监控
+                            <u-icon class="iconR" :name="`${$staticPath}imgs/home_card_r_5.png`" size="32rpx" />
+                        </view>
+                        <view class="cardSubTitle data">
+                            <view class="">
+                                预警低温：
+                                <text>{{temperatureCount.temperatureLowCount||'0'}}</text>
+                            </view>
+                                
+                            <view class="">
+                                预警高温：
+                                <text>{{temperatureCount.temperatureHighCount||'0'}}</text>
+                            </view>
+                        </view>
+                    </view>
+                    <view class="cardIcon">
+                        <u-icon :name="`${$staticPath}imgs/home_card_5.png`" size="140rpx" />
+                    </view>
+                </view>
             </view>
-            <view class="cardIcon">
-                <u-icon :name="`${$staticPath}imgs/home_card_5.png`" size="140rpx" />
-            </view>
-        </view>
-    </view>
 			<!-- <view class="luBox">
 				<view class="luTitle">设备列表</view><u-skeleton v-if="!firstLoaded&&dataList.length==0" rows="8" title loading />
       			<project-device-apply-item v-for="item,idx in dataList" :key="item.id" :item="item" :hideLine="dataList.length-1==idx" />
@@ -145,14 +145,16 @@ export default {
                 this.timer = null // 清除后重置引用
             }
         },
-        getTemperatureCount() {			
-            getDeviceTemperatureCount().then((res) => {
-                console.log('温度数据更新：', res.data)
-                this.temperatureCount = res.data
-            }).catch((err) => { 
-                // 关键修复3：添加异常日志，便于排查
-                console.error('获取温度数据失败：', err)
-            }).finally(() => { })
+        getTemperatureCount() {
+            if (this.isLogin) {
+                getDeviceTemperatureCount().then((res) => {
+                    console.log('温度数据更新：', res.data)
+                    this.temperatureCount = res.data
+                }).catch((err) => { 
+                    // 关键修复3：添加异常日志，便于排查
+                    console.error('获取温度数据失败：', err)
+                }).finally(() => { })
+            }
         },
         onJump(path){
             if (!this.checkUserInfo()) { return; };
@@ -160,14 +162,16 @@ export default {
             this.$eUni.navTo({ url: `${path}` })
         },
 		queryList(pageNo, pageSize) {
-			// this.$refs.paging.endRefresh()
+			this.$refs.paging.endRefresh()
 			this.queryParams.pageNo = pageNo; this.queryParams.pageSize = pageSize; const type = pageNo>1 ? 'search': ''
 			// getDeviceList(this.queryParams).then((res) => {
 			// 	this.totalCount = res&&res.data?res.data.total : 0 
 			// 	this.$refs.paging.complete(res&&res.data?res.data.records:false)
 			// }).catch(()=>{
 			// 	this.$refs.paging.complete(false)
-			// }).finally(()=>{ setTimeout(()=>{ this.firstLoaded = true; }, 750); uni.hideLoading(); })
+			// }).finally(()=>{ 
+            setTimeout(()=>{ this.firstLoaded = true; }, 750); uni.hideLoading(); 
+            // })
 		},
 		// onSearch(event) { this.queryParams.deviceName = event; this.$refs.paging && this.$refs.paging.refresh(); },
 		// handleGoDetail(id, deviceId) { if (!this.checkUserInfo()){ return }; this.$ut.jump(`/sub-pack/tab1/device/detail?instrumentId=${id}&deviceId=${deviceId}`); }
@@ -247,7 +251,7 @@ export default {
 		margin-top: -210rpx;
 		// #endif
 		// #ifdef MP-WEIXIN
-		margin-top: -140rpx;
+		margin-top: -130rpx;
 		// #endif
 		.luBox {
 			width: 100%;
