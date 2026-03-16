@@ -3,9 +3,7 @@
         "autoscan": true,
         "custom": {
 			"^ut-(.*)": "@/components/custom-ui/ut-$1/ut-$1.vue", "^project-(.*)": "@/components/project-ui/project-$1/project-$1.vue",
-			"^u-(.*)": "@/uni_modules/uview-ui/components/u-$1/u-$1.vue",
-			"echarts": "@/components/echarts-uniapp/echarts-uniapp.vue",
-			"e-charts": "@/components/e-chart/e-chart.vue",
+			"^u-(.*)": "@/uni_modules/uview-ui/components/u-$1/u-$1.vue", "e-charts": "@/components/e-chart/e-chart.vue",
 	    	"^(?!z-paging-refresh|z-paging-load-more)z-paging(.*)": "@/uni_modules/z-paging/components/z-paging$1/z-paging$1.vue"
         }
     },
@@ -23,26 +21,27 @@
 				{ "path": "login/login", "name": "login", "style": { "navigationBarTitleText": "登录", "enablePullDownRefresh": false, "navigationBarBackgroundColor": "#ffffff00" } }
 			]
 		},
-		{
-			"root": "sub-pack/chat",
-			"pages": [
-				{ "path": "chat-stream/chat-stream", "name": "chatStream", "style": { "navigationBarTitleText": "报告分析", "enablePullDownRefresh": false } }
-			]
-		},
+		// {
+		// 	"root": "sub-pack/chat",
+		// 	"pages": [
+		// 		{ "path": "chat-stream/chat-stream", "name": "chatStream", "style": { "navigationBarTitleText": "报告分析", "enablePullDownRefresh": false } },
+		// 		{ "path": "chat-stream/chat-log", "name": "chatLog", "style": { "navigationBarTitleText": "聊天记录", "enablePullDownRefresh": false } },
+		// 	]
+		// },
 		{
 			"root": "sub-pack/tab1",
 			"pages": [
-				{ "path": "device/detail", "name": "deviceDetail", "style": { "navigationBarTitleText": "设备详情", "enablePullDownRefresh": false } }
-				// { "path": "ocr-recog/ocr-recog", "name": "ocrRecognition", "style": { "navigationBarTitleText": "图文识别", "enablePullDownRefresh": false } }
+				{ "path": "device/detail", "name": "deviceDetail", "style": { "navigationBarTitleText": "设备详情", "enablePullDownRefresh": false } },
+				{ "path": "ocr-recog/ocr-recog", "name": "ocrRecognition", "style": { "navigationBarTitleText": "图文识别", "enablePullDownRefresh": false } }
 			]
 		},
 		{
 			"root": "sub-pack/tab5",
 			"pages": [
-				// { "path": "reserve/reserve", "name": "reserve", "style": { "navigationBarTitleText": "我的预约", "enablePullDownRefresh": false } },
-				// { "path": "reserve/detail", "name": "reserveDetail", "style": { "navigationBarTitleText": "预约详情", "enablePullDownRefresh": false } },
-				// { "path": "sign-doc/sign-doc", "name": "signDoc", "style": { "navigationBarTitleText": "我的待签署", "enablePullDownRefresh": false } },
-				// { "path": "sign-doc/doc-sign", "name": "docSign", "style": { "navigationBarTitleText": "文件签署", "enablePullDownRefresh": false } },
+				{ "path": "reserve/reserve", "name": "reserve", "style": { "navigationBarTitleText": "我的预约", "enablePullDownRefresh": false } },
+				{ "path": "reserve/detail", "name": "reserveDetail", "style": { "navigationBarTitleText": "预约详情", "enablePullDownRefresh": false } },
+				{ "path": "sign-doc/sign-doc", "name": "signDoc", "style": { "navigationBarTitleText": "我的待签署", "enablePullDownRefresh": false } },
+				{ "path": "sign-doc/doc-sign", "name": "docSign", "style": { "navigationBarTitleText": "文件签署", "enablePullDownRefresh": false } },
 				{ "path": "temperature-monitoring/temperature-monitoring", "name": "temperatureMonitoring", "style": { "navigationBarTitleText": "温度监控", "enablePullDownRefresh": false } },
 				{ "path": "temperature-monitoring/temperature-monitoring-detail", "name": "temperatureMonitoringDetail", "style": { "navigationBarTitleText": "温度监控详情", "enablePullDownRefresh": false } },
 				{ "path": "temperature-monitoring/temperature-monitoring-echarts", "name": "temperatureMonitoringEcharts", "style": { "navigationBarTitleText": "温度监控图表", "enablePullDownRefresh": false } }

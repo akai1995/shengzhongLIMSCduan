@@ -90,10 +90,10 @@
                     </view>
                 </view>
             </view>
-			<!-- <view class="luBox">
+			<view class="luBox">
 				<view class="luTitle">设备列表</view><u-skeleton v-if="!firstLoaded&&dataList.length==0" rows="8" title loading />
       			<project-device-apply-item v-for="item,idx in dataList" :key="item.id" :item="item" :hideLine="dataList.length-1==idx" />
-			</view> -->
+			</view>
 		</view>
 		<ut-bottomNav slot="bottom" :value="0" />
 	</z-paging>
@@ -164,14 +164,14 @@ export default {
 		queryList(pageNo, pageSize) {
 			this.$refs.paging.endRefresh()
 			this.queryParams.pageNo = pageNo; this.queryParams.pageSize = pageSize; const type = pageNo>1 ? 'search': ''
-			// getDeviceList(this.queryParams).then((res) => {
-			// 	this.totalCount = res&&res.data?res.data.total : 0 
-			// 	this.$refs.paging.complete(res&&res.data?res.data.records:false)
-			// }).catch(()=>{
-			// 	this.$refs.paging.complete(false)
-			// }).finally(()=>{ 
-            setTimeout(()=>{ this.firstLoaded = true; }, 750); uni.hideLoading(); 
-            // })
+			getDeviceList(this.queryParams).then((res) => {
+				this.totalCount = res&&res.data?res.data.total : 0 
+				this.$refs.paging.complete(res&&res.data?res.data.records:false)
+			}).catch(()=>{
+				this.$refs.paging.complete(false)
+			}).finally(()=>{ 
+                setTimeout(()=>{ this.firstLoaded = true; }, 750); uni.hideLoading(); 
+            })
 		},
 		// onSearch(event) { this.queryParams.deviceName = event; this.$refs.paging && this.$refs.paging.refresh(); },
 		// handleGoDetail(id, deviceId) { if (!this.checkUserInfo()){ return }; this.$ut.jump(`/sub-pack/tab1/device/detail?instrumentId=${id}&deviceId=${deviceId}`); }

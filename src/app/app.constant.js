@@ -27,14 +27,14 @@ if (envWx === 'develop') { /* 开发 */
 	filePath = '192.168.112.29:9083'
 } 
 else if (envWx === 'release') { /* 生产 */
-	baseUrl = 'https://eai.ypzlfx.com/eai-lims';
+	baseUrl = 'http://eai.natapp1.cc';
 	wsUrl = 'wss://api.ypzlfx.com/prod-api';
 	filePath = '192.168.0.151:9889';
 } 
 else {
-	baseUrl = 'https://eai.ypzlfx.com/eai-lims';
+	baseUrl = 'http://eai.natapp1.cc';
 	wsUrl = 'wss://genepiapi.ypzlfx.com/prod-api';
-	filePath = '192.168.0.151:9889';
+	filePath = 'http://eai.natapp1.cc';
 }
 // #endif
 
