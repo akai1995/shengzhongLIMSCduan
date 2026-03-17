@@ -1,22 +1,22 @@
+<style lang="less" scoped>
+@import './asserts/index.less';
+</style>
+
 <template>
-	<z-paging
-		ref="paging" class="detailPage" :paging-style="{ backgroundColor: 'white' }" v-model="dataList" @query="queryList"
-		:fixed="true" :auto="false" :refresher-enabled="true" :auto-show-back-to-top="true" :auto-scroll-to-top-when-reload="true"
-		:loading-more-enabled="false" :show-refresher-when-reload="true" hide-empty-view
-	>
-        <view slot="top">
-            <u-navbar title="详情" :fixed="false" background="transparent" color="#000" left-icon-color="#000" @leftClick="onBack" />
-        </view>
-		<ut-components ref="utComponents" />
+    <view>
+        <ut-nav title="详情" @onBack="handleGoHome" border></ut-nav>
+
         <view class="detail">
             <view class="detail-pic">
-                <image class="detail-img" 
-                :src="deviceInfo.deviceImg ? deviceInfo.deviceImg : `${$staticPath}imgs/devcieCover.png`" />
+                <img class="detail-img"
+                    :src="deviceInfo.deviceImg ? deviceInfo.deviceImg : 'https://genepiapi.ypzlfx.com/file/device-appointment/image.png'" />
             </view>
+
             <view class="detail-content">
                 <view class="detail-info">
                     <view class="detail-info-title">{{ deviceInfo.name }}</view>
                     <view class="detail-info-text" style="margin-bottom: 10rpx;">设备编号{{ deviceInfo.code }}</view>
+
                     <view class="detail-info-text">{{ deviceInfo.address }}</view>
                 </view>
 
@@ -138,15 +138,15 @@
                         </view>
                     </view>
 
-                    <!-- <view class="submit-button">
+                    <view class="submit-button">
                         <u-button @click="handleSubmit" type="primary" text="提交预约"></u-button>
-                    </view> -->
+                    </view>
                 </view>
             </view>
+
+
         </view>
-        
-        <!-- <u-datetime-picker :show="time.selectVisible" mode="datetime" @close="onTimeClose" @confirm="onTimeSubmit" /> -->
-        
+
         <u-picker :show="time.selectVisible" ref="uPicker" :columns="time.select" @confirm="currTimeSubmit"
             @cancel="currTimeCancel"></u-picker>
 
@@ -158,44 +158,34 @@
 
         <u-calendar :show="choose.moreVisible" :defaultDate="choose.minDate" :minDate="choose.minDate"
             :maxDate="choose.maxDate" @confirm="handleConfirmDate" @close="choose.moreVisible = false"></u-calendar>
-
-        <view slot="bottom" class="pubBotBtn pubTopLine">
-            <view class="wrap">
-                <view class="btn" @click="handleSubmit"><u-button type="primary" text="提交预约" /></view>
-            </view>
-        </view>
-    </z-paging>
+    </view>
 </template>
+
 <script>
-import { 
-    deviceSubmit, deviceDetail,
-    getAllDayReserve,
-    getGroup as _getGroup, getTeacher as _getTeacher
-} from '@/app/api/index'
+import { deviceSubmit, deviceDetail, getAllDayReserve, getGroup, getTeacher } from '@/api/device/index.js'
+
 export default {
     data() {
         return {
-			dataList: [], firstLoaded: false, instrumentId: null, deviceId: null,
+            instrumentId: null,
+            deviceId: null,
             choose: { currIndex: 0, list: [], isMore: false, moreDate: '', moreVisible: false, minDate: '', maxDate: '', moreText: true },
             time: { start: null, end: null, select: [[]], selectVisible: false, type: '' },
             form: { name: '', phone: '', description: '', group: '', teacher: '', school: '', info: '' },
             deviceInfo: { name: "", code: "", address: "", price: "", reserveTime: [], canReserveWeek: [], canReserveTime: '' },
             group: { visible: false, list: [[]], currName: '', currCode: '' },
-            teacher: { visible: false, list: [[]], currName: '', inputVisible: false }, schoolInput: { visible: false }
+            teacher: { visible: false, list: [[]], currName: '', inputVisible: false },
+            schoolInput: { visible: false }
         };
     },
     onLoad(options) {
         this.instrumentId = options.instrumentId;
         this.deviceId = options.deviceId;
-        this.getDeviceDetail(); this.getGroup()
+        this.getDeviceDetail()
+        this.getGroup()
     },
     methods: {
-		queryList(pageNo, pageSize) {
-			this.$refs.paging.endRefresh()
-            this.getDeviceDetail(); this.getGroup()
-            uni.hideLoading();
-		},
-        genDateArray() {
+        generateDateArray() {
             const result = [];
             const today = new Date();
 
@@ -235,13 +225,13 @@ export default {
             const dateStr = `${monthStr}-${dayStr}`;
             return `${year}-${dateStr}`
         },
-        getSelPicker() {
+        getSelectPicker() {
             const timeArray = [];
             const range = this.deviceInfo.canReserveTime;
-            const [startTime, endTime] = range.split(' - ');
+            const [startTime, endTime] = range.split(" - ");
 
-            const startHour = parseInt(startTime.split(':')[0], 10);
-            const endHour = parseInt(endTime.split(':')[0], 10);
+            const startHour = parseInt(startTime.split(":")[0], 10);
+            const endHour = parseInt(endTime.split(":")[0], 10);
 
             for (let i = startHour; i <= endHour; i++) {
                 for (let j = 0; j < 60; j += 10) {
@@ -255,17 +245,21 @@ export default {
                     }
                 }
             }
+
             const lastTime = timeArray[timeArray.length - 1];
 
             if (lastTime === "23:50") {
                 timeArray.push('23:59');
             }
+
+
+
             this.time.select[0] = timeArray;
         },
         getWeekNumber(date) {
             const currDate = new Date(date);
             const dayOfWeek = currDate.getDay();
-            const daysOfWeek = ['7', '1', '2', '3', '4', '5', '6'];
+            const daysOfWeek = ["7", "1", "2", "3", "4", "5", "6"];
             return daysOfWeek[dayOfWeek];
         },
         timeIsNotGreaterThan(a, b) {
@@ -301,38 +295,40 @@ export default {
         getDeviceDetail() {
             deviceDetail(this.instrumentId).then((resp) => {
                 if (resp.code == 200) {
-                    const result = resp.data
-                    this.deviceInfo.name = result.deviceName
-                    this.deviceInfo.code = result.deviceCode
-                    this.deviceInfo.price = this.addLineBreakBeforeText(result.priceDesc, ["校内","校外", "不足"]) || "暂无价格"
-                    this.deviceInfo.address = result.deviceAddress || "暂无设备地址"
-                    this.deviceInfo.reserveTime = result.reserveTimeList
-                    this.deviceInfo.canReserveWeek = result.openList
-                    this.deviceInfo.canReserveTime = result.openTime
-                    this.deviceInfo.deviceImg = result.deviceImg || null
+                    this.deviceInfo.name = resp.result.deviceName
+                    this.deviceInfo.code = resp.result.deviceCode
+                    this.deviceInfo.price = this.addLineBreakBeforeText(resp.result.priceDesc, ["校内","校外", "不足"]) || "暂无价格"
+                    this.deviceInfo.address = resp.result.deviceAddress || "暂无设备地址"
+                    this.deviceInfo.reserveTime = resp.result.reserveTimeList
+                    this.deviceInfo.canReserveWeek = resp.result.openList
+                    this.deviceInfo.canReserveTime = resp.result.openTime
+                    this.deviceInfo.deviceImg = resp.result.deviceImg || null
 
-                    this.genDateArray(); this.getSelPicker(); this.getAllDayReserve()
+
+                    this.generateDateArray()
+                    this.getSelectPicker()
+                    this.getAllDayReserve()
                 }
-            }).finally(()=>{
-                setTimeout(() => {
-                    this.firstLoaded = true
-                }, 1000)
-            })
+            });
+
         },
         getGroup() {
-            _getGroup().then((resp) => {
+            getGroup().then((resp) => {
                 if (resp.code == 200) {
-                    let arr = []; for (let item of resp.data) {
+                    let arr = []
+                    for (let item of resp.result) {
                         arr.push({ label: item.name, id: item.id, code: item.code })
                     }
                     this.group.list[0] = arr;
                 }
             });
         },
+
         getTeacher(id) {
-            _getTeacher(id).then((resp) => {
+            getTeacher(id).then((resp) => {
                 if (resp.code == 200) {
-                    let arr = []; for (let item of resp.data) {
+                    let arr = []
+                    for (let item of resp.result) {
                         arr.push({ label: item.name, id: item.id })
                     }
                     this.teacher.list[0] = arr;
@@ -346,8 +342,10 @@ export default {
             this.form.group = e.value[0].id
             this.getTeacher(e.value[0].id)
             this.group.visible = false
-            this.teacher.currName = ''; this.form.teacher = ''
-            this.form.school = ''; this.form.info = ''
+            this.teacher.currName = ''
+            this.form.teacher = ''
+            this.form.school = ''
+            this.form.info = ''
             if (e.value[0].code != 'xn' && e.value[0].code != 'xw') {
                 this.teacher.inputVisible = true
                 this.schoolInput.visible = false
@@ -363,18 +361,25 @@ export default {
         },
         getAllDayReserve() {
             const currentDate = this.choose.isMore ? this.choose.moreDate : `${this.choose.list[this.choose.currIndex].year}-${this.choose.list[this.choose.currIndex].date}`
-            getAllDayReserve({ currentDate, deviceId: this.deviceId }).then((resp) => {
+            const pushData = {
+                currentDate,
+                deviceId: this.deviceId
+            }
+
+            getAllDayReserve(pushData).then((resp) => {
                 if (resp.code == 200) {
-                    const result = resp.data
-                    if (result.length <= 4) {
-                        this.deviceInfo.reserveTime = result
+                    if (resp.result.length <= 4) {
+                        this.deviceInfo.reserveTime = resp.result
                         this.choose.moreText = false
                     } else {
                         if (this.choose.moreText == false) {
-                            this.deviceInfo.reserveTime = result
+                            this.deviceInfo.reserveTime = resp.result
                             this.choose.moreText = false
                         } else {
-                            const arr = []; for (let i = 0; i < 4; i += 1) { arr.push(result[i]) }
+                            const arr = []
+                            for (let i = 0; i < 4; i += 1) {
+                                arr.push(resp.result[i])
+                            }
                             this.choose.moreText = true
                             this.deviceInfo.reserveTime = arr
                         }
@@ -382,22 +387,27 @@ export default {
                     }
 
                 }
-            })
+            });
         },
-        onMoreTextClick() { this.choose.moreText = false; this.getAllDayReserve() },
+        handleClickMoreText() {
+            this.choose.moreText = false
+            this.getAllDayReserve()
+        },
         handleDateClick(index, currDate) {
             const currentYear = new Date().getFullYear();
             const currenWeek = this.getWeekNumber(`${currentYear}-${currDate}`)
             const openDate = this.deviceInfo.canReserveWeek
             if (openDate.includes(currenWeek)) {
-                this.choose.currIndex = index; this.choose.moreDate = ''
-                this.choose.isMore = false; this.getAllDayReserve()
+                this.choose.currIndex = index;
+                this.choose.moreDate = ""
+                this.choose.isMore = false
+                this.getAllDayReserve()
             } else {
-                this.showTips('该日设备不开放预约', 'error');
+                uni.showToast({ title: "该日设备不开放预约", icon: "none", });
             }
         },
-        handleConfirmDate(event) {
-            this.choose.moreDate = event[0]
+        handleConfirmDate(e) {
+            this.choose.moreDate = e[0]
             this.choose.isMore = true
             this.choose.moreVisible = false
             this.getAllDayReserve()
@@ -406,71 +416,59 @@ export default {
             this.time.type = type
             this.time.selectVisible = true
         },
-        currTimeSubmit(event) {
-            console.log('onTimeSubmit',this.time.type, event.value[0])
-            // const date = new Date(event.value); // 毫秒级时间戳
-            // // 格式化为 YYYY-MM-DD HH:mm:ss
-            // const dateTimeVal = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ` +
-            // `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
-            // console.log(dateTimeVal); // 输出：2025-03-11 00:00:00
-            this.time[this.time.type] = event.value.length>0?event.value[0]:''
+        currTimeSubmit(e) {
+            this.time[this.time.type] = e.value[0]
             this.time.selectVisible = false
         },
-        onTimeClose() {
+        currTimeCancel() {
             this.time.selectVisible = false
-        },
-        onVisibleFalse(type) {
-            if (type==1) this.group.visible = false
-            if (type==2) this.teacher.visible = false
-            if (type==3) this.choose.moreVisible = false
         },
         handleSubmit() {
-			if (!this.checkUserInfo()) { return; }
             if (!this.time.start) {
-                this.showTips('请选择预约开始时间', 'error');
+                uni.showToast({ title: "请选择预约开始时间", icon: "none", });
                 return
             }
             if (!this.time.end) {
-                this.showTips('请选择预约结束时间', 'error');
+                uni.showToast({ title: "请选择预约结束时间", icon: "none", });
                 return
             }
 
             if (!this.timeIsNotGreaterThan(this.time.start, this.time.end)) {
-                this.showTips('预约开始时间不能大于等于预约结束时间', 'error');
+                uni.showToast({ title: "预约开始时间不能大于等于预约结束时间", icon: "none", });
                 return
             }
 
             if (!this.isTimeDifferenceValid(this.time.start, this.time.end)) {
-                this.showTips('使用设备至少三十分钟且不超过十二小时', 'error');
+                uni.showToast({ title: "使用设备至少三十分钟且不超过十二小时", icon: "none", });
                 return
             }
 
             if (!this.form.name) {
-                this.showTips('请输入预约人姓名', 'error');
+                uni.showToast({ title: "请输入预约人姓名", icon: "none", });
                 return
             }
             if (!this.form.phone) {
-                this.showTips('请输入预约人电话', 'error');
+                uni.showToast({ title: "请输入预约人电话", icon: "none", });
                 return
             }
             if (!/^1[3-9]\d{9}$/.test(this.form.phone)) {
-                this.showTips('请输入正确的电话号码', 'error');
+                uni.showToast({ title: "请输入正确的电话号码", icon: "none", });
                 return
             }
             if (!this.form.description) {
-                this.showTips('请输入用途说明', 'error');
+                uni.showToast({ title: "请输入用途说明", icon: "none", });
                 return
             }
             if (this.form.group == '') {
-                this.showTips('请选择团队', 'error');
+                uni.showToast({ title: "请选择团队", icon: "none", });
                 return
             }
             if (this.group.currCode != 'xn' && this.group.currCode != 'xw' && this.form.teacher == '') {
-                this.showTips('请选择导师', 'error');
+                uni.showToast({ title: "请选择导师", icon: "none", });
                 return
             }
             if ((this.group.currCode == 'xn' || this.group.currCode == 'xw') && this.form.school == '') {
-                this.showTips('请填写所在学院', 'error');
+                uni.showToast({ title: "请填写所在学院", icon: "none", });
                 return
             }
 
@@ -490,357 +488,18 @@ export default {
                 reserveName: this.form.name,
                 reservePhone: this.form.phone,
             }
-            console.log('deviceSubmit::',pushData)
             deviceSubmit(pushData).then((resp) => {
                 if (resp.code == 200) {
-                    this.showTips('预约成功，正在跳转', 'success');
+                    uni.showToast({ title: "预约成功，正在跳转", icon: "none", });
                     setTimeout(() => {
-                        this.$ut.jump(`/sub-pack/tab5/reserve/detail?id=${resp.data.instrumentId}`);
+                        this.$ut.jump(`/pages/reserve/detail?id=${resp.result.instrumentId}`);
                     }, 2000);
                 }
             });
-        }
-    }
-}
+        },
+        handleGoHome() {
+            this.$ut.jump(`/pages/index/index`);
+        },
+    },
+};
 </script>
-<style lang="scss" scoped>
-.detail {
-	position: relative;
-	width: 100%;
-	box-sizing: border-box;
-	background-color: #fff;
-	.detail-pic {
-		position: relative;
-		width: 100%;
-		height: auto;
-		aspect-ratio: 1.25/1;
-		.detail-img {
-			position: relative;
-			width: 100%;
-			height: 100%;
-		}
-	}
-	.detail-content {
-		position: relative;
-		width: 100%;
-		background-color: #fff;
-		padding: 20rpx;
-		box-sizing: border-box;
-		.detail-info {
-			position: relative;
-			width: 100%;
-			.detail-info-title {
-				position: relative;
-				width: 100%;
-				font-family: PingFang SC, PingFang SC;
-				font-weight: bold;
-				font-size: 16px;
-				color: #000000;
-				line-height: 19px;
-				text-align: left;
-				font-style: normal;
-				text-transform: none;
-				margin: 22rpx 0;
-			}
-			.detail-info-text {
-				position: relative;
-				width: 100%;
-				font-family: PingFang SC, PingFang SC;
-				font-weight: 400;
-				font-size: 13px;
-				color: #9699a1;
-				line-height: 15px;
-				text-align: left;
-				font-style: normal;
-				text-transform: none;
-			}
-			.middle {
-				margin: 30rpx 0;
-				margin-top: 0;
-				line-height: 26px;
-			}
-		}
-		.detail-date {
-			position: relative;
-			width: 100%;
-			box-sizing: border-box;
-			.detail-date-title {
-				position: relative;
-				width: 100%;
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-				font-family: PingFang SC, PingFang SC;
-				font-weight: bold;
-				font-size: 16px;
-				color: #000000;
-				line-height: 19px;
-				text-align: left;
-				font-style: normal;
-				text-transform: none;
-				margin: 22rpx 0;
-				margin-top: 40rpx;
-			}
-			.detail-date-day {
-				position: relative;
-				width: 100%;
-				display: flex;
-				align-items: stretch;
-				justify-content: space-between;
-				.detail-date-day-item {
-					position: relative;
-					width: 19%;
-					padding: 14px 8px;
-					box-sizing: border-box;
-					background: #f0f2f7;
-					border-radius: 4px 4px 4px 4px;
-					.detail-date-day-item-num {
-						position: relative;
-						width: 100%;
-						font-family: PingFang SC, PingFang SC;
-						font-weight: 500;
-						font-size: 15px;
-						color: #4b4b4e;
-						line-height: 18px;
-						text-align: center;
-						font-style: normal;
-						text-transform: none;
-					}
-					.detail-date-day-item-text {
-						position: relative;
-						width: 100%;
-						font-family: PingFang SC, PingFang SC;
-						font-weight: 400;
-						font-size: 13px;
-						color: #4b4b4e;
-						line-height: 15px;
-						text-align: center;
-						font-style: normal;
-						text-transform: none;
-						margin-top: 20rpx;
-					}
-				}
-				.detail-date-day-item-curr {
-					position: relative;
-					width: 19%;
-					padding: 14px 8px;
-					box-sizing: border-box;
-					background: #0d70f3;
-					border-radius: 4px 4px 4px 4px;
-					.detail-date-day-item-num {
-						position: relative;
-						width: 100%;
-						font-family: PingFang SC, PingFang SC;
-						font-weight: 500;
-						font-size: 15px;
-						color: #ffffff;
-						line-height: 18px;
-						text-align: center;
-						font-style: normal;
-						text-transform: none;
-					}
-					.detail-date-day-item-text {
-						position: relative;
-						width: 100%;
-						font-family: PingFang SC, PingFang SC;
-						font-weight: 400;
-						font-size: 13px;
-						color: #ffffff;
-						line-height: 15px;
-						text-align: center;
-						font-style: normal;
-						text-transform: none;
-						margin-top: 20rpx;
-					}
-				}
-				.detail-date-day-item-more {
-					position: relative;
-					width: 19%;
-					padding: 14px 8px;
-					box-sizing: border-box;
-					background: #0d70f3;
-					border-radius: 4px 4px 4px 4px;
-					display: flex;
-					align-items: center;
-					justify-content: center;
-					.detail-date-day-item-more-text {
-						position: relative;
-						font-family: PingFang SC, PingFang SC;
-						font-weight: 500;
-						font-size: 15px;
-						color: #ffffff;
-						line-height: 18px;
-						text-align: center;
-						font-style: normal;
-						text-transform: none;
-					}
-				}
-				.detail-date-day-item-more-curr {
-					position: relative;
-					width: 19%;
-					padding: 14px 8px;
-					box-sizing: border-box;
-					background: #f0f2f7;
-					border-radius: 4px 4px 4px 4px;
-					display: flex;
-					align-items: center;
-					justify-content: center;
-					.detail-date-day-item-more-text {
-						position: relative;
-						font-family: PingFang SC, PingFang SC;
-						font-weight: 500;
-						font-size: 15px;
-						color: #4b4b4e;
-						line-height: 18px;
-						text-align: center;
-						font-style: normal;
-						text-transform: none;
-					}
-				}
-			}
-			.detail-date-has-list {
-				position: relative;
-				width: 100%;
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-				flex-wrap: wrap;
-				box-sizing: border-box;
-				.detail-date-has-item {
-					position: relative;
-					box-sizing: border-box;
-					width: calc(50% - 10rpx);
-					margin-bottom: 20rpx;
-					background: #f0f2f7;
-					border-radius: 4px 4px 4px 4px;
-					font-family: PingFang SC, PingFang SC;
-					font-weight: 400;
-					font-size: 15px;
-					color: #4b4b4e;
-					line-height: 18px;
-					text-align: center;
-					font-style: normal;
-					text-transform: none;
-					padding: 20rpx;
-				}
-			}
-			.detail-date-more-list {
-				position: relative;
-				width: 100%;
-				font-family: PingFang SC, PingFang SC;
-				font-weight: 400;
-				font-size: 13px;
-				color: #9699a1;
-				line-height: 15px;
-				text-align: center;
-				font-style: normal;
-				text-transform: none;
-				margin-bottom: 40rpx;
-			}
-			.detail-date-has-box {
-				position: relative;
-				width: 100%;
-				padding: 40rpx;
-				border: 1px solid #cecece;
-				border-radius: 4px;
-				margin-bottom: 40rpx;
-				box-sizing: border-box;
-			}
-			.detail-date-choose {
-				position: relative;
-				width: 100%;
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-				.detail-date-choose-item {
-					position: relative;
-					width: 48%;
-					.detail-date-choose-item-title {
-						position: relative;
-						width: 100%;
-						text-align: center;
-						font-family: PingFang SC, PingFang SC;
-						font-weight: 400;
-						font-size: 14px;
-						color: #000000;
-						line-height: 16px;
-						text-align: center;
-						font-style: normal;
-						text-transform: none;
-						margin: 22rpx auto;
-					}
-					.detail-date-choose-item-button {
-						position: relative;
-						width: 100%;
-						border-radius: 30px 30px 30px 30px;
-						border: 1px solid rgba(3, 171, 110, 0.5);
-						font-family: PingFang SC, PingFang SC;
-						font-weight: 400;
-						font-size: 14px;
-						color: #03ab6e;
-						line-height: 16px;
-						text-align: center;
-						font-style: normal;
-						text-transform: none;
-						padding: 10px 0;
-					}
-				}
-			}
-		}
-		.detail-form {
-			position: relative;
-			width: 100%;
-			margin-top: 50rpx;
-			.detail-form-item {
-				position: relative;
-				width: 100%;
-				margin-top: 30rpx;
-				.detail-form-item-title {
-					position: relative;
-					width: 100%;
-					margin-bottom: 10rpx;
-					font-family: PingFang SC, PingFang SC;
-					font-weight: 400;
-					font-size: 14px;
-					color: #4b4b4e;
-					line-height: 16px;
-					text-align: left;
-					font-style: normal;
-					text-transform: none;
-					padding-left: 10rpx;
-				}
-				.detail-form-item-input {
-					position: relative;
-					width: 100%;
-					.detail-form-item-arr {
-						position: absolute;
-						margin: auto;
-						top: 11px;
-						right: 10px;
-					}
-				}
-			}
-			.submit-button {
-				position: relative;
-				width: 100%;
-				margin-top: 30rpx;
-				margin-bottom: constant(safe-area-inset-bottom);
-				margin-bottom: env(safe-area-inset-bottom);
-			}
-		}
-	}
-}
-    
-/*共用底部按钮*/
-.pubBotBtn {
-	background: #fff;
-    padding: 16rpx;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-	.wrap {
-        padding: 0;
-        width: 100%;
-	}
-}
-</style>
