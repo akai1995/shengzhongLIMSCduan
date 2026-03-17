@@ -2,9 +2,9 @@
 	<z-paging 
 		ref="paging" class="page" :paging-style="{ backgroundColor: 'white' }" 
 		v-model="dataList" @query="queryList" :fixed="true" :auto="false" :auto-show-back-to-top="true"
-		:enable-back-to-top="true" :auto-scroll-to-top-when-reload="false"
-		:auto-clean-list-when-reload="true" :safe-area-inset-bottom="true"
-		empty-view-text="暂无数据" :loading-more-no-more-text="`已加载完，共${totalCount}条记录`"
+		:enable-back-to-top="true" :safe-area-inset-bottom="true" :auto-scroll-to-top-when-reload="false"
+		:auto-clean-list-when-reload="true" empty-view-text="暂无数据"
+        :loading-more-no-more-text="`已加载完，共${totalCount}条记录`"
 		:loading-more-enabled="false" :show-refresher-when-reload="false" hide-empty-view
 	>
 	 	<!-- slot="top" -->
@@ -67,7 +67,7 @@
                         <u-icon :name="`${$staticPath}imgs/home_card_4.png`" size="140rpx" />
                     </view>
                 </view>
-                <view class="cardWarp f5" @click="onJump('/sub-pack/tab5/temperature-monitoring/temperature-monitoring')">
+                <view v-if="hasAction('tab1:temperature-monitoring')" class="cardWarp f5" @click="onJump('/sub-pack/tab5/temperature-monitoring/temperature-monitoring')">
                     <view class="cardInfo">
                         <view class="cardTitle">
                             温度监控

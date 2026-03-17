@@ -9,9 +9,12 @@
         <ocr-result v-if="fileValue&&info.imgPath" :info="info" @copy="onCopy" @close="onResultClose" />
         <ocr-result-log v-if="showOcrResultLog" @close="onOcrResultLogClose" />
         <z-paging 
-            ref="paging" v-show="!!!fileValue&&!showOcrResultLog" class="page" :paging-style="{ backgroundColor: '#F7F8FA' }" v-model="dataList" @query="queryList"
-            :fixed="true" :auto="false" :refresher-enabled="false" :auto-show-back-to-top="true" :auto-scroll-to-top-when-reload="false"
-            :loading-more-enabled="false" :show-refresher-when-reload="false" hide-empty-view
+            ref="paging" v-show="!!!fileValue&&!showOcrResultLog" class="page"
+            :paging-style="{ backgroundColor: '#F7F8FA' }" v-model="dataList" @query="queryList"
+            :fixed="true" :auto="false" :refresher-enabled="false" :auto-show-back-to-top="true"
+            :enable-back-to-top="true" :safe-area-inset-bottom="true" 
+            :auto-scroll-to-top-when-reload="false" :loading-more-enabled="false"
+            :show-refresher-when-reload="false" hide-empty-view
         >
             <view slot="top"><u-navbar  title="图文识别" :fixed="false" background="transparent" :leftIcon="$leftIcon" @leftClick="onBack" /></view>
             <view class="content">
@@ -83,14 +86,15 @@ export default {
                     const cropPath = `${_self.$onlineFilePath}${resp.message}`
                     console.log('cropPath', cropPath)
                     parseDoc(resp.message).then((res)=>{
-                    console.log('parseDoc res', res.success, res.data)
-                    if (res.success) {
-                        _self.info = Object.assign(_self.info, {...res.data,imgPath: cropPath})
-                        console.log('_self.info', _self.info)
-                    }
+                        console.log('parseDoc res', res.success, res.data)
+                        if (res.success) {
+                            _self.info = Object.assign(_self.info, { ...res.data,imgPath: cropPath })
+                            console.log('_self.info', _self.info)
+                        }
                     }).finally(()=>{ uni.hideLoading() })
                 } else { _self.showTips('上传异常', 'error'); }
-            }).catch((error) => {  console.error(error); _self.showTips('上传异常', 'error'); }).finally(() => { uni.hideLoading(); });
+            }).catch((error) => { console.error(error); _self.showTips('上传异常', 'error');
+            }).finally(() => { uni.hideLoading(); });
         },
         onCopy() {
             uni.setClipboardData({

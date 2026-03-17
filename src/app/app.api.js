@@ -51,8 +51,14 @@ const request = config => {
         data: noEmpty(config.data, config.method || 'get'),
         header: config.header, dataType: 'json',
 				success: (response) => {
-          console.log('response', response);
+          // console.log('request', config);
+          // console.log('timeout', timeout);
+          // console.log('url', config.baseUrl || baseUrl + config.url);
+          // console.log('data:::', noEmpty(config.data, config.method || 'get'));
+          // console.log('response', response);
           const { statusCode, errMsg, data } = response; const code = data.code || 200;
+          // console.log('code', statusCode, code);
+          // console.log('code', JSON.stringify(data));
           const msg = data.message || httpStatusCode[code] || httpStatusCode['default']
           if (statusCode == 401||code == 401) {
             if(toLogin) { delToken(); return; }; toLogin = true;
@@ -73,7 +79,7 @@ const request = config => {
             };
             resolve(checkData(objData))
           }
-          else { console.error('msg', msg); onToast(msg); reject(code) }
+          else { console.error('msg', msg); onToast(msg); reject(data) }
 				},
 				fail: (error) => {
           console.error('error', error); const { message, errMsg } = error

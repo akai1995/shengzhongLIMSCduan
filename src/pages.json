@@ -24,8 +24,8 @@
 		// {
 		// 	"root": "sub-pack/chat",
 		// 	"pages": [
-		// 		{ "path": "chat-stream/chat-stream", "name": "chatStream", "style": { "navigationBarTitleText": "报告分析", "enablePullDownRefresh": false } },
-		// 		{ "path": "chat-stream/chat-log", "name": "chatLog", "style": { "navigationBarTitleText": "聊天记录", "enablePullDownRefresh": false } },
+		// 		{ "path": "chat-stream", "name": "chatStream", "style": { "navigationBarTitleText": "报告分析", "enablePullDownRefresh": false } },
+		// 		{ "path": "chat-log", "name": "chatLog", "style": { "navigationBarTitleText": "聊天记录", "enablePullDownRefresh": false } },
 		// 	]
 		// },
 		{

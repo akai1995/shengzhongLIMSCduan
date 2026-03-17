@@ -139,8 +139,7 @@
 
         <view slot="bottom" class="pubBotBtn pubTopLine">
             <view class="wrap">
-                <view class="btn" @click="handleSubmit"><u-button type="primary" text="提交预约" />
-                </view>
+                <view class="btn" @click="handleSubmit"><u-button type="primary" text="提交预约" /></view>
             </view>
         </view>
     </z-paging>

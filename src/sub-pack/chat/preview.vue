@@ -1,12 +1,15 @@
 <template>
     <z-paging 
-        ref="paging" class="page" :paging-style="{ backgroundColor: '#F7F8FA' }" v-model="dataList" @query="queryList"
-        :fixed="true" :auto="false" :auto-show-back-to-top="true" :enable-back-to-top="true" :show-refresher-when-reload="false" 
-        :auto-scroll-to-top-when-reload="false" :auto-clean-list-when-reload="false" :safe-area-inset-bottom="true"
+        ref="paging" class="page" :paging-style="{ backgroundColor: '#F7F8FA' }"
+        v-model="dataList" @query="queryList" :fixed="true" :auto="false"
+        :auto-show-back-to-top="true" :enable-back-to-top="true"
+        :show-refresher-when-reload="false" :auto-scroll-to-top-when-reload="false"
+        :auto-clean-list-when-reload="false" :safe-area-inset-bottom="true"
         hide-empty-view :refresher-enabled="false" :loading-more-enabled="false"
     >
         <!-- <view slot="top"><u-navbar title="文件预览" :fixed="false" bgColor="transparent" color="#000" left-icon="close" left-icon-color="#000" @leftClick="onClose" /></view> -->
-		<ut-components ref="utComponents" /><u-skeleton v-if="!firstLoaded&&dataList.length === 0" rows="16" title loading />
+		<ut-components ref="utComponents" />
+        <u-skeleton v-if="!firstLoaded&&dataList.length === 0" rows="16" title loading />
         <!-- <ss-preview fileType="2" :fileUrl="fileUrl" :file-list="imageList" /> -->
     </z-paging>
 </template>
@@ -23,7 +26,9 @@ export default {
 		}
 	},
     onLoad(query) { console.log(query); this.fileUrl = query.uri },
-	mounted() { setTimeout(() => { this.$refs.paging && this.$refs.paging.refresh(); }, 250) },
+	mounted() {
+        setTimeout(() => { this.$refs.paging && this.$refs.paging.refresh(); }, 250)
+    },
 	methods: {
 		queryList(pageNo, pageSize) {
 			this.$refs.paging.endRefresh()

@@ -12,11 +12,15 @@
 		<!-- bottom-bg-color：设置slot="bottom"容器的背景色，这里设置为和chat-input-bar的背景色一致 -->
 		<!-- use-chat-record-mode -->
 		<z-paging 
-			ref="paging" v-show="!showChatLog" v-model="dataList" use-chat-record-mode safe-area-inset-bottom bottom-bg-color="#f8f8f8" 
-			empty-view-text="有什么可以帮忙的？" @query="queryList" @keyboardHeightChange="keyboardHeightChange" @hidedKeyboard="hidedKeyboard"
+			ref="paging" v-show="!showChatLog" v-model="dataList" use-chat-record-mode safe-area-inset-bottom
+			bottom-bg-color="#f8f8f8" empty-view-text="有什么可以帮忙的？" @query="queryList"
+			@keyboardHeightChange="keyboardHeightChange" @hidedKeyboard="hidedKeyboard"
 		>
 			<view slot="top" class="">
-				<u-navbar title="报告分析" :fixed="false" background="transparent" color="#000" left-icon-color="#000">					
+				<u-navbar
+					title="报告分析" background="transparent"
+					color="#000" left-icon-color="#000" :fixed="false"
+				>					
 					<view class="u-nav-slot" slot="left" style="display: flex;">
 						<u-icon :name="$leftIcon" size="18" @click="onBack" />
 						<u-line direction="column" :hairline="false" length="15" margin="0 8px" />
@@ -44,13 +48,23 @@
 			</view>
 			<view class="inWrap" v-if="false">
 				<!-- 未有聊天问题时显示 --> <!-- 聊天内容显示 -->
-				<!-- <project-chat-list  ref="refChatList" :chatLogs="dataList" :currentSelectedHis="currentSelectedHis" :useMarkdown="useMarkdown" @again="againDialog($event)" @del="delDialog($event)" /> -->
+				<!-- <project-chat-list
+					ref="refChatList" :chatLogs="dataList" :currentSelectedHis="currentSelectedHis"
+					:useMarkdown="useMarkdown" @again="againDialog($event)" @del="delDialog($event)"
+				 /> -->
 			</view>
 			<!-- 底部聊天输入框 -->
 			<view slot="bottom" class="pubBotHandleFooter">
 				<view class="wrap">
-					<!-- <chat-input :disabled="isAnswering" ref="chatInputBar" @send-fail="showTips($event, 'warning')" @show-log="onChatLogShow" @send="doSend" /> -->					
-					<view class="write chat-input-bar-container" :class="{ speak: showVoice }" @touchmove.stop.prevent>
+					<!-- <chat-input
+					 	:disabled="isAnswering" ref="chatInputBar"
+						@send-fail="showTips($event, 'warning')" @show-log="onChatLogShow"
+						@send="doSend"
+					/> -->					
+					<view
+						class="write chat-input-bar-container"
+						:class="{ speak: showVoice }" @touchmove.stop.prevent
+					>
 						<view class="lWrite chat-input-bar">
 							<u-scroll-list :indicator="false" v-if="fileList.length > 0">
 								<view class="fileWarp">
@@ -61,7 +75,10 @@
 									/>
 								</view>
 							</u-scroll-list>
-							<view class="writeArea pubBoxAI" @touchstart="startRecording" @touchmove="moveRecording" @touchend="endRecording">
+							<view
+								class="writeArea pubBoxAI" @touchstart="startRecording"
+								@touchmove="moveRecording" @touchend="endRecording"
+							>
 								<!-- :adjust-position="false"必须设置，防止键盘弹窗自动上顶，交由z-paging内部处理 -->
 								<view class="writeBox">
 									<u--textarea
@@ -74,7 +91,9 @@
 									<view class="voiceBox" v-else>
 										<text class="fTip" v-if="!isRecording">按住 说话</text>
 										<template v-else>
-											<text class="fTip">{{ cancelRecording ? '松开手指，取消发送' : '向上滑动，取消发送' }}</text>
+											<text class="fTip">
+												{{ cancelRecording ? '松开手指，取消发送' : '向上滑动，取消发送' }}
+											</text>
 										</template>
 									</view>
 								</view>
@@ -85,7 +104,11 @@
 							<view class="chat-input-plus" :class="{ 'rotate-45': showMenu }" @click.stop="onTogglePlus()">
 								<u-icon :name="`${$staticPath}imgs/icon-plus.png`" size="45rpx" />
 							</view>
-							<view class="chat-input-send" :class="{'chat-input-send-disabled': !sendEnabled }" @click.stop="onSendClick()">
+							<view
+								class="chat-input-send"
+								:class="{'chat-input-send-disabled': !sendEnabled }"
+								@click.stop="onSendClick()"
+							>
 								<u-icon v-if="showVoice" :name="`${$staticPath}imgs/icon-voice.png`" size="46rpx" />
 								<u-icon v-else :name="`${$staticPath}imgs/icon-${sendEnabled?'send2':'keyboard'}.png`" size="48rpx" />
 							</view>
