@@ -86,6 +86,9 @@ export default {
 			// #endif
 			_self.default_img = `${staticPath}imgs/default_doctor.png`
 		}, 350)
+		setTimeout(() => {
+			if (this.eventHanlder) uni.$on(EventsConfigs.eventNames.refreshLoginedPage, _self.eventHanlder)
+		}, 750)
 	},
 	methods: {
 		hidePhone(phone) {
@@ -124,10 +127,10 @@ export default {
 		showPreviewImage (url) { uni.previewImage({ urls: [url], current: 0 }) },
 	},
 	onHide() {
-        uni.$off(EventsConfigs.eventNames.refreshLoginedPage, this.eventHanlder)
+        if (this.eventHanlder) uni.$off(EventsConfigs.eventNames.refreshLoginedPage, this.eventHanlder)
 	},
     destroyed() {
-        uni.$off(EventsConfigs.eventNames.refreshLoginedPage, this.eventHanlder)
+        if (this.eventHanlder) uni.$off(EventsConfigs.eventNames.refreshLoginedPage, this.eventHanlder)
     },
 	// #ifdef MP-WEIXIN
     onShareAppMessage:(res) => { return this.shareParams }, onShareTimeline:(res) => { return this.shareParams }, onAddToFavorites:(res) => { return this.shareParams }

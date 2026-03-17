@@ -187,6 +187,7 @@ export default {
     onLoad(options) {
         this.instrumentId = options.instrumentId;
         this.deviceId = options.deviceId;
+        this.eventHanlder = () => { this.getDeviceDetail(); this.getGroup() }
         this.getDeviceDetail(); this.getGroup()
     },
     methods: {
