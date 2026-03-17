@@ -1,8 +1,8 @@
 <template>
 	<z-paging
 		ref="paging" class="detailPage" :paging-style="{ backgroundColor: 'white' }" v-model="dataList" @query="queryList"
-		:fixed="true" :auto="false" :refresher-enabled="false" :auto-show-back-to-top="true" :auto-scroll-to-top-when-reload="false"
-		:loading-more-enabled="false" :show-refresher-when-reload="false" hide-empty-view
+		:fixed="true" :auto="false" :refresher-enabled="true" :auto-show-back-to-top="true" :auto-scroll-to-top-when-reload="true"
+		:loading-more-enabled="false" :show-refresher-when-reload="true" hide-empty-view
 	>
         <view slot="top">
             <u-navbar title="详情" :fixed="false" background="transparent" color="#000" left-icon-color="#000" @leftClick="onBack" />
@@ -127,15 +127,15 @@
             </view>
         </view>
         
-        <u-datetime-picker :show="time.selectVisible" mode="datetime" @close="onTimeClose" @confirm="onTimeSubmit" />
-        <!-- <u-picker :show="time.selectVisible" ref="uPicker" :columns="time.select" @cancel="onTimeClose" @confirm="onTimeSubmit" /> -->
+        <!-- <u-datetime-picker :show="time.selectVisible" mode="datetime" @close="onTimeClose" @confirm="onTimeSubmit" /> -->
+        <u-picker :show="time.selectVisible" ref="uPicker" :columns="time.select" @cancel="onTimeClose" @confirm="onTimeSubmit" />
         <u-picker :show="group.visible" :columns="group.list" keyName="label" @cancel="onVisibleFalse(1)" @confirm="onCurrGroup" />
         <u-picker :show="teacher.visible" :columns="teacher.list" keyName="label" @cancel="onVisibleFalse(2)" @confirm="onCurrTeacher" />
-        <!-- <u-calendar 
+        <u-calendar 
             :show="choose.moreVisible" :defaultDate="choose.minDate"
             :minDate="choose.minDate" :maxDate="choose.maxDate"
             @close="onVisibleFalse(3)" @confirm="onConfirmDate"
-        /> -->
+        />
 
         <view slot="bottom" class="pubBotBtn pubTopLine">
             <view class="wrap">
@@ -165,11 +165,12 @@ export default {
     onLoad(options) {
         this.instrumentId = options.instrumentId;
         this.deviceId = options.deviceId;
-        // this.getDeviceDetail(); this.getGroup()
+        this.getDeviceDetail(); this.getGroup()
     },
     methods: {
 		queryList(pageNo, pageSize) {
 			this.$refs.paging.endRefresh()
+            this.getDeviceDetail(); this.getGroup()
             uni.hideLoading();
 		},
         genDateArray() {
@@ -388,13 +389,13 @@ export default {
             this.time.selectVisible = true
         },
         onTimeSubmit(event) {
-            console.log('onTimeSubmit',this.time.type, event)
-            const date = new Date(event.value); // 毫秒级时间戳
-            // 格式化为 YYYY-MM-DD HH:mm:ss
-            const dateTimeVal = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ` +
-            `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
-            console.log(dateTimeVal); // 输出：2025-03-11 00:00:00
-            this.time[this.time.type] = dateTimeVal
+            console.log('onTimeSubmit',this.time.type, event.value[0])
+            // const date = new Date(event.value); // 毫秒级时间戳
+            // // 格式化为 YYYY-MM-DD HH:mm:ss
+            // const dateTimeVal = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ` +
+            // `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+            // console.log(dateTimeVal); // 输出：2025-03-11 00:00:00
+            this.time[this.time.type] = event.value.length>0?event.value[0]:''
             this.time.selectVisible = false
         },
         onTimeClose() {
