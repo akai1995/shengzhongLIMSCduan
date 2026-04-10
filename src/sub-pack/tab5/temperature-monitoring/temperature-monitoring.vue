@@ -20,7 +20,7 @@
             </u-scroll-list> -->
         </view>
 		<u-skeleton v-if="!firstLoaded&&dataList.length==0" rows="15" title loading />
-        <view class="luBox" v-else>
+        <view class="luBox" v-if>
             <project-temperature-monitoring-item
                 v-for="item,idx in dataList" :key="item.id"
                 :item="item" :hideMb="dataList.length-1==idx"
