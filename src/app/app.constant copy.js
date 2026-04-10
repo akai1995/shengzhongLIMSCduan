@@ -2,11 +2,9 @@
 var envWx = 'release';
 // #endif
 
-// var _val = 'eai.natapp1.cc'
-
-var baseUrl = `http://192.168.0.151:9083/eai-lims`;
+var baseUrl = `http://eai.natapp1.cc/eai-lims`;
 var wsUrl = `wss://api.ypzlfx.com/prod-api`;
-var filePath = `192.168.0.151:9889`;
+var filePath = `eai.natapp1.cc`;
 // #ifdef MP-WEIXIN
 try {
 //   const systemInfo = uni.getSystemInfoSync();
@@ -25,19 +23,19 @@ const envWx = envVersion;
 
 // console.log(envWx)
 if (envWx === `develop`) { /* 开发 */
-	baseUrl = `http://192.168.0.151:9083/eai-lims`;
+	baseUrl = `http:/eai.natapp1.cc/eai-lims`;
 	wsUrl = `ws://192.168.0.154:5200`;
-	filePath = `192.168.0.151:9889`
+	filePath = `eai.natapp1.cc`
 } 
 else if (envWx === `release`) { /* 生产 */
-	baseUrl = `http://192.168.0.151:9083/eai-lims`;
+	baseUrl = `http:/eai.natapp1.cc/eai-lims`;
 	wsUrl = `wss://api.ypzlfx.com/prod-api`;
-	filePath = `192.168.0.151:9889`
+	filePath = `eai.natapp1.cc`
 } 
 else {
-	baseUrl = `http://192.168.0.151:9083/eai-lims`;
+	baseUrl = `http:/eai.natapp1.cc/eai-lims`;
 	wsUrl = `wss://genepiapi.ypzlfx.com/prod-api`;
-	filePath = `192.168.0.151:9889`
+	filePath = `eai.natapp1.cc`
 }
 // #endif
 

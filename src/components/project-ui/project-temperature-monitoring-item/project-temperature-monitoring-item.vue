@@ -17,7 +17,7 @@
             </view>
             <view class="temperature-box">
                 <view class="temperature-box-label">
-                    {{item.temperatureLow}}-{{item.temperatureHigh}}℃
+                    {{item.temperatureLow}}~{{item.temperatureHigh}}℃
                 </view>
                 <view class="temperature-box-name">
                     预警范围
@@ -67,10 +67,14 @@ export default {
     computed: {
         statusClass() {
             // 随机输出class，实际使用时根据温度值判断
-            const {warning,currentTemperature,temperatureHigh,temperatureLow} = this.item
+            const { warning, currentTemperature, temperatureHigh, temperatureLow } = this.item
             const a = Number(currentTemperature)
             const b = Number(temperatureHigh)
             const c = Number(temperatureLow)
+            // 检查是否为有效数字
+            if (isNaN(a) || isNaN(b) || isNaN(c)) {
+                return ''
+            }
             if (a < c) {
                 return 'blue'
             } else if (a > b){

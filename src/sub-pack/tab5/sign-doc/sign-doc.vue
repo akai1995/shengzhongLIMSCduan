@@ -13,10 +13,9 @@
 				<u--input border="surround" placeholder="请输入文件名称" suffixIcon="search" suffixIconStyle="color: #909399" customStyle="background-color: white;" @change="onSearch" />
 			</view>
 		</view>
-		<view class="home-content">
+		<u-skeleton v-if="!firstLoaded&&dataList.length==0" rows="12" title loading />
+		<view class="home-content" v-if="dataList.length>0">
 			<view class="luBox">
-				<view class="luTitle">待签署文件列表</view>
-            	<u-skeleton v-if="!firstLoaded&&dataList.length==0" rows="8" title loading />
       			<project-sign-doc-item v-for="item,idx in dataList" :key="item.id" :item="item" :hideLine="dataList.length-1==idx" />
 			</view>
 		</view>

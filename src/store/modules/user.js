@@ -87,7 +87,7 @@ const user = {
 				// { 'path':                      '', 'name':     '', 'type': 'action', 'action': 'tab1:chat-stream', 'describe': '报告分析' },
 				// { 'path':                      '', 'name':     '', 'type': 'action', 'action': 'tab1:reserve', 'describe': '设备预约' },
 				// { 'path':                      '', 'name':     '', 'type': 'action', 'action': 'tab1:sign-doc', 'describe': '待签署文件' },
-				// { 'path':                      '', 'name':     '', 'type': 'action', 'action': 'tab1:temperature-monitoring', 'describe': '温度监控' },
+				{ 'path':                      '', 'name':     '', 'type': 'action', 'action': 'tab1:temperature-monitoring', 'describe': '温度监控' },
 				// { 'path':                      '', 'name':     '', 'type': 'data',   'action': 'tab1:ocr-recog', 'describe': '' },
 			]);
 		},
