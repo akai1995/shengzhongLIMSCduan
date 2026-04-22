@@ -4,9 +4,9 @@ var envWx = 'release';
 
 // var _val = 'eai.natapp1.cc'
 
-var baseUrl = `http://192.168.0.151:9083/eai-lims`;
+var baseUrl = `http://eai.natapp1.cc/yinpe-bioblank`;
 var wsUrl = `wss://api.ypzlfx.com/prod-api`;
-var filePath = `192.168.0.151:9889`;
+var filePath = `http://eai.natapp1.cc/yinpe-bioblank`;
 // #ifdef MP-WEIXIN
 try {
 //   const systemInfo = uni.getSystemInfoSync();
@@ -25,26 +25,26 @@ const envWx = envVersion;
 
 // console.log(envWx)
 if (envWx === `develop`) { /* 开发 */
-	baseUrl = `http://192.168.0.151:9083/eai-lims`;
+	baseUrl = `http://eai.natapp1.cc/yinpe-bioblank`;
 	wsUrl = `ws://192.168.0.154:5200`;
-	filePath = `192.168.0.151:9889`
+	filePath = `http://eai.natapp1.cc/yinpe-bioblank`
 } 
 else if (envWx === `release`) { /* 生产 */
-	baseUrl = `http://192.168.0.151:9083/eai-lims`;
+	baseUrl = `http://eai.natapp1.cc/yinpe-bioblank`;
 	wsUrl = `wss://api.ypzlfx.com/prod-api`;
-	filePath = `192.168.0.151:9889`
+	filePath = `http://eai.natapp1.cc/yinpe-bioblank`
 } 
 else {
-	baseUrl = `http://192.168.0.151:9083/eai-lims`;
+	baseUrl = `http://eai.natapp1.cc/yinpe-bioblank`;
 	wsUrl = `wss://genepiapi.ypzlfx.com/prod-api`;
-	filePath = `192.168.0.151:9889`
+	filePath = `http://eai.natapp1.cc/yinpe-bioblank`
 }
 // #endif
 
 export default {
 	envWx, baseUrl, wsUrl, currentPages: getCurrentPages(),
 	leftIcon: getCurrentPages().length > 1 ? `home` : uni.$u.props.navbar.leftIcon,
-	onlineFilePath: `http://${filePath}/eai-lims/sys/common/static/`,
+	onlineFilePath: `${filePath}/sys/common/static/`,
 	staticPath: `https://genepiapi.ypzlfx.com/file/eai/temp/`,
 	AES_KEY:`yinpecloudgenepi`, IV: `yinpecloudgenepi`,
 	publicKey:`yinpecloudgenepi`, privateKey: `yinpecloudgenepi`,

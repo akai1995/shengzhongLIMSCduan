@@ -58,7 +58,6 @@
 	"condition": {
 		"current": 0,
 		"list": [
-			{ "name": "报告分析", "path": "/sub-pack/chat/chat-stream/chat-stream", "query": "" },
 			{ "name": "温度监控", "path": "sub-pack/tab5/temperature-monitoring/temperature-monitoring", "query": "" }
 		]
 	}

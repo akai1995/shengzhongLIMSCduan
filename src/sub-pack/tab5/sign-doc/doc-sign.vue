@@ -1,25 +1,59 @@
 <template>
 	<view class="sign">
 		<view class="imgBox">
-			<!-- <view class="nom_img" v-if="!showImg" @click="signModShow=true"></view> -->
-			<!-- <view class="across_img" v-if="showImg"><view v-if="showImg" class="delete_icon" @click.stop="onDeleteImg">x</view><image v-if="showImg" :src="showImg" style="width: 140px;height: 80px;" @click="previewImg(showImg)"></image></view> -->
+			<!-- <view v-if="!showImg" class="nom_img" @click="signModShow=true"></view> -->
+			<!-- <view v-if="showImg" class="across_img">
+				<view v-if="showImg" class="delete_icon" @click.stop="onDeleteImg">x</view>
+				<image v-if="showImg" :src="showImg" style="width: 140px;height: 80px;" @click="previewImg(showImg)" />
+			</view> -->
 		</view>
-		<u-mask :show="signModShow" @click="signModShow=false" :duration="0">
-		<view class="warp"><view class="signBox" @tap.stop><view class="wrapper"><view class="handBtn">
-		<!-- #ifdef MP-WEIXIN -->
-		<!-- <image @click="selectColorEvent('black','#1A1A1A')" :src="selectColor === 'black' ? '/static/other/color_black_selected.png' : '/static/other/color_black.png'" class="black-select"></image> -->
-		<!-- <image @click="selectColorEvent('red','#ca262a')" :src="selectColor === 'red' ? '/static/other/color_red_selected.png' : '/static/other/color_red.png'" class="red-select"></image> -->
-		<!-- #endif -->
-		<!-- #ifndef MP-WEIXIN --><!-- <view class="color_pic" :style="{background:lineColor}" @click="showPickerColor=true"></view> --><!-- #endif -->
-		<button @click="clear" class="delBtn">清空</button><button @click="onCloseCanvas" class="saveBtn">关闭</button>
-		<!-- <button @click="onPreviewCanvasImg" class="previewBtn">预览</button> -->
-		<button @click="subCanvas" class="subBtn">完成</button><button @click="undo" class="undoBtn">撤销</button>
-		<span class="emptyInfo" style="color: red;" v-if="emptyShow">你还没有绘制任何东西哦</span>
-		</view>
-		<view class="handCenter" :style="{left:canvasLeft+'px'}"><canvas :disable-scroll="true" @touchstart="onUploadScaleStart" @touchmove="onUploadScaleMove" @touchend="onUploadScaleEnd" :style="{width:'100%',height:'calc(85vh - 8rpx)'}" :canvas-id="canvasId"></canvas></view>
-		<view class="handCenters"><canvas :canvas-id="canvasIds" :style="{width:outSignWidth+'px',height:outSignHeight+'px'}"></canvas></view>
-		<view class="handRight"><view class="handTitle">请签名</view></view>
-		</view></view></view>
+		<u-mask :show="signModShow" :duration="0" @click="signModShow=false">
+			<view class="warp">
+				<view class="signBox" @tap.stop>
+					<view class="wrapper">
+						<view class="handBtn">
+							<!-- #ifdef MP-WEIXIN -->
+							<!-- <image
+								:src="selectColor === 'black' ? '/static/other/color_black_selected.png' : '/static/other/color_black.png'"
+								class="black-select" @click="selectColorEvent('black','#1A1A1A')"
+							/> -->
+							<!-- <image
+							 	:src="selectColor === 'red' ? '/static/other/color_red_selected.png' : '/static/other/color_red.png'"
+								class="red-select" @click="selectColorEvent('red','#ca262a')"
+							/> -->
+							<!-- #endif -->
+							<!-- #ifndef MP-WEIXIN --><!-- <view class="color_pic" :style="{background:lineColor}" @click="showPickerColor=true"></view> --><!-- #endif -->
+							<button class="delBtn" @click="clear">清空</button>
+							<button class="saveBtn" @click="onCloseCanvas">关闭</button>
+							<!-- <button @click="onPreviewCanvasImg" class="previewBtn">预览</button> -->
+							<button class="subBtn" @click="subCanvas">完成</button>
+							<button class="undoBtn" @click="undo">撤销</button>
+							<span
+								v-if="emptyShow"
+								style="color: red;"
+								class="emptyInfo"
+							>
+								你还没有绘制任何东西哦
+							</span>
+						</view>
+						<view class="handCenter" :style="{left:canvasLeft+'px'}">
+							<canvas
+								:canvas-id="canvasId" :style="{width:'100%',height:'calc(85vh - 8rpx)'}" :disable-scroll="true"
+								@touchstart="onUploadScaleStart" @touchmove="onUploadScaleMove" @touchend="onUploadScaleEnd"
+							/>
+						</view>
+						<view class="handCenters">
+							<canvas
+								:canvas-id="canvasIds"
+								:style="{width:outSignWidth+'px',height:outSignHeight+'px'}"
+							/>
+						</view>
+						<view class="handRight">
+							<view class="handTitle">请签名</view>
+						</view>
+					</view>
+				</view>
+			</view>
 		</u-mask>
 	</view>
 </template>

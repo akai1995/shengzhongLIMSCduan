@@ -7,33 +7,65 @@
         <view slot="top"><u-navbar title="详情" :fixed="false" background="transparent" color="#000" left-icon-color="#000" @leftClick="onBack" /></view>
 		<ut-components ref="utComponents" />
         <view class="detail">
-            <view class="detail-pic"><image class="detail-img" :src="deviceInfo.deviceImg ? deviceInfo.deviceImg : `${$staticPath}imgs/devcieCover.png`" /></view>
-            <view class="detail-content">
-                <view class="detail-info"><view class="detail-info-title">{{ deviceInfo.name }}</view><view class="detail-info-text" style="margin-bottom: 10rpx;">设备编号{{ deviceInfo.code }}</view><view class="detail-info-text">{{ deviceInfo.address }}</view></view>
-                <view class="detail-date"><view class="detail-date-title"><view>收费标准</view></view><view class="detail-info"><view class="detail-info-text middle" v-html="deviceInfo.price"></view></view></view>
-                <view class="detail-date">
-                    <view class="detail-date-title"><view>选择日期</view><view v-if="choose.isMore">{{ choose.moreDate }}</view></view>
-                    <view class="detail-date-day">
-                        <view :class="index == choose.currIndex && !choose.isMore ? 'detail-date-day-item-curr' : 'detail-date-day-item'" @click="onDateClick(index, item.date)" v-for="(item, index) in choose.list" :key="index"><view class="detail-date-day-item-num">{{ item.date }}</view><view class="detail-date-day-item-text">{{ item.day }}</view></view>
-                        <view :class="choose.isMore ? 'detail-date-day-item-more' : 'detail-date-day-item-more-curr'" @click="choose.moreVisible = true"><view class="detail-date-day-item-more-text">更多</view></view>
+            <view class="detailPic">
+				<image class="detailImg" :src="deviceInfo.deviceImg ? deviceInfo.deviceImg : `${$staticPath}imgs/devcieCover.png`" />
+			</view>
+            <view class="detailContent">
+                <view class="detailInfo">
+					<view class="detailInfoTitle">{{ deviceInfo.name }}</view>
+					<view class="detailInfoText" style="margin-bottom: 10rpx;">
+						设备编号{{ deviceInfo.code }}
+					</view>
+					<view class="detailInfoText">{{ deviceInfo.address }}</view>
+				</view>
+                <view class="detailDate">
+					<view class="detailDateTitle"><view>收费标准</view></view>
+					<view class="detailInfo">
+						<view class="detailInfoText middle" v-html="deviceInfo.price"></view>
+					</view>
+				</view>
+                <view class="detailDate">
+                    <view class="detailDateTitle"><view>选择日期</view><view v-if="choose.isMore">{{ choose.moreDate }}</view></view>
+                    <view class="detailDateDay">
+                        <view
+							v-for="(item, index) in choose.list" :key="index"
+							:class="index == choose.currIndex && !choose.isMore ? 'detailDateDayItemCurr' : 'detailDateDayItem'"
+							@click="onDateClick(index, item.date)"
+						>
+							<view class="detailDateDayItem-num">{{ item.date }}</view>
+							<view class="detailDateDayItem-text">{{ item.day }}</view>
+						</view>
+                        <view :class="choose.isMore ? 'detailDateDayItemMore' : 'detailDateDayItemMore-curr'" @click="choose.moreVisible = true">
+							<view class="detailDateDayItemMoreText">更多</view>
+						</view>
                     </view>
-                    <view class="detail-date-title">已预约时间</view>
-                    <view class="detail-date-has-list" v-if="deviceInfo.reserveTime && deviceInfo.reserveTime.length > 0"><view class="detail-date-has-item" v-for="item,idx in deviceInfo.reserveTime" :key="idx">{{ `${item.reserveStartTime} - ${item.reserveEndTime}` }}</view></view>
-                    <view class="detail-date-more-list" @click="onClickMoreText" v-if="choose.moreText">查看更多</view>
-                    <view class="detail-date-has-box" v-if="deviceInfo.reserveTime && deviceInfo.reserveTime.length == 0"><u-empty mode="data" text="当日暂无预约" /></view>
-                    <view class="detail-date-choose">
-                        <view class="detail-date-choose-item"><view class="detail-date-choose-item-title">开始时间</view><view class="detail-date-choose-item-button" @click="onTimeClick('start')">{{ time.start ? time.start : '请选择' }}</view></view>
-                        <view class="detail-date-choose-item"><view class="detail-date-choose-item-title">结束时间</view><view class="detail-date-choose-item-button" @click="onTimeClick('end')">{{ time.end ? time.end : '请选择' }}</view></view>
+                    <view class="detailDateTitle">已预约时间</view>
+                    <view class="detailDate-has-list" v-if="deviceInfo.reserveTime && deviceInfo.reserveTime.length > 0">
+						<view class="detailDateHasItem" v-for="item,idx in deviceInfo.reserveTime" :key="idx">
+							{{ `${item.reserveStartTime} - ${item.reserveEndTime}` }}
+						</view>
+					</view>
+                    <view class="detailDate-more-list" @click="onClickMoreText" v-if="choose.moreText">查看更多</view>
+                    <view class="detailDate-has-box" v-if="deviceInfo.reserveTime && deviceInfo.reserveTime.length == 0"><u-empty mode="data" text="当日暂无预约" /></view>
+                    <view class="detailDate-choose">
+                        <view class="detailDateChooseItem">
+							<view class="detailDateChooseItemTitle">开始时间</view>
+							<view class="detailDateChooseItemButton" @click="onTimeClick('start')">{{ time.start ? time.start : '请选择' }}</view>
+						</view>
+                        <view class="detailDateChooseItem">
+							<view class="detailDateChooseItemTitle">结束时间</view>
+							<view class="detailDateChooseItemButton" @click="onTimeClick('end')">{{ time.end ? time.end : '请选择' }}</view>
+						</view>
                     </view>
                 </view>
-                <view class="detail-form">
-                    <view class="detail-form-item"><view class="detail-form-item-title">预约人姓名</view><view class="detail-form-item-input"><u--input placeholder="预约人姓名" border="surround" v-model="form.name"></u--input></view></view>
-                    <view class="detail-form-item"><view class="detail-form-item-title">预约人电话</view><view class="detail-form-item-input"><u--input placeholder="请输入预约人电话" border="surround" v-model="form.phone"></u--input></view></view>
-                    <view class="detail-form-item"><view class="detail-form-item-title">团队选择</view><view class="detail-form-item-input" @click="group.visible = true"><u--input v-model="group.currName" disabled disabledColor="#ffffff" placeholder="请选择团队" border="surround"></u--input><view class="detail-form-item-arr"><u-icon name="arrow-right"></u-icon></view></view></view>
-                    <view class="detail-form-item" v-if="teacher.inputVisible"><view class="detail-form-item-title">导师选择</view><view class="detail-form-item-input" @click="teacher.visible = true"><u--input v-model="teacher.currName" disabled disabledColor="#ffffff" placeholder="请选择团队" border="surround"></u--input><view class="detail-form-item-arr"><u-icon name="arrow-right"></u-icon></view></view></view>
-                    <view class="detail-form-item" v-if="schoolInput.visible"><view class="detail-form-item-title">所在学院</view><view class="detail-form-item-input"><u--input placeholder="请输入所在学院" border="surround" v-model="form.school"></u--input></view></view>
-                    <view class="detail-form-item" v-if="schoolInput.visible"><view class="detail-form-item-title">备注信息</view><view class="detail-form-item-input"><u--textarea v-model="form.info" placeholder="请输入备注信息" :autoHeight="false"></u--textarea></view></view>
-                    <view class="detail-form-item"><view class="detail-form-item-title">用途说明</view><view class="detail-form-item-input"><u--textarea v-model="form.description" placeholder="请输入用途说明" :autoHeight="false"></u--textarea></view></view>
+                <view class="detailForm">
+                    <view class="detailFormItem"><view class="detailFormItemTitle">预约人姓名</view><view class="detailFormItemInput"><u--input placeholder="预约人姓名" border="surround" v-model="form.name"></u--input></view></view>
+                    <view class="detailFormItem"><view class="detailFormItemTitle">预约人电话</view><view class="detailFormItemInput"><u--input placeholder="请输入预约人电话" border="surround" v-model="form.phone"></u--input></view></view>
+                    <view class="detailFormItem"><view class="detailFormItemTitle">团队选择</view><view class="detailFormItemInput" @click="group.visible = true"><u--input v-model="group.currName" disabled disabledColor="#ffffff" placeholder="请选择团队" border="surround"></u--input><view class="detailFormItem-arr"><u-icon name="arrow-right"></u-icon></view></view></view>
+                    <view class="detailFormItem" v-if="teacher.inputVisible"><view class="detailFormItemTitle">导师选择</view><view class="detailFormItemInput" @click="teacher.visible = true"><u--input v-model="teacher.currName" disabled disabledColor="#ffffff" placeholder="请选择团队" border="surround"></u--input><view class="detailFormItem-arr"><u-icon name="arrow-right"></u-icon></view></view></view>
+                    <view class="detailFormItem" v-if="schoolInput.visible"><view class="detailFormItemTitle">所在学院</view><view class="detailFormItemInput"><u--input placeholder="请输入所在学院" border="surround" v-model="form.school"></u--input></view></view>
+                    <view class="detailFormItem" v-if="schoolInput.visible"><view class="detailFormItemTitle">备注信息</view><view class="detailFormItemInput"><u--textarea v-model="form.info" placeholder="请输入备注信息" :autoHeight="false"></u--textarea></view></view>
+                    <view class="detailFormItem"><view class="detailFormItemTitle">用途说明</view><view class="detailFormItemInput"><u--textarea v-model="form.description" placeholder="请输入用途说明" :autoHeight="false"></u--textarea></view></view>
                     <!-- <view class="submit-button"><u-button @click="onSubmit" type="primary" text="提交预约"></u-button></view> -->
                 </view>
             </view>
@@ -184,7 +216,7 @@ export default {
         getTeacher(id) {
             _getTeacher(id).then((resp) => {
                 if (resp.code == 200) {
-                    let arr = []; for (let item of resp.data) { arr.push({ label: item.name, id: item.id }) }
+                    let arr = []; for (let item of resp.data) { arr.push({ label: item.realname, id: item.id }) }
                     this.teacher.list[0] = arr;
                 }
             })
@@ -314,27 +346,27 @@ export default {
 	width: 100%;
 	box-sizing: border-box;
 	background-color: #fff;
-	.detail-pic {
+	.detailPic {
 		position: relative;
 		width: 100%;
 		height: auto;
 		aspect-ratio: 1.25/1;
-		.detail-img {
+		.detailImg {
 			position: relative;
 			width: 100%;
 			height: 100%;
 		}
 	}
-	.detail-content {
+	.detailContent {
 		position: relative;
 		width: 100%;
 		background-color: #fff;
 		padding: 20rpx;
 		box-sizing: border-box;
-		.detail-info {
+		.detailInfo {
 			position: relative;
 			width: 100%;
-			.detail-info-title {
+			.detailInfoTitle {
 				position: relative;
 				width: 100%;
 				font-family: PingFang SC, PingFang SC;
@@ -347,7 +379,7 @@ export default {
 				text-transform: none;
 				margin: 22rpx 0;
 			}
-			.detail-info-text {
+			.detailInfoText {
 				position: relative;
 				width: 100%;
 				font-family: PingFang SC, PingFang SC;
@@ -365,11 +397,11 @@ export default {
 				line-height: 26px;
 			}
 		}
-		.detail-date {
+		.detailDate {
 			position: relative;
 			width: 100%;
 			box-sizing: border-box;
-			.detail-date-title {
+			.detailDateTitle {
 				position: relative;
 				width: 100%;
 				display: flex;
@@ -386,20 +418,20 @@ export default {
 				margin: 22rpx 0;
 				margin-top: 40rpx;
 			}
-			.detail-date-day {
+			.detailDateDay {
 				position: relative;
 				width: 100%;
 				display: flex;
 				align-items: stretch;
 				justify-content: space-between;
-				.detail-date-day-item {
+				.detailDateDayItem {
 					position: relative;
 					width: 19%;
 					padding: 14px 8px;
 					box-sizing: border-box;
 					background: #f0f2f7;
 					border-radius: 4px 4px 4px 4px;
-					.detail-date-day-item-num {
+					.detailDateDayItem-num {
 						position: relative;
 						width: 100%;
 						font-family: PingFang SC, PingFang SC;
@@ -411,7 +443,7 @@ export default {
 						font-style: normal;
 						text-transform: none;
 					}
-					.detail-date-day-item-text {
+					.detailDateDayItem-text {
 						position: relative;
 						width: 100%;
 						font-family: PingFang SC, PingFang SC;
@@ -425,14 +457,14 @@ export default {
 						margin-top: 20rpx;
 					}
 				}
-				.detail-date-day-item-curr {
+				.detailDateDayItemCurr {
 					position: relative;
 					width: 19%;
 					padding: 14px 8px;
 					box-sizing: border-box;
 					background: #0d70f3;
 					border-radius: 4px 4px 4px 4px;
-					.detail-date-day-item-num {
+					.detailDateDayItem-num {
 						position: relative;
 						width: 100%;
 						font-family: PingFang SC, PingFang SC;
@@ -444,7 +476,7 @@ export default {
 						font-style: normal;
 						text-transform: none;
 					}
-					.detail-date-day-item-text {
+					.detailDateDayItem-text {
 						position: relative;
 						width: 100%;
 						font-family: PingFang SC, PingFang SC;
@@ -458,7 +490,7 @@ export default {
 						margin-top: 20rpx;
 					}
 				}
-				.detail-date-day-item-more {
+				.detailDateDayItemMore {
 					position: relative;
 					width: 19%;
 					padding: 14px 8px;
@@ -468,7 +500,7 @@ export default {
 					display: flex;
 					align-items: center;
 					justify-content: center;
-					.detail-date-day-item-more-text {
+					.detailDateDayItemMoreText {
 						position: relative;
 						font-family: PingFang SC, PingFang SC;
 						font-weight: 500;
@@ -480,7 +512,7 @@ export default {
 						text-transform: none;
 					}
 				}
-				.detail-date-day-item-more-curr {
+				.detailDateDayItemMore-curr {
 					position: relative;
 					width: 19%;
 					padding: 14px 8px;
@@ -490,7 +522,7 @@ export default {
 					display: flex;
 					align-items: center;
 					justify-content: center;
-					.detail-date-day-item-more-text {
+					.detailDateDayItemMoreText {
 						position: relative;
 						font-family: PingFang SC, PingFang SC;
 						font-weight: 500;
@@ -503,7 +535,7 @@ export default {
 					}
 				}
 			}
-			.detail-date-has-list {
+			.detailDate-has-list {
 				position: relative;
 				width: 100%;
 				display: flex;
@@ -511,7 +543,7 @@ export default {
 				justify-content: space-between;
 				flex-wrap: wrap;
 				box-sizing: border-box;
-				.detail-date-has-item {
+				.detailDateHasItem {
 					position: relative;
 					box-sizing: border-box;
 					width: calc(50% - 10rpx);
@@ -529,7 +561,7 @@ export default {
 					padding: 20rpx;
 				}
 			}
-			.detail-date-more-list {
+			.detailDate-more-list {
 				position: relative;
 				width: 100%;
 				font-family: PingFang SC, PingFang SC;
@@ -542,7 +574,7 @@ export default {
 				text-transform: none;
 				margin-bottom: 40rpx;
 			}
-			.detail-date-has-box {
+			.detailDate-has-box {
 				position: relative;
 				width: 100%;
 				padding: 40rpx;
@@ -551,16 +583,16 @@ export default {
 				margin-bottom: 40rpx;
 				box-sizing: border-box;
 			}
-			.detail-date-choose {
+			.detailDate-choose {
 				position: relative;
 				width: 100%;
 				display: flex;
 				align-items: center;
 				justify-content: space-between;
-				.detail-date-choose-item {
+				.detailDateChooseItem {
 					position: relative;
 					width: 48%;
-					.detail-date-choose-item-title {
+					.detailDateChooseItemTitle {
 						position: relative;
 						width: 100%;
 						text-align: center;
@@ -574,7 +606,7 @@ export default {
 						text-transform: none;
 						margin: 22rpx auto;
 					}
-					.detail-date-choose-item-button {
+					.detailDateChooseItemButton {
 						position: relative;
 						width: 100%;
 						border-radius: 30px 30px 30px 30px;
@@ -592,15 +624,15 @@ export default {
 				}
 			}
 		}
-		.detail-form {
+		.detailForm {
 			position: relative;
 			width: 100%;
 			margin-top: 50rpx;
-			.detail-form-item {
+			.detailFormItem {
 				position: relative;
 				width: 100%;
 				margin-top: 30rpx;
-				.detail-form-item-title {
+				.detailFormItemTitle {
 					position: relative;
 					width: 100%;
 					margin-bottom: 10rpx;
@@ -614,10 +646,10 @@ export default {
 					text-transform: none;
 					padding-left: 10rpx;
 				}
-				.detail-form-item-input {
+				.detailFormItemInput {
 					position: relative;
 					width: 100%;
-					.detail-form-item-arr {
+					.detailFormItem-arr {
 						position: absolute;
 						margin: auto;
 						top: 11px;

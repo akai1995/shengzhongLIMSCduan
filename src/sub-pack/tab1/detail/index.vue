@@ -9,7 +9,7 @@
         <view class="detail">
             <view class="detail-pic">
                 <img class="detail-img"
-                    :src="deviceInfo.deviceImg ? deviceInfo.deviceImg : 'https://genepiapi.ypzlfx.com/file/device-appointment/image.png'" />
+                    :src="deviceInfo.deviceImg ? deviceInfo.deviceImg : `${$staticPath}imgs/devcieCover.png`" />
             </view>
 
             <view class="detail-content">

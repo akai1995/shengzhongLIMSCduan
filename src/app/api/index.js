@@ -31,7 +31,7 @@ export function getRejectDes(id) { return service.get({ url: `/appDevice/storage
 export function openDevice(id) { return service.get({ url: `/appDevice/storageInstrumentReserve/powerOn?id=${id}` }) }
 export function closeDevice(id) { return service.get({ url: `/appDevice/storageInstrumentReserve/powerOff?id=${id}` }) }
 export function getGroup() { return service.get({ url: `/appDevice/storageInstrumentReserve/getParentProjectList` }) }
-export function getTeacher(id) { return service.get({ url: `/appDevice/storageInstrumentReserve/getProjectDetList?pid=${id}` }) }
+export function getTeacher(id) { return service.get({ url: `/appDevice/storageInstrumentReserve/getTeamUsers?teamId=${id}` }) }
 export function setCancelReserve(data) { return service.post({ url: `/appDevice/storageInstrumentReserve/reserveCancel`, data }) }
 /** 设备 end */
 

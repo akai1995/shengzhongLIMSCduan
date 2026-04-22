@@ -10,7 +10,11 @@
 			<!-- <view class="home-head" :style="{ height: headInfo.headHeight }"><view class="home-title" :style="{ marginTop: headInfo.titleTop }">待签署文件</view></view> -->
 			<u-navbar title="我的待签署" :fixed="false" bgColor="transparent" :leftIcon="$leftIcon" @leftClick="onBack" />
 			<view class="searchBox">
-				<u--input border="surround" placeholder="请输入文件名称" suffixIcon="search" suffixIconStyle="color: #909399" customStyle="background-color: white;" @change="onSearch" />
+				<u--input
+					border="surround" placeholder="请输入文件名称"
+					suffixIcon="search" suffixIconStyle="color: #909399"
+					customStyle="background-color: white;" @change="onSearch"
+				/>
 			</view>
 		</view>
 		<u-skeleton v-if="!firstLoaded&&dataList.length==0" rows="12" title loading />

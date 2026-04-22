@@ -5,28 +5,52 @@
 		:loading-more-enabled="false" :show-refresher-when-reload="false" hide-empty-view
 	>
         <view slot="top"><u-navbar title="预约详情" :fixed="false" background="transparent" :leftIcon="$leftIcon" @leftClick="onBack" /></view>
-        <view class="reserve-detail">
+        <view class="reserveDetail">
             <ut-components ref="utComponents" />
-            <view class="reserve-detail-status">
-                <view class="reserve-detail-status-blue" v-if="[1,2].includes(info.deviceReserveStatus)">{{ info.deviceReserveStatus_dictText }}</view>
-                <view class="reserve-detail-status-green" v-if="[4,5,6].includes(info.deviceReserveStatus)">{{ info.deviceReserveStatus_dictText }}</view>
-                <view class="reserve-detail-status-red" v-if="[3,7].includes(info.deviceReserveStatus)">
-                    <view class="reserve-detail-status-red-title">{{ info.deviceReserveStatus_dictText }}</view>
-                    <view class="reserve-detail-status-red-text" v-if="[7].includes(info.deviceReserveStatus)">{{ rejectDes }}</view>
+            <view class="reserveDetailStatus">
+                <view class="reserveDetailStatusBlue" v-if="[1,2].includes(info.deviceReserveStatus)">{{ info.deviceReserveStatus_dictText }}</view>
+                <view class="reserveDetailStatusGreen" v-if="[4,5,6].includes(info.deviceReserveStatus)">{{ info.deviceReserveStatus_dictText }}</view>
+                <view class="reserveDetailStatusRed" v-if="[3,7].includes(info.deviceReserveStatus)">
+                    <view class="reserveDetailStatusRedTitle">{{ info.deviceReserveStatus_dictText }}</view>
+                    <view class="reserveDetailStatusRedText" v-if="[7].includes(info.deviceReserveStatus)">{{ rejectDes }}</view>
                 </view>
             </view>
-            <view class="reserve-detail-info">
-                <view class="reserve-detail-info-pic"><image class="reserve-detail-info-img" :src="info.deviceImg ? info.deviceImg : $staticPath+'device-appointment/image.png'" /></view>
-                <view class="reserve-detail-info-message"><view class="reserve-detail-info-message-title">{{ info.deviceName }}</view><view class="reserve-detail-info-message-date">{{ info.reserveTime }}</view><view class="reserve-detail-info-message-use">用途：{{ info.reservePurpose || "暂无" }}</view></view>
+            <view class="reserveDetailInfo">
+                <view class="reserveDetailInfoPic">
+					<image class="reserveDetailInfoImg" :src="info.deviceImg ? info.deviceImg : `${$staticPath}imgs/devcieCover.png`" />
+				</view>
+                <view class="reserveDetailInfoMessage">
+					<view class="reserveDetailInfoMessageTitle">{{ info.deviceName }}</view>
+					<view class="reserveDetailInfoMessageDate">{{ info.reserveTime }}</view>
+					<view class="reserveDetailInfoMessageUse">用途：{{ info.reservePurpose || "暂无" }}</view>
+				</view>
             </view>
-            <view class="reserve-detail-user"><view class="reserve-detail-user-item">用户名：{{ info.reserveName }}</view><view class="reserve-detail-user-item">电话：{{ info.reservePhone }}</view><view class="reserve-detail-user-item">提交时间：{{ info.updateTime }}</view></view>
-            <u-modal :show="cancelReserve.visible" title="取消预约" showCancelButton @confirm="handleSubmitModal" @cancel="handleCancelModal"><u--textarea v-model="cancelReserve.description" placeholder="请输入取消原因" :autoHeight="false" /></u-modal>
+            <view class="reserveDetailUser">
+				<view class="reserveDetailUserItem">用户名：{{ info.reserveName }}</view>
+				<view class="reserveDetailUserItem">电话：{{ info.reservePhone }}</view>
+				<view class="reserveDetailUserItem">提交时间：{{ info.updateTime }}</view>
+			</view>
+            <u-modal
+				:show="cancelReserve.visible" title="取消预约" showCancelButton
+				@confirm="handleSubmitModal" @cancel="handleCancelModal"
+			>
+				<u--textarea v-model="cancelReserve.description" placeholder="请输入取消原因" :autoHeight="false" />
+			</u-modal>
         </view>
         <view slot="bottom" class="pubBotBtn pubTopLine">
             <view class="wrap">
-                <view class="btn" v-if="(info.deviceReserveStatus == 4 && info.deviceStatus == 0) || (info.deviceReserveStatus == 5 && info.deviceStatus == 0)" @click="handleStart"><u-button type="primary" text="开机" /></view>
-                <view class="btn" v-if="info.deviceReserveStatus == 5 && info.deviceStatus == 1" @click="handleClose"><u-button type="primary" text="关机" /></view>
-                <view class="btn" v-if="cancelReserve.button" @click="handleCancelModalClick"><u-button type="primary" text="取消预约" /></view>
+                <view
+					v-if="(info.deviceReserveStatus == 4 && info.deviceStatus == 0) || (info.deviceReserveStatus == 5 && info.deviceStatus == 0)"
+					class="btn" @click="handleStart"
+				>
+					<u-button type="primary" text="开机" />
+				</view>
+                <view v-if="info.deviceReserveStatus == 5 && info.deviceStatus == 1" class="btn" @click="handleClose">
+					<u-button type="primary" text="关机" />
+				</view>
+                <view v-if="cancelReserve.button" class="btn" @click="handleCancelModalClick">
+					<u-button type="primary" text="取消预约" />
+				</view>
             </view>
         </view>
     </z-paging>
@@ -73,17 +97,17 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.reserve-detail {
+.reserveDetail {
 	width: 100%;
 	height: 100vh;
 	box-sizing: border-box;
 	background-color: #fff;
 	padding-bottom: 200rpx;
-	.reserve-detail-status {
+	.reserveDetailStatus {
 		width: 100%;
 		box-sizing: border-box;
 		padding: 20rpx;
-		.reserve-detail-status-blue {
+		.reserveDetailStatusBlue {
 			width: 100%;
 			background: rgba(13, 112, 243, 0.1);
 			border-radius: 8rpx;
@@ -94,7 +118,7 @@ export default {
 			text-align: center;
 			padding: 20rpx 0;
 		}
-		.reserve-detail-status-green {
+		.reserveDetailStatusGreen {
 			width: 100%;
 			background: rgba(3, 171, 110, 0.1);
 			border-radius: 8rpx;
@@ -105,13 +129,13 @@ export default {
 			text-align: center;
 			padding: 20rpx 0;
 		}
-		.reserve-detail-status-red {
+		.reserveDetailStatusRed {
 			width: 100%;
 			padding: 20rpx;
 			background: rgba(231, 41, 41, 0.1);
 			border-radius: 8rpx;
 			box-sizing: border-box;
-			.reserve-detail-status-red-title {
+			.reserveDetailStatusRedTitle {
 				width: 100%;
 				font-weight: 500;
 				font-size: 32rpx;
@@ -120,7 +144,7 @@ export default {
 				text-align: center;
 				margin-bottom: 20rpx;
 			}
-			.reserve-detail-status-red-text {
+			.reserveDetailStatusRedText {
 				width: 100%;
 				font-weight: 400;
 				font-size: 28rpx;
@@ -130,33 +154,33 @@ export default {
 			}
 		}
 	}
-	.reserve-detail-info {
+	.reserveDetailInfo {
 		width: 100%;
 		padding: 20rpx;
 		box-sizing: border-box;
 		margin-top: 40rpx;
 		display: flex;
-		.reserve-detail-info-pic {
+		.reserveDetailInfoPic {
 			width: 152rpx;
 			height: 152rpx;
-			.reserve-detail-info-img {
+			.reserveDetailInfoImg {
 				width: 100%;
 				height: 100%;
 				display: block;
 			}
 		}
-		.reserve-detail-info-message {
+		.reserveDetailInfoMessage {
 			width: calc(100% - 152rpx);
 			box-sizing: border-box;
 			padding-left: 20rpx;
-			.reserve-detail-info-message-title {
+			.reserveDetailInfoMessageTitle {
 				width: 100%;
 				font-weight: 500;
 				font-size: 32rpx;
 				color: #000000;
 				line-height: 40rpx;
 			}
-			.reserve-detail-info-message-date {
+			.reserveDetailInfoMessageDate {
 				width: 100%;
 				font-weight: 400;
 				font-size: 28rpx;
@@ -164,7 +188,7 @@ export default {
 				line-height: 32rpx;
 				margin: 20rpx 0;
 			}
-			.reserve-detail-info-message-use {
+			.reserveDetailInfoMessage-use {
 				width: 100%;
 				font-weight: 400;
 				font-size: 28rpx;
@@ -173,11 +197,11 @@ export default {
 			}
 		}
 	}
-	.reserve-detail-user {
+	.reserveDetailUser {
 		width: 100%;
 		box-sizing: border-box;
 		padding: 20rpx;
-		.reserve-detail-user-item {
+		.reserveDetailUserItem {
 			width: 100%;
 			font-weight: 400;
 			font-size: 28rpx;
