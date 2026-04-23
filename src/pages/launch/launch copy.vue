@@ -105,7 +105,7 @@ export default {
 		}
 		
 		.home-description {
-			font-size: 16px;
+			font-size: 32rpx;
 			color: #606266;
 			margin-bottom: 20rpx;
 		}
@@ -192,7 +192,7 @@ export default {
 						width: 28.3%;
 						aspect-ratio: 1.375/1;
 						overflow: hidden;
-						border-radius: 4px;
+						border-radius: 8px;
 						.home-item-content-img {
 							position: relative;
 							width: 100%;
@@ -215,7 +215,7 @@ export default {
 							text-overflow: ellipsis;
 							font-family: PingFang SC, PingFang SC;
 							font-weight: 500;
-							font-size: 16px;
+							font-size: 32rpx;
 							color: #000000;
 							text-align: left;
 							font-style: normal;
@@ -230,7 +230,7 @@ export default {
 								width: 100;
 								font-family: PingFang SC, PingFang SC;
 								font-weight: 400;
-								font-size: 13px;
+								font-size: 26rpx;
 								color: #9699a1;
 								line-height: 17px;
 								text-align: left;

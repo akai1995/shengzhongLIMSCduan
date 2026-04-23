@@ -14,23 +14,30 @@
 </template>
 
 <script>
-import { getReserveList } from '@/app/api/index'
+import { getReserveList as getReserveListApi } from '@/app/api/index'
 export default {
-    data() { return { queryParams: { pageNo: 1, pageSize: 10 }, dataList:[], totalCount:0, firstLoaded: false } },
-    onLoad() { this.getReserveList() },
-	mounted() { setTimeout(() => { this.$refs.paging && this.$refs.paging.refresh(); }, 250) },
+    data() {
+		return {
+			queryParams: { pageNo: 1, pageSize: 10 },
+			dataList:[], totalCount:0, firstLoaded: false
+		}
+	},
+    mounted() {
+		setTimeout(() => {
+			this.$refs.paging && this.$refs.paging.refresh();
+		}, 250)
+	},
     methods: {
 		queryList(pageNo, pageSize) {
 			this.queryParams.pageNo = pageNo
 			this.queryParams.pageSize = pageSize
-			getReserveList(this.queryParams).then((resp) => {
+			getReserveListApi(this.queryParams).then((resp) => {
 				this.totalCount = resp&&resp.data?resp.data.total : 0 
 				this.$refs.paging.complete(resp&&resp.data?resp.data.records:false)
 			}).catch(()=>{
 				this.$refs.paging.complete(false)
 			}).finally(()=>{
-				setTimeout(()=>{ this.firstLoaded = true; }, 1750)
-				uni.hideLoading();
+				uni.hideLoading(); setTimeout(()=>{ this.firstLoaded = true; }, 1750)
 			});
 		},
         handleGoUser() { this.$ut.jump(`/pages/tabs/tab5/tab5`) },
@@ -46,7 +53,7 @@ export default {
 	.luBox {
 		width: 100%;
 		box-sizing: border-box;
-		padding: 20rpx;
+		padding: 32rpx;
 	}
 }
 </style>

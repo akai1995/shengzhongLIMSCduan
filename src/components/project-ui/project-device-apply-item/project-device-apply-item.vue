@@ -40,6 +40,10 @@ export default {
         // padding: 32rpx;
         border-radius: 20rpx;
         margin-bottom: 32rpx;
+        &:last-child {
+            margin-bottom: 0;
+            border-bottom: none;
+        }
         .liItemInfo {
             position: relative;
             padding: 0 0 0 244rpx;

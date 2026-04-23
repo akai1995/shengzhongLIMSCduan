@@ -66,7 +66,7 @@
 		padding-bottom: 4px;
 
 		&__title {
-			font-size: 16px;
+			font-size: 32rpx;
 			color: $u-main-color;
 			text-align: center;
 			height: 42px;
@@ -75,7 +75,7 @@
 		}
 
 		&__subtitle {
-			font-size: 14px;
+			font-size: 28rpx;
 			color: $u-main-color;
 			height: 40px;
 			text-align: center;
@@ -88,7 +88,7 @@
 			justify-content: space-between;
 
 			&__weekday {
-				font-size: 13px;
+				font-size: 26rpx;
 				color: $u-main-color;
 				line-height: 30px;
 				flex: 1;

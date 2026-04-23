@@ -88,7 +88,7 @@ text {
         right: 0;
         width: 200%;
         height: 200%;
-        border: 1px solid #eaeaea;
+        border: 2rpx solid #eaeaea;
         -webkit-transform: scale(0.5);
         -webkit-transform-origin: right top;
         box-sizing: border-box;
@@ -176,11 +176,13 @@ text {
     width: 100%;
 
     .wrap {
-        padding: 20rpx;
+        // padding: 20rpx;
         display: flex;
-
+        .btn+.btn {
+            margin-left: 20rpx;
+        }
         .btn {
-            padding: 15rpx;
+            // padding: 15rpx;
             display: flex;
             align-items: center;
             justify-content: center;

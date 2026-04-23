@@ -37,9 +37,9 @@
 							</view>
 							<view class="botHandle pubTopLine">
 								<view class="lBtn">
-									<u-button class="btn" @click="$emit('again', item)"><u-icon name="reload" size="36" /></u-button>
-									<u-button class="btn" @click="onCopy(item.content)"><u-icon name="file-text" size="36" /></u-button>
-									<u-button class="btn" @click="$emit('del', item)"><u-icon name="trash" size="36" /></u-button>
+									<u-button class="btn" @click="$emit('again', item)"><u-icon name="reload" size="36" / />
+									<u-button class="btn" @click="onCopy(item.content)"><u-icon name="file-text" size="36" / />
+									<u-button class="btn" @click="$emit('del', item)"><u-icon name="trash" size="36" / />
 								</view>
 							</view>
 						</view>
@@ -52,7 +52,7 @@
 		</scroll-view>
 
 		<!-- 聊天消息向上滚动时显示，此时点击回到最新信息处 -->
-		<view class="newMsg" v-if="showBotNew"><u-button :throttle-time="0" @click="scrollBtn()"><u-icon name="arrow-down" size="28" /></u-button></view>
+		<view class="newMsg" v-if="showBotNew"><u-button :throttle-time="0" @click="scrollBtn()"><u-icon name="arrow-down" size="28" / /></view>
 	</view>
 </template>
 
@@ -302,7 +302,7 @@ export default {
 						width: 100%;
 						line-height: 0;
 						.txt {
-							font-size: 14px;
+							font-size: 28rpx;
 							margin-left: 5px;
 							color: #878aab;
 						}

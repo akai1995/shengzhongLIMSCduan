@@ -58,6 +58,7 @@
 	"condition": {
 		"current": 0,
 		"list": [
+			{ "name": "我的预约", "path": "sub-pack/tab5/reserve/reserve", "query": "" },
 			{ "name": "温度监控", "path": "sub-pack/tab5/temperature-monitoring/temperature-monitoring", "query": "" }
 		]
 	}

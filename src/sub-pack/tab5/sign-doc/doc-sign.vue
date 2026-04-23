@@ -267,7 +267,7 @@ export default {
 				width: 24px;
 				height: 24px;
 				overflow: hidden;
-				color: #ffffff;
+				color: white;
 				font-size: 24px;
 				text-align: center;
 				line-height: 20px;
@@ -409,7 +409,7 @@ export default {
 		position: absolute;
 		top: 200rpx;
 		left: 62rpx;
-		border: 1px solid #ddd;
+		border: 2rpx solid #ddd;
 	}
 
 	/*Peach - 新增 - 保存*/

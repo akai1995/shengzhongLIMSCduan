@@ -40,14 +40,14 @@
 						</view>
                     </view>
                     <view class="detailDateTitle">已预约时间</view>
-                    <view class="detailDate-has-list" v-if="deviceInfo.reserveTime && deviceInfo.reserveTime.length > 0">
+                    <view class="detailDateHasList" v-if="deviceInfo.reserveTime && deviceInfo.reserveTime.length > 0">
 						<view class="detailDateHasItem" v-for="item,idx in deviceInfo.reserveTime" :key="idx">
 							{{ `${item.reserveStartTime} - ${item.reserveEndTime}` }}
 						</view>
 					</view>
-                    <view class="detailDate-more-list" @click="onClickMoreText" v-if="choose.moreText">查看更多</view>
-                    <view class="detailDate-has-box" v-if="deviceInfo.reserveTime && deviceInfo.reserveTime.length == 0"><u-empty mode="data" text="当日暂无预约" /></view>
-                    <view class="detailDate-choose">
+                    <view class="detailDateMoreList" @click="onClickMoreText" v-if="choose.moreText">查看更多</view>
+                    <view class="detailDatHasBox" v-if="deviceInfo.reserveTime && deviceInfo.reserveTime.length == 0"><u-empty mode="data" text="当日暂无预约" /></view>
+                    <view class="detailDateChoose">
                         <view class="detailDateChooseItem">
 							<view class="detailDateChooseItemTitle">开始时间</view>
 							<view class="detailDateChooseItemButton" @click="onTimeClick('start')">{{ time.start ? time.start : '请选择' }}</view>
@@ -59,19 +59,46 @@
                     </view>
                 </view>
                 <view class="detailForm">
-                    <view class="detailFormItem"><view class="detailFormItemTitle">预约人姓名</view><view class="detailFormItemInput"><u--input placeholder="预约人姓名" border="surround" v-model="form.name"></u--input></view></view>
-                    <view class="detailFormItem"><view class="detailFormItemTitle">预约人电话</view><view class="detailFormItemInput"><u--input placeholder="请输入预约人电话" border="surround" v-model="form.phone"></u--input></view></view>
-                    <view class="detailFormItem"><view class="detailFormItemTitle">团队选择</view><view class="detailFormItemInput" @click="group.visible = true"><u--input v-model="group.currName" disabled disabledColor="#ffffff" placeholder="请选择团队" border="surround"></u--input><view class="detailFormItem-arr"><u-icon name="arrow-right"></u-icon></view></view></view>
-                    <view class="detailFormItem" v-if="teacher.inputVisible"><view class="detailFormItemTitle">导师选择</view><view class="detailFormItemInput" @click="teacher.visible = true"><u--input v-model="teacher.currName" disabled disabledColor="#ffffff" placeholder="请选择团队" border="surround"></u--input><view class="detailFormItem-arr"><u-icon name="arrow-right"></u-icon></view></view></view>
-                    <view class="detailFormItem" v-if="schoolInput.visible"><view class="detailFormItemTitle">所在学院</view><view class="detailFormItemInput"><u--input placeholder="请输入所在学院" border="surround" v-model="form.school"></u--input></view></view>
-                    <view class="detailFormItem" v-if="schoolInput.visible"><view class="detailFormItemTitle">备注信息</view><view class="detailFormItemInput"><u--textarea v-model="form.info" placeholder="请输入备注信息" :autoHeight="false"></u--textarea></view></view>
-                    <view class="detailFormItem"><view class="detailFormItemTitle">用途说明</view><view class="detailFormItemInput"><u--textarea v-model="form.description" placeholder="请输入用途说明" :autoHeight="false"></u--textarea></view></view>
-                    <!-- <view class="submit-button"><u-button @click="onSubmit" type="primary" text="提交预约"></u-button></view> -->
+                    <view class="detailFormItem"><view class="detailFormItemTitle">预约人姓名</view><view class="detailFormItemInput"><u--input placeholder="预约人姓名" border="surround" v-model="form.name" /></view></view>
+                    <view class="detailFormItem"><view class="detailFormItemTitle">预约人电话</view><view class="detailFormItemInput"><u--input placeholder="请输入预约人电话" border="surround" v-model="form.phone" /></view></view>
+                    <view class="detailFormItem">
+						<view class="detailFormItemTitle">团队选择</view>
+						<view class="detailFormItemInput" @click="group.visible = true">
+							<u--input v-model="group.currName" disabled disabledColor="#ffffff" placeholder="请选择团队" border="surround" />
+							<view class="detailFormItem-arr"><u-icon name="arrow-right" /></view>
+						</view>
+					</view>
+                    <view class="detailFormItem" v-if="teacher.inputVisible">
+						<view class="detailFormItemTitle">导师选择</view>
+						<view class="detailFormItemInput" @click="teacher.visible = true">
+							<u--input v-model="teacher.currName" disabled disabledColor="#ffffff" placeholder="请选择团队" border="surround" />
+							<view class="detailFormItem-arr"><u-icon name="arrow-right" /></view>
+						</view>
+					</view>
+                    <view class="detailFormItem" v-if="schoolInput.visible">
+						<view class="detailFormItemTitle">所在学院</view>
+						<view class="detailFormItemInput">
+							<u--input placeholder="请输入所在学院" border="surround" v-model="form.school" />
+						</view>
+					</view>
+                    <view class="detailFormItem" v-if="schoolInput.visible">
+						<view class="detailFormItemTitle">备注信息</view>
+						<view class="detailFormItemInput">
+							<u--textarea v-model="form.info" placeholder="请输入备注信息" :autoHeight="false" />
+						</view>
+					</view>
+                    <view class="detailFormItem">
+						<view class="detailFormItemTitle">用途说明</view>
+						<view class="detailFormItemInput">
+							<u--textarea v-model="form.description" placeholder="请输入用途说明" :autoHeight="false" />
+						</view>
+					</view>
+                    <!-- <view class="submit-button"><u-button @click="onSubmit" type="primary" text="提交预约" /></view> -->
                 </view>
             </view>
         </view>        
         <!-- <u-datetime-picker :show="time.selectVisible" mode="datetime" @close="onTimeClose" @confirm="onTimeSubmit" /> -->        
-        <u-picker :show="time.selectVisible" ref="uPicker" :columns="time.select" @confirm="currTimeSubmit" @cancel="currTimeCancel" />
+        <u-picker :show="time.selectVisible" ref="uPicker" :columns="time.select" @confirm="onTimeSubmit" @cancel="onTimeClose" />
         <u-picker :show="group.visible" :columns="group.list" keyName="label" @confirm="onCurrGroup" @cancel="group.visible = false" />
         <u-picker :show="teacher.visible" :columns="teacher.list" keyName="label" @confirm="onCurrTeacher" @cancel="teacher.visible = false" />
         <u-calendar :show="choose.moreVisible" :defaultDate="choose.minDate" :minDate="choose.minDate" :maxDate="choose.maxDate" @confirm="onConfirmDate" @close="choose.moreVisible = false" />
@@ -79,14 +106,21 @@
     </z-paging>
 </template>
 <script>
-import {  deviceSubmit, deviceDetail, getAllDayReserve, getGroup as _getGroup, getTeacher as _getTeacher } from '@/app/api/index'
+import {
+	deviceSubmit, deviceDetail, getAllDayReserve as getAllDayReserveApi,
+	getGroup as _getGroup, getTeacher as _getTeacher
+} from '@/app/api/index'
 export default {
     data() {
         return {
 			dataList: [], firstLoaded: false, instrumentId: null, deviceId: null,
-            choose: { currIndex: 0, list: [], isMore: false, moreDate: '', moreVisible: false, minDate: '', maxDate: '', moreText: true }, time: { start: null, end: null, select: [[]], selectVisible: false, type: '' },
-            form: { name: '', phone: '', description: '', group: '', teacher: '', school: '', info: '' }, deviceInfo: { name: "", code: "", address: "", price: "", reserveTime: [], canReserveWeek: [], canReserveTime: '' },
-            group: { visible: false, list: [[]], currName: '', currCode: '' }, teacher: { visible: false, list: [[]], currName: '', inputVisible: false }, schoolInput: { visible: false }
+            choose: { currIndex: 0, list: [], isMore: false, moreDate: '', moreVisible: false, minDate: '', maxDate: '', moreText: true },
+			time: { start: null, end: null, select: [[]], selectVisible: false, type: '' },
+            form: { name: '', phone: '', description: '', group: '', teacher: '', school: '', info: '' },
+			deviceInfo: { name: "", code: "", address: "", price: "", reserveTime: [], canReserveWeek: [], canReserveTime: '' },
+            group: { visible: false, list: [[]], currName: '', currCode: '' },
+			teacher: { visible: false, list: [[]], currName: '', inputVisible: false },
+			schoolInput: { visible: false }
         }
     },
     onLoad(options) {
@@ -100,6 +134,17 @@ export default {
             this.getDeviceDetail(); this.getGroup()
             uni.hideLoading();
 		},
+        formatDate(num) { return num < 10 ? '0' + num : num; },
+        getAnyDate(num) {
+            const today = new Date();
+            const year = today.getFullYear();
+            const currentDate = new Date(today);
+            currentDate.setDate(today.getDate() + num);
+            const monthStr = this.formatDate(currentDate.getMonth() + 1);
+            const dayStr = this.formatDate(currentDate.getDate());
+            const dateStr = `${monthStr}-${dayStr}`;
+            return `${year}-${dateStr}`
+        },
         genDateArray() {
             const result = []; const today = new Date(); const year = today.getFullYear();
             const dayNames = ['日', '一', '二', '三', '四', '五', '六'];
@@ -113,27 +158,12 @@ export default {
 
             this.choose.minDate = this.getAnyDate(4); this.choose.maxDate = this.getAnyDate(30); this.choose.list = result
         },
-        formatDate(num) {
-            return num < 10 ? '0' + num : num;
-        },
-        getAnyDate(num) {
-            const today = new Date();
-            const year = today.getFullYear();
-            const currentDate = new Date(today);
-            currentDate.setDate(today.getDate() + num);
-            const monthStr = this.formatDate(currentDate.getMonth() + 1);
-            const dayStr = this.formatDate(currentDate.getDate());
-            const dateStr = `${monthStr}-${dayStr}`;
-            return `${year}-${dateStr}`
-        },
         getSelPicker() {
             const timeArray = [];
             const range = this.deviceInfo.canReserveTime;
             const [startTime, endTime] = range.split(' - ');
-
             const startHour = parseInt(startTime.split(':')[0], 10);
             const endHour = parseInt(endTime.split(':')[0], 10);
-
             for (let i = startHour; i <= endHour; i++) {
                 for (let j = 0; j < 60; j += 10) {
                     const hour = i < 10 ? `0${i}` : i;
@@ -181,6 +211,47 @@ export default {
                 text = text.replace(regex, '<br />' + target);
             });
             return text;
+        },
+        getAllDayReserve() {
+            const _self = this
+            const currentDate = _self.choose.isMore ? _self.choose.moreDate : `${_self.choose.list[_self.choose.currIndex].year}-${_self.choose.list[_self.choose.currIndex].date}`
+            getAllDayReserveApi({ currentDate, deviceId: _self.deviceId }).then((resp) => {
+                if (resp.code == 200) {
+                    const result = resp.data
+                    if (result.length <= 4) {
+                        _self.deviceInfo.reserveTime = result
+                        _self.choose.moreText = false
+                    } else {
+                        if (_self.choose.moreText == false) {
+                            _self.deviceInfo.reserveTime = result
+                            _self.choose.moreText = false
+                        } else {
+                            const arr = []; for (let i = 0; i < 4; i += 1) { arr.push(result[i]) }
+                            _self.choose.moreText = true
+                            _self.deviceInfo.reserveTime = arr
+                        }
+                    }
+                }
+            })
+        },
+        onMoreTextClick() { this.choose.moreText = false; this.getAllDayReserve() },
+        onDateClick(index, currDate) {
+            const currentYear = new Date().getFullYear();
+            const currenWeek = this.getWeekNumber(`${currentYear}-${currDate}`)
+            const openDate = this.deviceInfo.canReserveWeek
+            if (openDate.includes(currenWeek)) {
+                this.choose.currIndex = index; this.choose.moreDate = ''
+                this.choose.isMore = false; this.getAllDayReserve()
+            } else {
+                this.showTips('该日设备不开放预约', 'error');
+            }
+        },
+        onConfirmDate(event) { this.choose.moreDate = event[0]; this.choose.isMore = true; this.choose.moreVisible = false; this.getAllDayReserve(); },
+		onTimeClick(type) { this.time.type = type; this.time.selectVisible = true; },
+        onTimeClose() { this.time.selectVisible = false },
+        onTimeSubmit(event) {
+            console.log('onTimeSubmit',this.time.type, event.value[0])
+            this.time[this.time.type] = event.value.length>0?event.value[0]:''; this.time.selectVisible = false
         },
         getDeviceDetail() {
             const _self = this
@@ -242,100 +313,38 @@ export default {
             this.form.teacher = e.value[0].id
             this.teacher.visible = false
         },
-        getAllDayReserve() {
-            const _self = this
-            const currentDate = _self.choose.isMore ? _self.choose.moreDate : `${_self.choose.list[_self.choose.currIndex].year}-${_self.choose.list[_self.choose.currIndex].date}`
-            getAllDayReserve({ currentDate, deviceId: _self.deviceId }).then((resp) => {
-                if (resp.code == 200) {
-                    const result = resp.data
-                    if (result.length <= 4) {
-                        _self.deviceInfo.reserveTime = result
-                        _self.choose.moreText = false
-                    } else {
-                        if (_self.choose.moreText == false) {
-                            _self.deviceInfo.reserveTime = result
-                            _self.choose.moreText = false
-                        } else {
-                            const arr = []; for (let i = 0; i < 4; i += 1) { arr.push(result[i]) }
-                            _self.choose.moreText = true
-                            _self.deviceInfo.reserveTime = arr
-                        }
-                    }
-                }
-            })
-        },
-        onMoreTextClick() { this.choose.moreText = false; this.getAllDayReserve() },
-        onDateClick(index, currDate) {
-            const currentYear = new Date().getFullYear();
-            const currenWeek = this.getWeekNumber(`${currentYear}-${currDate}`)
-            const openDate = this.deviceInfo.canReserveWeek
-            if (openDate.includes(currenWeek)) {
-                this.choose.currIndex = index; this.choose.moreDate = ''
-                this.choose.isMore = false; this.getAllDayReserve()
-            } else {
-                this.showTips('该日设备不开放预约', 'error');
-            }
-        },
-        onConfirmDate(event) {
-            this.choose.moreDate = event[0]
-            this.choose.isMore = true
-            this.choose.moreVisible = false
-            this.getAllDayReserve()
-        },
-        onTimeClick(type) {
-            this.time.type = type
-            this.time.selectVisible = true
-        },
-        currTimeSubmit(event) {
-            console.log('onTimeSubmit',this.time.type, event.value[0])
-            // const date = new Date(event.value); // 毫秒级时间戳
-            // // 格式化为 YYYY-MM-DD HH:mm:ss
-            // const dateTimeVal = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ` +
-            // `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
-            // console.log(dateTimeVal); // 输出：2025-03-11 00:00:00
-            this.time[this.time.type] = event.value.length>0?event.value[0]:''
-            this.time.selectVisible = false
-        },
-        onTimeClose() {
-            this.time.selectVisible = false
-        },
-        onVisibleFalse(type) {
-            if (type==1) this.group.visible = false
-            if (type==2) this.teacher.visible = false
-            if (type==3) this.choose.moreVisible = false
-        },
+        onVisibleFalse(type) { if (type==1) { this.group.visible = false } if (type==2) { this.teacher.visible = false } if (type==3) { this.choose.moreVisible = false } },
         onSubmit() {
             const _self = this; if (!_self.checkUserInfo()) { return; }
-            if (!_self.time.start) { _self.showTips('请选择预约开始时间', 'error'); return }
-            if (!_self.time.end) { _self.showTips('请选择预约结束时间', 'error'); return }
+            if (!_self.time.start) { _self.showTips('请选择预约开始时间', 'error'); return } if (!_self.time.end) { _self.showTips('请选择预约结束时间', 'error'); return }
             if (!_self.timeIsNotGreaterThan(_self.time.start, _self.time.end)) { _self.showTips('预约开始时间不能大于等于预约结束时间', 'error'); return }
             if (!_self.isTimeDifferenceValid(_self.time.start, _self.time.end)) { _self.showTips('使用设备至少三十分钟且不超过十二小时', 'error'); return }
-            if (!_self.form.name) { _self.showTips('请输入预约人姓名', 'error'); return }
-            if (!_self.form.phone) { _self.showTips('请输入预约人电话', 'error'); return }
+            if (!_self.form.name) { _self.showTips('请输入预约人姓名', 'error'); return } if (!_self.form.phone) { _self.showTips('请输入预约人电话', 'error'); return }
             if (!/^1[3-9]\d{9}$/.test(_self.form.phone)) { _self.showTips('请输入正确的电话号码', 'error'); return }
-            if (!_self.form.description) { _self.showTips('请输入用途说明', 'error'); return }
-            if (_self.form.group == '') { _self.showTips('请选择团队', 'error'); return }
+            if (!_self.form.description) { _self.showTips('请输入用途说明', 'error'); return } if (_self.form.group == '') { _self.showTips('请选择团队', 'error'); return }
             if (_self.group.currCode != 'xn' && _self.group.currCode != 'xw' && _self.form.teacher == '') { _self.showTips('请选择导师', 'error'); return }
             if ((_self.group.currCode == 'xn' || _self.group.currCode == 'xw') && _self.form.school == '') { _self.showTips('请填写所在学院', 'error'); return }
             const currDate = _self.choose.list[_self.choose.currIndex]
             const pushData = {
-                deviceId: _self.instrumentId, projectMentorDictDetId: _self.form.teacher,
+                deviceId: _self.instrumentId, projectMentorDictId: _self.form.group,
+                projectMentorDictName: _self.group.currName, projectMentorDictDetId: _self.form.teacher,
                 projectMentorDictDetName: _self.teacher.currName || _self.form.school,
-                projectMentorDictId: _self.form.group,
-                projectMentorDictName: _self.group.currName, projectMentorRemark: _self.form.info,
+
                 reserveDate: _self.choose.isMore ? _self.choose.moreDate : `${currDate.year}-${currDate.date}`,
-                reserveEndTime: `${_self.time.end}:00`, reservePurpose: _self.form.description,
-                reserveStartTime: `${_self.time.start}:00`, reserveName: _self.form.name, reservePhone: _self.form.phone,
+                reserveStartTime: `${_self.time.start}:00`, reserveEndTime: `${_self.time.end}:00`,
+
+				reserveName: _self.form.name, reservePhone: _self.form.phone,
+				projectMentorRemark: _self.form.info, reservePurpose: _self.form.description,
             }
             console.log('deviceSubmit::',pushData)
             deviceSubmit(pushData).then((resp) => {
                 if (resp.code == 200) {
                     _self.showTips('预约成功，正在跳转', 'success');
                     setTimeout(() => {
-                        _self.$ut.jump(`/sub-pack/tab5/reserve/detail?id=${resp.data.instrumentId}`);
+                        _self.$eUni.redirectTo({ url:`/sub-pack/tab5/reserve/detail?id=${resp.data.instrumentId}` });
                     }, 2000);
                 }
-            });
+            })
         }
     }
 }
@@ -371,12 +380,10 @@ export default {
 				width: 100%;
 				font-family: PingFang SC, PingFang SC;
 				font-weight: bold;
-				font-size: 16px;
+				font-size: 32rpx;
 				color: #000000;
-				line-height: 19px;
+				line-height: 38rpx;
 				text-align: left;
-				font-style: normal;
-				text-transform: none;
 				margin: 22rpx 0;
 			}
 			.detailInfoText {
@@ -384,12 +391,10 @@ export default {
 				width: 100%;
 				font-family: PingFang SC, PingFang SC;
 				font-weight: 400;
-				font-size: 13px;
+				font-size: 26rpx;
 				color: #9699a1;
-				line-height: 15px;
+				line-height: 32rpx;
 				text-align: left;
-				font-style: normal;
-				text-transform: none;
 			}
 			.middle {
 				margin: 30rpx 0;
@@ -409,12 +414,10 @@ export default {
 				justify-content: space-between;
 				font-family: PingFang SC, PingFang SC;
 				font-weight: bold;
-				font-size: 16px;
+				font-size: 32rpx;
 				color: #000000;
-				line-height: 19px;
+				line-height: 38rpx;
 				text-align: left;
-				font-style: normal;
-				text-transform: none;
 				margin: 22rpx 0;
 				margin-top: 40rpx;
 			}
@@ -427,18 +430,18 @@ export default {
 				.detailDateDayItem {
 					position: relative;
 					width: 19%;
-					padding: 14px 8px;
+					padding: 28rpx 16rpx;
 					box-sizing: border-box;
 					background: #f0f2f7;
-					border-radius: 4px 4px 4px 4px;
+					border-radius: 8rpx 8rpx 8rpx 8rpx;
 					.detailDateDayItem-num {
 						position: relative;
 						width: 100%;
 						font-family: PingFang SC, PingFang SC;
 						font-weight: 500;
-						font-size: 15px;
+						font-size: 30rpx;
 						color: #4b4b4e;
-						line-height: 18px;
+						line-height: 36rpx;
 						text-align: center;
 						font-style: normal;
 						text-transform: none;
@@ -448,9 +451,9 @@ export default {
 						width: 100%;
 						font-family: PingFang SC, PingFang SC;
 						font-weight: 400;
-						font-size: 13px;
+						font-size: 26rpx;
 						color: #4b4b4e;
-						line-height: 15px;
+						line-height: 32rpx;
 						text-align: center;
 						font-style: normal;
 						text-transform: none;
@@ -460,18 +463,18 @@ export default {
 				.detailDateDayItemCurr {
 					position: relative;
 					width: 19%;
-					padding: 14px 8px;
+					padding: 28rpx 16rpx;
 					box-sizing: border-box;
 					background: #0d70f3;
-					border-radius: 4px 4px 4px 4px;
+					border-radius: 8rpx 8rpx 8rpx 8rpx;
 					.detailDateDayItem-num {
 						position: relative;
 						width: 100%;
 						font-family: PingFang SC, PingFang SC;
 						font-weight: 500;
-						font-size: 15px;
-						color: #ffffff;
-						line-height: 18px;
+						font-size: 30rpx;
+						color: white;
+						line-height: 36rpx;
 						text-align: center;
 						font-style: normal;
 						text-transform: none;
@@ -481,9 +484,9 @@ export default {
 						width: 100%;
 						font-family: PingFang SC, PingFang SC;
 						font-weight: 400;
-						font-size: 13px;
-						color: #ffffff;
-						line-height: 15px;
+						font-size: 26rpx;
+						color: white;
+						line-height: 32rpx;
 						text-align: center;
 						font-style: normal;
 						text-transform: none;
@@ -493,10 +496,10 @@ export default {
 				.detailDateDayItemMore {
 					position: relative;
 					width: 19%;
-					padding: 14px 8px;
+					padding: 28rpx 16rpx;
 					box-sizing: border-box;
 					background: #0d70f3;
-					border-radius: 4px 4px 4px 4px;
+					border-radius: 8rpx 8rpx 8rpx 8rpx;
 					display: flex;
 					align-items: center;
 					justify-content: center;
@@ -504,9 +507,9 @@ export default {
 						position: relative;
 						font-family: PingFang SC, PingFang SC;
 						font-weight: 500;
-						font-size: 15px;
-						color: #ffffff;
-						line-height: 18px;
+						font-size: 30rpx;
+						color: white;
+						line-height: 36rpx;
 						text-align: center;
 						font-style: normal;
 						text-transform: none;
@@ -515,10 +518,10 @@ export default {
 				.detailDateDayItemMore-curr {
 					position: relative;
 					width: 19%;
-					padding: 14px 8px;
+					padding: 28rpx 16rpx;
 					box-sizing: border-box;
 					background: #f0f2f7;
-					border-radius: 4px 4px 4px 4px;
+					border-radius: 8rpx 8rpx 8rpx 8rpx;
 					display: flex;
 					align-items: center;
 					justify-content: center;
@@ -526,16 +529,16 @@ export default {
 						position: relative;
 						font-family: PingFang SC, PingFang SC;
 						font-weight: 500;
-						font-size: 15px;
+						font-size: 30rpx;
 						color: #4b4b4e;
-						line-height: 18px;
+						line-height: 36rpx;
 						text-align: center;
 						font-style: normal;
 						text-transform: none;
 					}
 				}
 			}
-			.detailDate-has-list {
+			.detailDateHasList {
 				position: relative;
 				width: 100%;
 				display: flex;
@@ -549,41 +552,39 @@ export default {
 					width: calc(50% - 10rpx);
 					margin-bottom: 20rpx;
 					background: #f0f2f7;
-					border-radius: 4px 4px 4px 4px;
+					border-radius: 8rpx 8rpx 8rpx 8rpx;
 					font-family: PingFang SC, PingFang SC;
 					font-weight: 400;
-					font-size: 15px;
+					font-size: 30rpx;
 					color: #4b4b4e;
-					line-height: 18px;
+					line-height: 36rpx;
 					text-align: center;
 					font-style: normal;
 					text-transform: none;
 					padding: 20rpx;
 				}
 			}
-			.detailDate-more-list {
+			.detailDateMoreList {
 				position: relative;
 				width: 100%;
 				font-family: PingFang SC, PingFang SC;
 				font-weight: 400;
-				font-size: 13px;
+				font-size: 26rpx;
 				color: #9699a1;
-				line-height: 15px;
+				line-height: 32rpx;
 				text-align: center;
-				font-style: normal;
-				text-transform: none;
 				margin-bottom: 40rpx;
 			}
-			.detailDate-has-box {
+			.detailDatHasBox {
 				position: relative;
 				width: 100%;
 				padding: 40rpx;
-				border: 1px solid #cecece;
-				border-radius: 4px;
+				border: 2rpx solid #cecece;
+				border-radius: 8px;
 				margin-bottom: 40rpx;
 				box-sizing: border-box;
 			}
-			.detailDate-choose {
+			.detailDateChoose {
 				position: relative;
 				width: 100%;
 				display: flex;
@@ -598,9 +599,9 @@ export default {
 						text-align: center;
 						font-family: PingFang SC, PingFang SC;
 						font-weight: 400;
-						font-size: 14px;
+						font-size: 28rpx;
 						color: #000000;
-						line-height: 16px;
+						line-height: 32rpx;
 						text-align: center;
 						font-style: normal;
 						text-transform: none;
@@ -609,17 +610,17 @@ export default {
 					.detailDateChooseItemButton {
 						position: relative;
 						width: 100%;
-						border-radius: 30px 30px 30px 30px;
-						border: 1px solid rgba(3, 171, 110, 0.5);
+						border-radius: 60rpx;
+						border: 2rpx solid rgba(3, 171, 110, 0.5);
 						font-family: PingFang SC, PingFang SC;
 						font-weight: 400;
-						font-size: 14px;
+						font-size: 28rpx;
 						color: #03ab6e;
-						line-height: 16px;
+						line-height: 32rpx;
 						text-align: center;
 						font-style: normal;
 						text-transform: none;
-						padding: 10px 0;
+						padding: 20rpx 0;
 					}
 				}
 			}
@@ -638,9 +639,9 @@ export default {
 					margin-bottom: 10rpx;
 					font-family: PingFang SC, PingFang SC;
 					font-weight: 400;
-					font-size: 14px;
+					font-size: 28rpx;
 					color: #4b4b4e;
-					line-height: 16px;
+					line-height: 32rpx;
 					text-align: left;
 					font-style: normal;
 					text-transform: none;

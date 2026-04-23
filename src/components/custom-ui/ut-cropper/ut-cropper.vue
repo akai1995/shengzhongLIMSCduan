@@ -676,7 +676,7 @@
 			}
 			.crop-border {
 				position: fixed;
-				border: 1px solid #0d70f3;
+				border: 2rpx solid #0d70f3;
 				box-sizing: border-box;
 				z-index: 3;
 				pointer-events: none;

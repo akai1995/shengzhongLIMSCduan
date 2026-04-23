@@ -26,6 +26,7 @@ export function deviceSubmit(data) { return service.post({ url: '/appDevice/stor
 export function deviceDetail(id) { return service.get({ url: `/appDevice/storageInstrumentReserve/deviceDetailById?instrumentId=${id}` }) }
 export function reserveDetail(id) { return service.get({ url: `/appDevice/storageInstrumentReserve/queryById?id=${id}` }) }
 export function getReserveList(params) { return service.get({ url: `/appDevice/storageInstrumentReserve/reserveList`, params }) }
+export function appDeviceReserveExtend(data) { return service.post({ url: `/appDevice/storageInstrumentReserve/appDeviceReserveExtend`, data }) }
 export function getAllDayReserve(params) { return service.get({ url: `/appDevice/storageInstrumentReserve/getDeviceReserveTimeV2List`, params }) }
 export function getRejectDes(id) { return service.get({ url: `/appDevice/storageInstrumentReserve/queryRejectComment?id=${id}` }) }
 export function openDevice(id) { return service.get({ url: `/appDevice/storageInstrumentReserve/powerOn?id=${id}` }) }

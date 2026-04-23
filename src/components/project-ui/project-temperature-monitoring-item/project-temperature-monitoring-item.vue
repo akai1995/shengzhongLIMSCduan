@@ -108,7 +108,11 @@ export default {
         border-radius: 12rpx;
         position: relative;
         overflow: hidden;
-        margin-bottom: 20rpx;
+        margin-bottom: 32rpx;
+        &:last-child {
+            margin-bottom: 0;
+            border-bottom: none;
+        }
         &::after {
             content: '';
             position: absolute;

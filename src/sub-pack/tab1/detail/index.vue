@@ -83,14 +83,14 @@
                     <view class="detail-form-item">
                         <view class="detail-form-item-title">预约人姓名</view>
                         <view class="detail-form-item-input">
-                            <u--input placeholder="预约人姓名" border="surround" v-model="form.name"></u--input>
+                            <u--input placeholder="预约人姓名" border="surround" v-model="form.name" />
                         </view>
                     </view>
 
                     <view class="detail-form-item">
                         <view class="detail-form-item-title">预约人电话</view>
                         <view class="detail-form-item-input">
-                            <u--input placeholder="请输入预约人电话" border="surround" v-model="form.phone"></u--input>
+                            <u--input placeholder="请输入预约人电话" border="surround" v-model="form.phone" />
                         </view>
                     </view>
 
@@ -98,7 +98,7 @@
                         <view class="detail-form-item-title">团队选择</view>
                         <view class="detail-form-item-input" @click="group.visible = true">
                             <u--input v-model="group.currName" disabled disabledColor="#ffffff" placeholder="请选择团队"
-                                border="surround"></u--input>
+                                border="surround" />
                             <view class="detail-form-item-arr">
                                 <u-icon name="arrow-right"></u-icon>
                             </view>
@@ -109,7 +109,7 @@
                         <view class="detail-form-item-title">导师选择</view>
                         <view class="detail-form-item-input" @click="teacher.visible = true">
                             <u--input v-model="teacher.currName" disabled disabledColor="#ffffff" placeholder="请选择团队"
-                                border="surround"></u--input>
+                                border="surround" />
                             <view class="detail-form-item-arr">
                                 <u-icon name="arrow-right"></u-icon>
                             </view>
@@ -119,7 +119,7 @@
                     <view class="detail-form-item" v-if="schoolInput.visible">
                         <view class="detail-form-item-title">所在学院</view>
                         <view class="detail-form-item-input">
-                            <u--input placeholder="请输入所在学院" border="surround" v-model="form.school"></u--input>
+                            <u--input placeholder="请输入所在学院" border="surround" v-model="form.school" />
                         </view>
                     </view>
 
@@ -139,7 +139,7 @@
                     </view>
 
                     <view class="submit-button">
-                        <u-button @click="handleSubmit" type="primary" text="提交预约"></u-button>
+                        <u-button @click="handleSubmit" type="primary" text="提交预约" />
                     </view>
                 </view>
             </view>
@@ -167,8 +167,7 @@ import { deviceSubmit, deviceDetail, getAllDayReserve, getGroup, getTeacher } fr
 export default {
     data() {
         return {
-            instrumentId: null,
-            deviceId: null,
+            instrumentId: null, deviceId: null,
             choose: { currIndex: 0, list: [], isMore: false, moreDate: '', moreVisible: false, minDate: '', maxDate: '', moreText: true },
             time: { start: null, end: null, select: [[]], selectVisible: false, type: '' },
             form: { name: '', phone: '', description: '', group: '', teacher: '', school: '', info: '' },
@@ -188,19 +187,16 @@ export default {
         generateDateArray() {
             const result = [];
             const today = new Date();
-
             const year = today.getFullYear();
             const dayNames = ['日', '一', '二', '三', '四', '五', '六'];
 
             for (let i = 0; i < 4; i++) {
                 const currentDate = new Date(today);
                 currentDate.setDate(today.getDate() + i);
-
                 const monthStr = this.formatDate(currentDate.getMonth() + 1);
                 const dayStr = this.formatDate(currentDate.getDate());
                 const dateStr = `${monthStr}-${dayStr}`;
                 const dayOfWeekStr = `周${dayNames[currentDate.getDay()]}`;
-
                 result.push({
                     year: year.toString(),
                     date: dateStr,
@@ -212,9 +208,7 @@ export default {
             this.choose.maxDate = this.getAnyDate(30);
             this.choose.list = result
         },
-        formatDate(num) {
-            return num < 10 ? '0' + num : num;
-        },
+        formatDate(num) { return num < 10 ? '0' + num : num; },
         getAnyDate(num) {
             const today = new Date();
             const year = today.getFullYear();
@@ -245,15 +239,10 @@ export default {
                     }
                 }
             }
-
             const lastTime = timeArray[timeArray.length - 1];
-
             if (lastTime === "23:50") {
                 timeArray.push('23:59');
             }
-
-
-
             this.time.select[0] = timeArray;
         },
         getWeekNumber(date) {
@@ -267,10 +256,8 @@ export default {
                 const [hours, minutes] = time.split(':').map(Number);
                 return hours * 60 + minutes;
             };
-
             const timeA = timeToMinutes(a);
             const timeB = timeToMinutes(b);
-
             return timeA < timeB;
         },
         isTimeDifferenceValid(startTime, endTime) {
@@ -282,7 +269,6 @@ export default {
             const startMinutes = timeToMinutes(startTime);
             const endMinutes = timeToMinutes(endTime);
             const timeDiff = Math.abs(endMinutes - startMinutes);
-
             return timeDiff >= 30 && timeDiff <= 720;
         },
         addLineBreakBeforeText(text, targets) {
@@ -297,20 +283,16 @@ export default {
                 if (resp.code == 200) {
                     this.deviceInfo.name = resp.result.deviceName
                     this.deviceInfo.code = resp.result.deviceCode
-                    this.deviceInfo.price = this.addLineBreakBeforeText(resp.result.priceDesc, ["校内","校外", "不足"]) || "暂无价格"
+                    this.deviceInfo.price = this.addLineBreakBeforeText(resp.result.priceDesc, ["校内", "校外", "不足"]) || "暂无价格"
                     this.deviceInfo.address = resp.result.deviceAddress || "暂无设备地址"
                     this.deviceInfo.reserveTime = resp.result.reserveTimeList
                     this.deviceInfo.canReserveWeek = resp.result.openList
                     this.deviceInfo.canReserveTime = resp.result.openTime
                     this.deviceInfo.deviceImg = resp.result.deviceImg || null
 
-
-                    this.generateDateArray()
-                    this.getSelectPicker()
-                    this.getAllDayReserve()
+                    this.generateDateArray(); this.getSelectPicker(); this.getAllDayReserve()
                 }
             });
-
         },
         getGroup() {
             getGroup().then((resp) => {
@@ -323,7 +305,6 @@ export default {
                 }
             });
         },
-
         getTeacher(id) {
             getTeacher(id).then((resp) => {
                 if (resp.code == 200) {
@@ -334,18 +315,14 @@ export default {
                     this.teacher.list[0] = arr;
                 }
             });
-
         },
         handleCurrGroup(e) {
             this.group.currName = e.value[0].label
             this.group.currCode = e.value[0].code
             this.form.group = e.value[0].id
-            this.getTeacher(e.value[0].id)
-            this.group.visible = false
-            this.teacher.currName = ''
-            this.form.teacher = ''
-            this.form.school = ''
-            this.form.info = ''
+            this.getTeacher(e.value[0].id); this.group.visible = false
+            this.teacher.currName = ''; this.form.teacher = ''
+            this.form.school = ''; this.form.info = ''
             if (e.value[0].code != 'xn' && e.value[0].code != 'xw') {
                 this.teacher.inputVisible = true
                 this.schoolInput.visible = false
@@ -361,11 +338,7 @@ export default {
         },
         getAllDayReserve() {
             const currentDate = this.choose.isMore ? this.choose.moreDate : `${this.choose.list[this.choose.currIndex].year}-${this.choose.list[this.choose.currIndex].date}`
-            const pushData = {
-                currentDate,
-                deviceId: this.deviceId
-            }
-
+            const pushData = { currentDate, deviceId: this.deviceId }
             getAllDayReserve(pushData).then((resp) => {
                 if (resp.code == 200) {
                     if (resp.result.length <= 4) {
@@ -377,22 +350,15 @@ export default {
                             this.choose.moreText = false
                         } else {
                             const arr = []
-                            for (let i = 0; i < 4; i += 1) {
-                                arr.push(resp.result[i])
-                            }
+                            for (let i = 0; i < 4; i += 1) { arr.push(resp.result[i]) }
                             this.choose.moreText = true
                             this.deviceInfo.reserveTime = arr
                         }
-
                     }
-
                 }
             });
         },
-        handleClickMoreText() {
-            this.choose.moreText = false
-            this.getAllDayReserve()
-        },
+        handleClickMoreText() { this.choose.moreText = false; this.getAllDayReserve() },
         handleDateClick(index, currDate) {
             const currentYear = new Date().getFullYear();
             const currenWeek = this.getWeekNumber(`${currentYear}-${currDate}`)
@@ -406,87 +372,32 @@ export default {
                 uni.showToast({ title: "该日设备不开放预约", icon: "none", });
             }
         },
-        handleConfirmDate(e) {
-            this.choose.moreDate = e[0]
-            this.choose.isMore = true
-            this.choose.moreVisible = false
-            this.getAllDayReserve()
-        },
-        handleTimeClick(type) {
-            this.time.type = type
-            this.time.selectVisible = true
-        },
-        currTimeSubmit(e) {
-            this.time[this.time.type] = e.value[0]
-            this.time.selectVisible = false
-        },
-        currTimeCancel() {
-            this.time.selectVisible = false
-        },
+        handleConfirmDate(e) { this.choose.moreDate = e[0]; this.choose.isMore = true; this.choose.moreVisible = false; this.getAllDayReserve(); },
+        handleTimeClick(type) { this.time.type = type; this.time.selectVisible = true; },
+        currTimeSubmit(e) { this.time[this.time.type] = e.value[0]; this.time.selectVisible = false; },
+        currTimeCancel() { this.time.selectVisible = false; },
         handleSubmit() {
-            if (!this.time.start) {
-                uni.showToast({ title: "请选择预约开始时间", icon: "none", });
-                return
-            }
-            if (!this.time.end) {
-                uni.showToast({ title: "请选择预约结束时间", icon: "none", });
-                return
-            }
-
-            if (!this.timeIsNotGreaterThan(this.time.start, this.time.end)) {
-                uni.showToast({ title: "预约开始时间不能大于等于预约结束时间", icon: "none", });
-                return
-            }
-
-            if (!this.isTimeDifferenceValid(this.time.start, this.time.end)) {
-                uni.showToast({ title: "使用设备至少三十分钟且不超过十二小时", icon: "none", });
-                return
-            }
-
-            if (!this.form.name) {
-                uni.showToast({ title: "请输入预约人姓名", icon: "none", });
-                return
-            }
-            if (!this.form.phone) {
-                uni.showToast({ title: "请输入预约人电话", icon: "none", });
-                return
-            }
-            if (!/^1[3-9]\d{9}$/.test(this.form.phone)) {
-                uni.showToast({ title: "请输入正确的电话号码", icon: "none", });
-                return
-            }
-            if (!this.form.description) {
-                uni.showToast({ title: "请输入用途说明", icon: "none", });
-                return
-            }
-            if (this.form.group == '') {
-                uni.showToast({ title: "请选择团队", icon: "none", });
-                return
-            }
-            if (this.group.currCode != 'xn' && this.group.currCode != 'xw' && this.form.teacher == '') {
-                uni.showToast({ title: "请选择导师", icon: "none", });
-                return
-            }
-            if ((this.group.currCode == 'xn' || this.group.currCode == 'xw') && this.form.school == '') {
-                uni.showToast({ title: "请填写所在学院", icon: "none", });
-                return
-            }
-
+            if (!this.time.start) { uni.showToast({ title: "请选择预约开始时间", icon: "none", }); return }
+            if (!this.time.end) { uni.showToast({ title: "请选择预约结束时间", icon: "none", }); return }
+            if (!this.timeIsNotGreaterThan(this.time.start, this.time.end)) { uni.showToast({ title: "预约开始时间不能大于等于预约结束时间", icon: "none", }); return }
+            if (!this.isTimeDifferenceValid(this.time.start, this.time.end)) { uni.showToast({ title: "使用设备至少三十分钟且不超过十二小时", icon: "none", }); return }
+            if (!this.form.name) { uni.showToast({ title: "请输入预约人姓名", icon: "none", }); return }
+            if (!this.form.phone) { uni.showToast({ title: "请输入预约人电话", icon: "none", }); return }
+            if (!/^1[3-9]\d{9}$/.test(this.form.phone)) { uni.showToast({ title: "请输入正确的电话号码", icon: "none", }); return }
+            if (!this.form.description) { uni.showToast({ title: "请输入用途说明", icon: "none", }); return }
+            if (this.form.group == '') { uni.showToast({ title: "请选择团队", icon: "none", }); return }
+            if (this.group.currCode != 'xn' && this.group.currCode != 'xw' && this.form.teacher == '') { uni.showToast({ title: "请选择导师", icon: "none", }); return }
+            if ((this.group.currCode == 'xn' || this.group.currCode == 'xw') && this.form.school == '') { uni.showToast({ title: "请填写所在学院", icon: "none", }); return }
             const currDate = this.choose.list[this.choose.currIndex]
-
             const pushData = {
-                deviceId: this.instrumentId,
-                projectMentorDictDetId: this.form.teacher,
+                deviceId: this.instrumentId, projectMentorDictDetId: this.form.teacher,
+                projectMentorDictId: this.form.group, projectMentorDictName: this.group.currName,
                 projectMentorDictDetName: this.teacher.currName || this.form.school,
-                projectMentorDictId: this.form.group,
-                projectMentorDictName: this.group.currName,
                 projectMentorRemark: this.form.info,
                 reserveDate: this.choose.isMore ? this.choose.moreDate : `${currDate.year}-${currDate.date}`,
-                reserveEndTime: `${this.time.end}:00`,
-                reservePurpose: this.form.description,
+                reserveEndTime: `${this.time.end}:00`, reservePurpose: this.form.description,
                 reserveStartTime: `${this.time.start}:00`,
-                reserveName: this.form.name,
-                reservePhone: this.form.phone,
+                reserveName: this.form.name, reservePhone: this.form.phone,
             }
             deviceSubmit(pushData).then((resp) => {
                 if (resp.code == 200) {
@@ -499,7 +410,7 @@ export default {
         },
         handleGoHome() {
             this.$ut.jump(`/pages/index/index`);
-        },
-    },
-};
+        }
+    }
+}
 </script>
