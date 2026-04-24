@@ -118,7 +118,7 @@
 				</view>
                 <view
 					v-if="
-						deviceInfo && [4,6].includes(deviceInfo.deviceReserveStatus)
+						deviceInfo && deviceInfo.continueFlag
 					"
 					class="btn" @click="onExtendAppointment"
 				>
