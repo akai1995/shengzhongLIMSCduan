@@ -409,7 +409,7 @@ export default {
             });
         },
         handleGoHome() {
-            this.$ut.jump(`/pages/index/index`);
+            this.$ut.jump(`/pages/tabs/tab1/tab1`);
         }
     }
 }
