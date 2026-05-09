@@ -34,9 +34,7 @@ export default {
 			getReserveListApi(this.queryParams).then((resp) => {
 				this.totalCount = resp&&resp.data?resp.data.total : 0 
 				this.$refs.paging.complete(resp&&resp.data?resp.data.records:false)
-			}).catch(()=>{
-				this.$refs.paging.complete(false)
-			}).finally(()=>{
+			}).catch(()=>{ this.$refs.paging.complete(false) }).finally(()=>{
 				uni.hideLoading(); setTimeout(()=>{ this.firstLoaded = true; }, 1750)
 			});
 		},

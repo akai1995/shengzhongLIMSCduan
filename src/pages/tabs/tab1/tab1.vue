@@ -126,9 +126,7 @@ export default {
         }, 60 * 1000); 
         console.log('定时器已启动，ID：', this.timer)
     },
-	mounted() { 
-		setTimeout(() => { this.$refs.paging && this.$refs.paging.refresh() }, 450); 
-	},
+	mounted() { setTimeout(() => { this.$refs.paging && this.$refs.paging.refresh() }, 450); },
 	methods: {
 		getHeadInfo() {
 			// #ifdef MP-WEIXIN

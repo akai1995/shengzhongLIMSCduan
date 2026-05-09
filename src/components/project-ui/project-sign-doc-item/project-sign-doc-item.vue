@@ -34,6 +34,11 @@ export default {
         box-shadow: 0 4rpx 15rpx rgba(0, 0, 0, 0.08);
         overflow: hidden;
         transition: all 0.3s ease;
+        margin-bottom: 20rpx;
+        
+        &:last-child {
+            margin-bottom: 0;
+        }
         
         &:hover {
             transform: translateY(-2rpx);
@@ -71,10 +76,6 @@ export default {
 
         .pubBotHandle {
             margin-top: 0;
-        }
-        
-        &:last-child {
-            margin-bottom: 0;
         }
     }
 </style>

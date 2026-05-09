@@ -110,7 +110,7 @@ export default {
                 }
                 .infoHeadTitle {
                     position: relative;
-                    width: calc(100% - 44px);
+                    width: calc(100% - 132rpx);
                     overflow: hidden;
                     white-space: nowrap;
                     text-overflow: ellipsis;
@@ -118,10 +118,10 @@ export default {
                     font-size: 32rpx;
                     color: #000000;
                     line-height: 58rpx;
-                }
+                } 
                 .infoHeadStatus {
                     position: relative;
-                    width: 88rpx;
+                    width: 132rpx;
                     font-weight: 400;
                     font-size: 28rpx;
                     line-height: 32rpx;
