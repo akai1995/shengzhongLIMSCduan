@@ -1,0 +1,72 @@
+{
+    "easycom": {
+        "autoscan": true,
+        "custom": {
+			"^ut-(.*)": "@/components/custom-ui/ut-$1/ut-$1.vue",
+			"^project-(.*)": "@/components/project-ui/project-$1/project-$1.vue",
+			"^u-(.*)": "@/uni_modules/uview-ui/components/u-$1/u-$1.vue",
+			"e-charts": "@/components/e-chart/e-chart.vue",
+	    	"^(?!z-paging-refresh|z-paging-load-more)z-paging(.*)": "@/uni_modules/z-paging/components/z-paging$1/z-paging$1.vue"
+        }
+    },
+	"pages": [
+		{ "path": "pages/tabs/tab1/tab1", "name": "tab1Page", "style": { "navigationBarTitleText": "工作台", "enablePullDownRefresh": false, "navigationStyle": "custom" } },
+		{ "path": "pages/tabs/tab2/tab2", "name": "tab2Page", "style": { "navigationBarTitleText": "科研", "enablePullDownRefresh": false, "navigationStyle": "custom" } },
+		{ "path": "pages/tabs/tab3/tab3", "name": "tab3Page", "style": { "navigationBarTitleText": "实验室", "enablePullDownRefresh": false, "navigationStyle": "custom" } },
+		{ "path": "pages/tabs/tab4/tab4", "name": "tab4Page", "style": { "navigationBarTitleText": "物联监控", "enablePullDownRefresh": false, "navigationStyle": "custom" } },
+		{ "path": "pages/tabs/tab5/tab5", "name": "tab5Page", "style": { "navigationBarTitleText": "我的", "enablePullDownRefresh": false, "navigationStyle": "custom" } },
+		{ "path": "pages/404/404", "name": "unFound", "style": { "navigationStyle": "default", "enablePullDownRefresh": false, "navigationBarTitleText": "页面丢失了" } }
+	],
+	"globalStyle": {
+		"navigationStyle": "custom",
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "E-AI",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+	},
+	"tabBar": {
+		"color": "#999999",
+		"selectedColor": "#3B7EFFFF",
+		"borderStyle": "black",
+		"backgroundColor": "#ffffff",
+		"list": [
+			{
+				"pagePath": "pages/tabs/tab1/tab1",
+				"text": "工作台",
+				"iconPath": "static/nav/nav1-1.png",
+				"selectedIconPath": "static/nav/nav1-2.png"
+			},
+			{
+				"pagePath": "pages/tabs/tab2/tab2",
+				"text": "科研",
+				"iconPath": "static/nav/nav2-1.png",
+				"selectedIconPath": "static/nav/nav2-2.png"
+			},
+			{
+				"pagePath": "pages/tabs/tab3/tab3",
+				"text": "实验室",
+				"iconPath": "static/nav/nav3-1.png",
+				"selectedIconPath": "static/nav/nav3-2.png"
+			},
+			{
+				"pagePath": "pages/tabs/tab4/tab4",
+				"text": "物联",
+				"iconPath": "static/nav/nav4-1.png",
+				"selectedIconPath": "static/nav/nav4-2.png"
+			},
+			{
+				"pagePath": "pages/tabs/tab5/tab5",
+				"text": "我的",
+				"iconPath": "static/nav/nav5-1.png",
+				"selectedIconPath": "static/nav/nav5-2.png"
+			}
+		]
+	},
+	"condition": {
+		"current": 0,
+		"list": [
+			{ "name": "我的预约", "path": "sub-pack/tab5/reserve/reserve", "query": "" },
+			{ "name": "温度监控", "path": "sub-pack/tab5/temperature-monitoring/temperature-monitoring", "query": "" }
+		]
+	}
+}
