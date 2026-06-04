@@ -1,0 +1,8 @@
+@mixin flex($direction: row) { display: flex; flex-direction: $direction; } @mixin page() { box-sizing: border-box; /* height:100%; */ min-height: 100%; padding: 0; margin: 0; }
+@mixin x-padding-bottom($val: 0px) { padding-bottom: $val; padding-bottom: calc((#{$val} + constant(safe-area-inset-bottom)) / 2); /* no */ padding-bottom: calc((#{$val} + env(safe-area-inset-bottom)) / 2); /* no */ }
+@mixin x-margin-bottom($val: 0px) { margin-bottom: $val; margin-bottom: calc(#{$val / 2} + constant(safe-area-inset-bottom)); /* no */ margin-bottom: calc(#{$val / 2} + env(safe-area-inset-bottom)); /* no */ }
+@mixin x-height-bottom($val: 0px) { height: calc(100vh - #{$val} - constant(safe-area-inset-bottom)); /* no */ height: calc(100vh - #{$val} - env(safe-area-inset-bottom)); /* no */ }
+@mixin x-height($val: 0px) { height: constant(safe-area-inset-bottom); /* no */ height: env(safe-area-inset-bottom); /* no */ } @mixin line-count($val: 1) { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: $val; overflow: hidden; }
+// @mixin ai-background-image($val) { background-image: url(@/static/temp/imgs/#{$val}); background-repeat: no-repeat; background-position: center center; background-size: cover; }
+@mixin background-image($val) { background-image: url(https://genepiapi.ypzlfx.com/file/eai/temp/#{$val}); background-repeat: no-repeat; background-position: center center; background-size: cover; }
+@mixin gradient-background($val: right) { background: linear-gradient(to $val, #ffaa31 0%, #ec6e08 100%) !important; }
