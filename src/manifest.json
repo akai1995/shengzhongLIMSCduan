@@ -101,7 +101,7 @@
         "title" : "",
         "template" : "index.html",
         "router" : {
-            "base" : "/"
+            "base" : "./"
         },
         "devServer" : {
             "port" : "8080"
